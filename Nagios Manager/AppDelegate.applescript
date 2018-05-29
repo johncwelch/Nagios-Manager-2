@@ -9,6 +9,8 @@
 --changed from _() to : syntax in function calls
 --table columns are not editable. Table size atrib's are all solid bars
 
+--BINDINGS NOTES
+
 script AppDelegate
 	property parent : class "NSObject"
      
@@ -30,7 +32,8 @@ script AppDelegate
      --it contains the full record for the selected server name in the popup list
      property userSelection : missing value--this is attached to the user array referencing outlet
      --contains the user values we care about, name and ID
-     property userArray:{} --this serves the same function as theNagiosServerRecords, but is blank.
+     property userArray:{} --this serves the same function as theNagiosServerRecords, but is blank. we may dump this at some point
+     property userTable : missing value --this is so we can have teh doble clickz 
      
      --Other Properties
      property theServerName:"" --name of the server for curl ops
@@ -54,6 +57,7 @@ script AppDelegate
           set my theServerName to x's serverName --grab the server name
           set my theServerAPIKey to x's serverAPIKey --grab the server key
           set my theServerURL to x's serverURL --grab the server URL
+          tell userTable to setDoubleAction:"manageSelectedUsers:"
      end applicationWillFinishLaunching:
 	
      on applicationShouldTerminate:sender
@@ -67,7 +71,7 @@ script AppDelegate
           set theResult to popupSelection's setSelectionIndex:thePopupIndex --we don't actually care about the result,
           --it's a bool, but if this stops working, we know what to log. This sets the "current selection" of the
           --array controller to thePopupIndex, so we can pull the right info for the curl commands
-          set x to popupSelection's selectedObjects()--'s firstObject() --grab the selected recored
+          set x to popupSelection's selectedObjects()--grab the selected recored
           set my theServerName to x's serverName --grab the server name
           set my theServerAPIKey to x's serverAPIKey --grab the server key
           set my theServerURL to x's serverURL --grab the server api
@@ -94,6 +98,11 @@ script AppDelegate
           userSelection's addObjects:theUserNameList --fill the table
           set my theUserNameList to {} --clear out theUserNameList so it's got fresh data each time.
      end getServerUsers:
+     
+     on manageSelectedUsers:sender --this activates for either the "delete user" button or a double click in the table
+          set theSelection to userSelection's selectedObjects() as record --this gets the slection in the table row
+          --and converts the NSArray to an AS record
+     end manageSelectedUsers:
      
      (*on clearTable:sender --test function to see why we aren't clearing table data correctly.
           userSelection's removeObjects:(userSelection's arrangedObjects()) --clear the table
