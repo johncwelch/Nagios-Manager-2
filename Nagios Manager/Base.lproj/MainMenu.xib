@@ -719,26 +719,6 @@
                             <binding destination="rqX-rY-uxs" name="contentValues" keyPath="arrangedObjects.serverName" id="oKw-HW-7oW"/>
                         </connections>
                     </popUpButton>
-                    <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" id="oRQ-BL-iEa">
-                        <rect key="frame" x="18" y="248" width="147" height="17"/>
-                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                        <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="Get User List for Server" id="Hl1-ek-fSr">
-                            <font key="font" metaFont="system"/>
-                            <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
-                            <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
-                        </textFieldCell>
-                    </textField>
-                    <button verticalHuggingPriority="750" id="clM-bo-Htq">
-                        <rect key="frame" x="14" y="212" width="101" height="32"/>
-                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                        <buttonCell key="cell" type="push" title="Get Users" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="bv8-ix-qdz">
-                            <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
-                            <font key="font" metaFont="system"/>
-                        </buttonCell>
-                        <connections>
-                            <action selector="getServerUsers:" target="Voe-Tx-rLC" id="e6g-KV-O80"/>
-                        </connections>
-                    </button>
                     <scrollView autohidesScrollers="YES" horizontalLineScroll="19" horizontalPageScroll="10" verticalLineScroll="19" verticalPageScroll="10" usesPredominantAxisScrolling="NO" id="z9W-1p-lVg">
                         <rect key="frame" x="184" y="50" width="276" height="290"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -812,14 +792,14 @@
                         </tableHeaderView>
                     </scrollView>
                     <button verticalHuggingPriority="750" misplaced="YES" id="Q2F-9g-cL7">
-                        <rect key="frame" x="14" y="172" width="112" height="32"/>
+                        <rect key="frame" x="16" y="246" width="112" height="32"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                         <buttonCell key="cell" type="push" title="Delete User" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="Gqd-O2-inM">
                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                             <font key="font" metaFont="system"/>
                         </buttonCell>
                         <connections>
-                            <action selector="manageSelectedUsers:" target="Voe-Tx-rLC" id="oqc-SU-oQg"/>
+                            <action selector="deleteSelectedUsers:" target="Voe-Tx-rLC" id="DLq-dN-Hyl"/>
                         </connections>
                     </button>
                 </subviews>
