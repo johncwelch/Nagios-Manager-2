@@ -6,9 +6,19 @@
 --  Copyright © 2018 John Welch. All rights reserved.
 --
 
---1.0 goals to delete users from a nagios server
-     
---1.1 move from hardcoded server list to user-entered list
+--1.0 goals: to delete users from a nagios server
+--1.1 goals: add a local user to a nagios server (make sure to label as "local only, no AD"
+     --URL scheme for adding is same as getting info, so no change necessary there, woohoo!
+     --hardcode:
+          --language: "xi default"
+          --date_format: 1
+          --number_format: 1
+          --use radio buttons for auth_level default to user.
+               --if admin selected, all options but read-only are enabled and unchangeable
+          --if read_only set to 1, then auth-level is forced to user, only "see all" is changeable, others set to 0
+     --all text fields are mandatory
+     --when using this, force_pw_change, email_info, monitoring_contact, enable_notifications are always set to 1
+--1.2 move from hardcoded server list to user-entered list
 
 --changed from _() to : syntax in function calls
 --table columns are not editable. Table size atrib's are all solid bars
@@ -73,6 +83,12 @@ script AppDelegate
      property theUserID:"" --user id from the nagios server
      property theUserNameList:{} --a list of records we convert from NSDicts
      property theDeletePattern : "^.*\\?" --the pattern we use to find where the question mark is. There's only one, so for our needs this works. this allows us to split the string at the ? so we can build a proper delete URL
+     property theRESTresults : "" --so we can show the results of rest commands as appropriate
+     
+     property theNewUserName : "" --name of user to be added
+     property theNewUserPassword : "" --password of user to be added
+     property theNewName : "" --name, not username of the user to be added
+     property theNewUserEmailAddress : "" email address of user to be added
      
      
 	
@@ -146,22 +162,23 @@ script AppDelegate
                set theDeleteURL to theURLNSString as text --create a text version of the NSString
                set theDeleteURL to theDeleteURL & "/" --need the trailing slash there
                set theDeleteUIDCommand to "/usr/bin/curl -XDELETE \"" & theDeleteURL & theUserIDToBeDeleted & "?apikey=" & theServerAPIKey & "&pretty=1\""
-               set deleteUserButtonRecord to display alert  "You are about to delete user " & theUserNameToBeDeleted & " from " & theServerName & "\r\rARE YOU SURE?" as critical buttons {"OK","Cancel"} default button "Cancel" giving up after 90
-               set deleteUserButton to button returned of deleteUserButtonRecord
+               set deleteUserButtonRecord to display alert  "You are about to delete user " & theUserNameToBeDeleted & " from " & theServerName & "\r\rARE YOU SURE?" as critical buttons {"OK","Cancel"} default button "Cancel" giving up after 90 --last chance warning
+               set deleteUserButton to button returned of deleteUserButtonRecord --get button user clicked
                 
-               if deleteUserButton is "OK" then
-                    set theReturn to do shell script theDeleteUIDCommand
-                    current application's NSLog("delete Return: %@", theReturn) --log the results of the command
-                    my getServerUsers:(missing value)
+               if deleteUserButton is "OK" then --buh-bye
+                    set my theRESTresults to do shell script theDeleteUIDCommand --run the delete command, display results in the window
+                    current application's NSLog("delete Return: %@", my theRESTresults) --log the results of the command
+                    my getServerUsers:(missing value) --reload the user list from the selected server to show the user has been deleted
                else if deleteUserButton is "Cancel" then
                     return
                end if
           on error errorMessage number errorNumber --try block, mostly for -1728
                if errorNumber is -1728 then --nothing selected
-                    display dialog "You don't have anything selected. You have to select someone to delete them"
+                    display dialog "You don't have anything selected. You have to select someone to delete them" --error message for -1728
+                    --if we get enough of these, we'll create a separate function just for them
                     current application's NSLog("Nothing Selected Error: %@", errorMessage) --log the error message
                end if
-               my getServerUsers:(missing value)
+               my getServerUsers:(missing value) --reload the list
                return
           end try
           
