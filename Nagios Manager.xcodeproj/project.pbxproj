@@ -44,6 +44,7 @@
 				34C4819E20AF5B610020AF01 /* Products */,
 			);
 			sourceTree = "<group>";
+			usesTabs = 1;
 		};
 		34C4819E20AF5B610020AF01 /* Products */ = {
 			isa = PBXGroup;

@@ -18,6 +18,7 @@
           --if read_only set to 1, then auth-level is forced to user, only "see all" is changeable, others set to 0
      --all text fields are mandatory
      --when using this, force_pw_change, email_info, monitoring_contact, enable_notifications are always set to 1
+     --sans the NSMatrix object, point all "related" radio buttons at the same thing to get them to work "together" properly.
 --1.2 move from hardcoded server list to user-entered list
 
 --changed from _() to : syntax in function calls
@@ -68,7 +69,16 @@ script AppDelegate
      property userSelection : missing value--this is attached to the user array referencing outlet
      --contains the user values we care about, name and ID
      property userArray:{} --this serves the same function as theNagiosServerRecords, but is blank. we may dump this at some point
-     property userTable : missing value --this is so we can have teh doble clickz 
+     property userTable : missing value --this is so we can have teh doble clickz
+     property canSeeAllObjects : missing value --attached to same-named checkbox
+     property canReconfigureAllObjects : missing value --attached to same-named checkbox
+     property canControlAllObjects : missing value --attached to same-named checkbox
+     property canSeeOrConfigureMonitoringEngine : missing value --attached to same-named checkbox
+     property canAccessAdvancedFeatures : missing value --attached to same-named checkbox
+     property readOnly : missing value --attached to same-named checkbox
+     property adminRadioButton : missing value --attached to "admin" radio button
+     property userRadioButton : missing value --attached to "user" radio button
+     
      
      --Other Properties
      property theServerName:"" --name of the server for curl ops
@@ -88,7 +98,7 @@ script AppDelegate
      property theNewUserName : "" --name of user to be added
      property theNewUserPassword : "" --password of user to be added
      property theNewName : "" --name, not username of the user to be added
-     property theNewUserEmailAddress : "" email address of user to be added
+     property theNewUserEmailAddress : "" --email address of user to be added
      
      
 	
@@ -102,6 +112,20 @@ script AppDelegate
           set my theServerURL to x's serverURL --grab the server URL
           tell userTable to setDoubleAction:"deleteSelectedUsers:"
           my getServerUsers:(missing value) --use missing value because we have to pass something. in ths case, the ASOC version of nil
+          
+          --set the initial state and enabled of the checkboxes
+          my canSeeAllObjects's setEnabled:true
+          my canSeeAllObjects's setState:1
+          my canReconfigureAllObjects's setEnabled:true
+          my canReconfigureAllObjects's setState:0
+          my canControlAllObjects's setEnabled:true
+          my canControlAllObjects's setState:1
+          my canSeeOrConfigureMonitoringEngine's setEnabled:true
+          my canSeeOrConfigureMonitoringEngine's setState:0
+          my canAccessAdvancedFeatures's setEnabled:true
+          my canAccessAdvancedFeatures's setState:1
+          my readOnly's setEnabled:true
+          my readOnly's setState:0
      end applicationWillFinishLaunching:
 	
      on applicationShouldTerminate:sender
@@ -183,6 +207,67 @@ script AppDelegate
           end try
           
      end deleteSelectedUsers:
+     
+     on getUserLevel:sender --This is only here to handle the user type radio buttons. but, it works well enough for that.
+          set theUserType to sender's title as text--we're using a local var here because the only thing this function does is enable or disable
+          --certain checkboxes.
+          --current application's NSLog("sender's title: %@", theUserType)
+          if theUserType is "Admin" then --set the checkbutton states to the appropriate setting for an admin
+               my canSeeAllObjects's setState:1
+               my canReconfigureAllObjects's setState:1
+               my canControlAllObjects's setState:1
+               my canSeeOrConfigureMonitoringEngine's setState:1
+               my canAccessAdvancedFeatures's setState:1
+               my readOnly's setEnabled:false --note this is how nagios does it in the web UI, so we are mirroring that behavior here
+               my readOnly's setState:0
+          else if theUserType is "User" then
+               my canSeeAllObjects's setState:1
+               my canReconfigureAllObjects's setState:0
+               my canControlAllObjects's setState:1
+               my canSeeOrConfigureMonitoringEngine's setState:0
+               my canAccessAdvancedFeatures's setState:1
+               my readOnly's setEnabled:true
+               my readOnly's setState:0
+          end if
+     end getUserLevel:
+     
+     on enabledReadOnly:sender --this action is only bound to the read only button
+          if sender's intValue() = 1 then --if we set it to read only, we clear all the other buttons and disable them
+               --we also force the user type to "user" and disable the admin radio button. A read-only admin is stupid.
+               --again, this is how nagios does it in the web UI, so we shall here
+                --ALWAYS USE () FOR THIS KIND OF THING ELSE YOU WILL BE IN HELL!
+              --current application's NSLog("admin button's integer value: %@", theTest)
+               my canSeeAllObjects's setEnabled:false
+               my canSeeAllObjects's setState:0
+               my canReconfigureAllObjects's setEnabled:false
+               my canReconfigureAllObjects's setState:0
+               my canControlAllObjects's setEnabled:false
+               my canControlAllObjects's setState:0
+               my canSeeOrConfigureMonitoringEngine's setEnabled:false
+               my canSeeOrConfigureMonitoringEngine's setState:0
+               my canAccessAdvancedFeatures's setEnabled:false
+               my canAccessAdvancedFeatures's setState:0
+               my userRadioButton's setState:1
+               my adminRadioButton's setState:0
+               my adminRadioButton's setEnabled:false
+          else if sender's intValue() = 0 then --don't try to reset the state, just re-enable the other checkbox buttons
+              --current application's NSLog("admin button's integer value: %@", theTest)
+               my canSeeAllObjects's setEnabled:true
+               my canSeeAllObjects's setState:1
+               my canReconfigureAllObjects's setEnabled:true
+               my canReconfigureAllObjects's setState:0
+               my canControlAllObjects's setEnabled:true
+               my canControlAllObjects's setState:1
+               my canSeeOrConfigureMonitoringEngine's setEnabled:true
+               my canSeeOrConfigureMonitoringEngine's setState:0
+               my canAccessAdvancedFeatures's setEnabled:true
+               my canAccessAdvancedFeatures's setState:1
+               my adminRadioButton's setEnabled:true
+          end if
+          --set theTest to my readOnly's intValue
+          --current application's NSLog("read only's integer value: %@", readOnlyToggle) --log the error message
+          
+     end enabledReadOnly:
      
      (*on clearTable:sender --test function to see why we aren't clearing table data correctly.
           userSelection's removeObjects:(userSelection's arrangedObjects()) --clear the table

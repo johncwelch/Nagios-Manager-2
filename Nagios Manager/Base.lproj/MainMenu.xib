@@ -15,8 +15,16 @@
         <customObject id="-3" userLabel="Application" customClass="NSObject"/>
         <customObject id="Voe-Tx-rLC" customClass="AppDelegate">
             <connections>
+                <outlet property="adminRadioButton" destination="syf-bY-6Gc" id="d6M-Jp-x2Z"/>
+                <outlet property="canAccessAdvancedFeatures" destination="WhP-XN-0Da" id="DQu-wt-vKA"/>
+                <outlet property="canControlAllObjects" destination="zhR-eq-mNA" id="Wyn-hX-3qW"/>
+                <outlet property="canReconfigureAllObjects" destination="1ak-Dl-V9F" id="s9h-Df-sUx"/>
+                <outlet property="canSeeAllObjects" destination="wnB-Ld-KVg" id="VKH-Ci-cA3"/>
+                <outlet property="canSeeOrConfigureMonitoringEngine" destination="WwK-vz-39Y" id="viW-61-yKE"/>
                 <outlet property="popupSelection" destination="rqX-rY-uxs" id="uJt-kR-iGg"/>
+                <outlet property="readOnly" destination="tLi-2o-hbI" id="MsM-zz-CWO"/>
                 <outlet property="theWindow" destination="QvC-M9-y7g" id="gIp-Ho-8D9"/>
+                <outlet property="userRadioButton" destination="dwM-41-H7r" id="6C6-6A-mMs"/>
                 <outlet property="userSelection" destination="FFf-nn-zo4" id="tAC-0E-17H"/>
                 <outlet property="userTable" destination="fVd-64-b9e" id="9fb-Ve-yna"/>
             </connections>
@@ -726,7 +734,7 @@
                     <scrollView misplaced="YES" autohidesScrollers="YES" horizontalLineScroll="19" horizontalPageScroll="10" verticalLineScroll="19" verticalPageScroll="10" usesPredominantAxisScrolling="NO" id="z9W-1p-lVg">
                         <rect key="frame" x="294" y="133" width="342" height="440"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <clipView key="contentView" id="rAa-PW-jfz">
+                        <clipView key="contentView" drawsBackground="NO" id="rAa-PW-jfz">
                             <rect key="frame" x="1" y="0.0" width="340" height="439"/>
                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                             <subviews>
@@ -781,6 +789,7 @@
                                     </tableColumns>
                                 </tableView>
                             </subviews>
+                            <nil key="backgroundColor"/>
                         </clipView>
                         <scroller key="horizontalScroller" hidden="YES" verticalHuggingPriority="750" horizontal="YES" id="Wqx-YD-9JW">
                             <rect key="frame" x="1" y="119" width="223" height="15"/>
@@ -1015,6 +1024,9 @@ Gw
                             <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                             <font key="font" metaFont="system"/>
                         </buttonCell>
+                        <connections>
+                            <action selector="getUserLevel:" target="Voe-Tx-rLC" id="RmF-ha-mUY"/>
+                        </connections>
                     </button>
                     <button verticalHuggingPriority="750" misplaced="YES" id="dwM-41-H7r">
                         <rect key="frame" x="188" y="282" width="51" height="18"/>
@@ -1023,6 +1035,9 @@ Gw
                             <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                             <font key="font" metaFont="system"/>
                         </buttonCell>
+                        <connections>
+                            <action selector="getUserLevel:" target="Voe-Tx-rLC" id="BYg-KC-UQx"/>
+                        </connections>
                     </button>
                     <button verticalHuggingPriority="750" misplaced="YES" id="wnB-Ld-KVg">
                         <rect key="frame" x="266" y="257" width="22" height="18"/>
@@ -1071,6 +1086,9 @@ Gw
                             <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                             <font key="font" metaFont="system"/>
                         </buttonCell>
+                        <connections>
+                            <action selector="enabledReadOnly:" target="Voe-Tx-rLC" id="y2Q-pF-EOU"/>
+                        </connections>
                     </button>
                 </subviews>
             </view>
