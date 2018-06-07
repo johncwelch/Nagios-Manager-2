@@ -99,6 +99,22 @@ script AppDelegate
      property theNewUserPassword : "" --password of user to be added
      property theNewName : "" --name, not username of the user to be added
      property theNewUserEmailAddress : "" --email address of user to be added
+	property theUserType : "" --used to test for user level
+	
+	--hardcoded Nagios create user parameters, these aren't initially settable, but later they might be so just in case
+	property theNagiosLanguage: "xi default" --use whatever the default for the server is
+	property theNagiosDateFormat: "1" --the default nagios date format, try as text initially
+	property theNagiosNumberFormat: "1" --the default nagios number format, try as text initially
+	property theNagiosForcePasswordChange : "1" --always require an initial password change
+	property theNagiosEmailAccountInfo : "1" --always email the user the account info
+	property theNagiosMonitoringContact : "1" --always a monitoring contact
+	property theNagiosEnableNotifications : "1" --always enable notifications
+	
+	--other add user parameters
+	property theNagiosNewUserName: ""
+	property theNagiosNewUserPassword: ""
+	property theNagiosNewUserRealName: ""
+	property theNagiosNewUserEmailAddress: ""
      
      
 	
@@ -126,6 +142,8 @@ script AppDelegate
           my canAccessAdvancedFeatures's setState:1
           my readOnly's setEnabled:true
           my readOnly's setState:0
+		--current application's NSLog("admin button state: %@", my adminRadioButton's objectValue())
+		--current application's NSLog("user button state: %@", my userRadioButton's objectValue())
      end applicationWillFinishLaunching:
 	
      on applicationShouldTerminate:sender
@@ -209,10 +227,10 @@ script AppDelegate
      end deleteSelectedUsers:
      
      on getUserLevel:sender --This is only here to handle the user type radio buttons. but, it works well enough for that.
-          set theUserType to sender's title as text--we're using a local var here because the only thing this function does is enable or disable
+          set my theUserType to sender's title as text--get user level as text
           --certain checkboxes.
           --current application's NSLog("sender's title: %@", theUserType)
-          if theUserType is "Admin" then --set the checkbutton states to the appropriate setting for an admin
+          if my theUserType is "Admin" then --set the checkbutton states to the appropriate setting for an admin
                my canSeeAllObjects's setState:1
                my canReconfigureAllObjects's setState:1
                my canControlAllObjects's setState:1
@@ -220,7 +238,7 @@ script AppDelegate
                my canAccessAdvancedFeatures's setState:1
                my readOnly's setEnabled:false --note this is how nagios does it in the web UI, so we are mirroring that behavior here
                my readOnly's setState:0
-          else if theUserType is "User" then
+          else if my theUserType is "User" then
                my canSeeAllObjects's setState:1
                my canReconfigureAllObjects's setState:0
                my canControlAllObjects's setState:1
@@ -268,6 +286,60 @@ script AppDelegate
           --current application's NSLog("read only's integer value: %@", readOnlyToggle) --log the error message
           
      end enabledReadOnly:
+	
+	on addUser:sender --kicks off when add user button is clicked
+		set my theRESTresults to "" --clear the notification field value
+		set isAdminUser to my adminRadioButton's objectValue() --get the value of the admin radio button, since it's mutually exclusive
+		if isAdminUser then
+			set theAuthLevel to "admin"
+		else if not isAdminUser then
+			set theAuthLevel to "user"
+		end if
+		
+		if (my theNagiosNewUserName is missing value) or (my theNagiosNewUserName is "") then --test for blank username
+			set my theRESTresults to "The Username field cannot be blank"
+			return
+		end if
+		
+		if (my theNagiosNewUserPassword is missing value) or (my theNagiosNewUserPassword is "") then --test for blank password
+			set my theRESTresults to "The password field cannot be blank"
+			return
+		end if
+		
+		if (my theNagiosNewUserRealName is missing value) or (my theNagiosNewUserRealName is "") then --test for blank user's name
+			set my theRESTresults to "The Name field cannot be blank"
+			return
+		end if
+		
+		if (my theNagiosNewUserEmailAddress is missing value) or (my theNagiosNewUserEmailAddress is "") then --test for blank email address
+			set my theRESTresults to "The Email Address field cannot be blank"
+			return
+		end if
+		
+		(*this next line builds the actual command to add a user. There's a lot of things that are hardcoded as that's the norm.
+		 it's not a problem to fix later if we need, the variables are already declared, just unused.*)
+		set theAddCommand to "/usr/bin/curl -XPOST \"" & (my theServerURL as text) & (my theServerAPIKey as text) & "&pretty=1\"" & " -d \"username=" & my theNagiosNewUserName & "&password=" & my theNagiosNewUserPassword & "&name=" & my theNagiosNewUserRealName & "&email=" & my theNagiosNewUserEmailAddress & "&force_pw_change=1&email_info=1&monitoring_contact=1&enable_notifications=1&language=xi default&date_format=1&number_format=1&auth_level=" & theAuthLevel & "&can_see_all_hs=" & my canSeeAllObjects's intValue() & "&can_control_all_hs=" & my canControlAllObjects's intValue() & "&can_reconfigure_hs=" & my canReconfigureAllObjects's intValue() & "&can_control_engine=" & my canSeeOrConfigureMonitoringEngine's intValue() & "&can_use_advanced=" & my canAccessAdvancedFeatures's intValue() & "&read_only=" & my readOnly's intValue() & "\""
+		
+		current application's NSLog("add command: %@", theAddCommand)
+	end addUser:
+	
+	on cancelAddUser:sender --cancel adding a user function. blank out text fields, reset checkboxes and radios to default states
+		my userRadioButton's setState:1
+		my adminRadioButton's setState:0 --this is technically not needed, but doesn't cause any real problems either
+		set my theNagiosNewUserName to ""
+		set my theNagiosNewUserPassword to ""
+		set my theNagiosNewUserRealName to ""
+		set my theNagiosNewUserEmailAddress to ""
+		my canSeeAllObjects's setState:1
+		my canReconfigureAllObjects's setState:0
+		my canControlAllObjects's setState:1
+		my canSeeOrConfigureMonitoringEngine's setState:0
+		my canAccessAdvancedFeatures's setState:1
+		my readOnly's setEnabled:true
+		my readOnly's setState:0
+		
+		set my theRESTresults to "" --clear the notification field value
+	end cancelAddUser:
      
      (*on clearTable:sender --test function to see why we aren't clearing table data correctly.
           userSelection's removeObjects:(userSelection's arrangedObjects()) --clear the table
