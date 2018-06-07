@@ -84,6 +84,7 @@
 				34C4819920AF5B610020AF01 /* Sources */,
 				34C4819A20AF5B610020AF01 /* Frameworks */,
 				34C4819B20AF5B610020AF01 /* Resources */,
+				345AFB3220C970220060FBB4 /* increment build */,
 			);
 			buildRules = (
 			);
@@ -137,6 +138,27 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		345AFB3220C970220060FBB4 /* increment build */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			name = "increment build";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "buildNumber=$(/usr/libexec/PlistBuddy -c \"Print CFBundleVersion\" \"${PROJECT_DIR}/${INFOPLIST_FILE}\")\nbuildNumber=$(($buildNumber + 1))\n/usr/libexec/PlistBuddy -c \"Set :CFBundleVersion $buildNumber\" \"${PROJECT_DIR}/${INFOPLIST_FILE}\"\n";
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		34C4819920AF5B610020AF01 /* Sources */ = {
@@ -277,7 +299,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 1.1;
+				CURRENT_PROJECT_VERSION = 2;
 				DEVELOPMENT_TEAM = 796488VG95;
 				INFOPLIST_FILE = "Nagios Manager/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -296,7 +318,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 1.1;
+				CURRENT_PROJECT_VERSION = 2;
 				DEVELOPMENT_TEAM = 796488VG95;
 				INFOPLIST_FILE = "Nagios Manager/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = (

@@ -19,6 +19,7 @@
      --all text fields are mandatory
      --when using this, force_pw_change, email_info, monitoring_contact, enable_notifications are always set to 1
      --sans the NSMatrix object, point all "related" radio buttons at the same thing to get them to work "together" properly.
+	--BONUS, figured out autoincrementing builds (see the build phases for details)
 --1.2 move from hardcoded server list to user-entered list
 
 --changed from _() to : syntax in function calls
