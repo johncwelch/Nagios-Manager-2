@@ -320,7 +320,9 @@ script AppDelegate
 		 it's not a problem to fix later if we need, the variables are already declared, just unused.*)
 		set theAddCommand to "/usr/bin/curl -XPOST \"" & (my theServerURL as text) & (my theServerAPIKey as text) & "&pretty=1\"" & " -d \"username=" & my theNagiosNewUserName & "&password=" & my theNagiosNewUserPassword & "&name=" & my theNagiosNewUserRealName & "&email=" & my theNagiosNewUserEmailAddress & "&force_pw_change=1&email_info=1&monitoring_contact=1&enable_notifications=1&language=xi default&date_format=1&number_format=1&auth_level=" & theAuthLevel & "&can_see_all_hs=" & my canSeeAllObjects's intValue() & "&can_control_all_hs=" & my canControlAllObjects's intValue() & "&can_reconfigure_hs=" & my canReconfigureAllObjects's intValue() & "&can_control_engine=" & my canSeeOrConfigureMonitoringEngine's intValue() & "&can_use_advanced=" & my canAccessAdvancedFeatures's intValue() & "&read_only=" & my readOnly's intValue() & "\""
 		
-		current application's NSLog("add command: %@", theAddCommand)
+		current application's NSLog("Add User Return: %@", my theRESTresults) --log the results of the command
+		set my theRESTresults to do shell script theAddCommand --add the user
+		my getServerUsers:(missing value) --reload the list
 	end addUser:
 	
 	on cancelAddUser:sender --cancel adding a user function. blank out text fields, reset checkboxes and radios to default states
