@@ -127,7 +127,8 @@ script AppDelegate
           set my theServerName to x's serverName --grab the server name
           set my theServerAPIKey to x's serverAPIKey --grab the server key
           set my theServerURL to x's serverURL --grab the server URL
-          tell userTable to setDoubleAction:"deleteSelectedUsers:"
+          tell userTable to setDoubleAction:"deleteSelectedUsers:" --this lets a doubleclick work as well as clicking the delete button. We may remove this
+		--because it could be dangrous
           my getServerUsers:(missing value) --use missing value because we have to pass something. in ths case, the ASOC version of nil
           
           --set the initial state and enabled of the checkboxes
@@ -168,7 +169,7 @@ script AppDelegate
      
      on getServerUsers:sender --this isn't attached to a specific button, but we'll leave the sender
           --in case we want to do so at a future date
-          set theTest to "/usr/bin/curl -XGET \"" & my theServerURL & my theServerAPIKey & "&pretty=1\""
+          --set theTest to "/usr/bin/curl -XGET \"" & my theServerURL & my theServerAPIKey & "&pretty=1\""
           set my theServerJSON to do shell script "/usr/bin/curl -XGET \"" & my theServerURL & my theServerAPIKey & "&pretty=1\"" --gets the JSON dump as text
           set my theServerJSON to current application's NSString's stringWithString:my theServerJSON --convert text to NSSTring
           set my theJSONData to my theServerJSON's dataUsingEncoding:(current application's NSUTF8StringEncoding) --convert NSString to NSData
@@ -178,13 +179,13 @@ script AppDelegate
           
           --doing this the long way, will fix to be more "cocoa-y" later
           repeat with x from 1 to count of my theServerUsers --iterate through theServerUsers
-               set theTest to item x of theServerUsers as record --convert NSDict to record because it's initially easier
-               set the end of my theUserNameList to {theUserName:|name| of theTest,theUserID:user_id of theTest} --build a list of records with the two values we care about
+               set theItem to item x of theServerUsers as record --convert NSDict to record because it's initially easier
+               set the end of my theUserNameList to {theUserName:|name| of theItem,theUserID:user_id of theItem} --build a list of records with the two values we care about
           end repeat
           my userSelection's removeObjects:(my userSelection's arrangedObjects()) --clear the table
           my userSelection's addObjects:my theUserNameList --fill the table
           set my theUserNameList to {} --clear out theUserNameList so it's got fresh data each time.
-          set theTest to my userSelection's arrangedObjects() --as record
+          --set theItem to my userSelection's arrangedObjects() --as record
      end getServerUsers:
      
      on deleteSelectedUsers:sender --this activates for either the "delete user" button or a double click in the table
