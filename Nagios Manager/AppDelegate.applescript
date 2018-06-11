@@ -21,7 +21,7 @@
      --sans the NSMatrix object, point all "related" radio buttons at the same thing to get them to work "together" properly.
 	--BONUS, figured out autoincrementing builds (see the build phases for details)
 --1.2 goals : build tabbed interface so we can add a server manager (add/remove) tab that's separate from user manager (and other features eventually
---1.3 move from hardcoded server list to user-entered list
+--1.3 move from hardcoded server list to user-entered list. This will be fun
 
 --changed from _() to : syntax in function calls
 --table columns are not editable. Table size atrib's are all solid bars
