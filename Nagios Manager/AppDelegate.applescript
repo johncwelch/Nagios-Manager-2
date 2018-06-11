@@ -124,12 +124,12 @@ script AppDelegate
 		-- Insert code here to initialize your application before any files are opened
           --initialize our properties to the default value in the popup
           set x to my popupSelection's selectedObjects()'s firstObject() --this grabs the initial record
-		current application's NSLog("first thing in popup controller: %@", x)
+		--current application's NSLog("first thing in popup controller: %@", x)
           --current application's NSLog("selected: %@", x)
           set my theServerName to x's serverName --grab the server name
           set my theServerAPIKey to x's serverAPIKey --grab the server key
           set my theServerURL to x's serverURL --grab the server URL
-          tell userTable to setDoubleAction:"deleteSelectedUsers:" --this lets a doubleclick work as well as clicking the delete button. We may remove this
+          tell my userTable to setDoubleAction:"deleteSelectedUsers:" --this lets a doubleclick work as well as clicking the delete button. We may remove this
 		--because it could be dangrous
           my getServerUsers:(missing value) --use missing value because we have to pass something. in ths case, the ASOC version of nil
           
@@ -184,7 +184,7 @@ script AppDelegate
                set theItem to item x of theServerUsers as record --convert NSDict to record because it's initially easier
                set the end of my theUserNameList to {theUserName:|name| of theItem,theUserID:user_id of theItem} --build a list of records with the two values we care about
           end repeat
-		current application's NSLog("theUserNameList: %@", my theUserNameList)
+		--current application's NSLog("theUserNameList: %@", my theUserNameList)
           my userSelection's removeObjects:(my userSelection's arrangedObjects()) --clear the table
           my userSelection's addObjects:my theUserNameList --fill the table
           set my theUserNameList to {} --clear out theUserNameList so it's got fresh data each time.
