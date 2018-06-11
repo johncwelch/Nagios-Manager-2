@@ -20,7 +20,8 @@
      --when using this, force_pw_change, email_info, monitoring_contact, enable_notifications are always set to 1
      --sans the NSMatrix object, point all "related" radio buttons at the same thing to get them to work "together" properly.
 	--BONUS, figured out autoincrementing builds (see the build phases for details)
---1.2 move from hardcoded server list to user-entered list
+--1.2 goals : build tabbed interface so we can add a server manager (add/remove) tab that's separate from user manager (and other features eventually
+--1.3 move from hardcoded server list to user-entered list
 
 --changed from _() to : syntax in function calls
 --table columns are not editable. Table size atrib's are all solid bars
@@ -123,6 +124,7 @@ script AppDelegate
 		-- Insert code here to initialize your application before any files are opened
           --initialize our properties to the default value in the popup
           set x to my popupSelection's selectedObjects()'s firstObject() --this grabs the initial record
+		current application's NSLog("first thing in popup controller: %@", x)
           --current application's NSLog("selected: %@", x)
           set my theServerName to x's serverName --grab the server name
           set my theServerAPIKey to x's serverAPIKey --grab the server key
@@ -182,6 +184,7 @@ script AppDelegate
                set theItem to item x of theServerUsers as record --convert NSDict to record because it's initially easier
                set the end of my theUserNameList to {theUserName:|name| of theItem,theUserID:user_id of theItem} --build a list of records with the two values we care about
           end repeat
+		current application's NSLog("theUserNameList: %@", my theUserNameList)
           my userSelection's removeObjects:(my userSelection's arrangedObjects()) --clear the table
           my userSelection's addObjects:my theUserNameList --fill the table
           set my theUserNameList to {} --clear out theUserNameList so it's got fresh data each time.
