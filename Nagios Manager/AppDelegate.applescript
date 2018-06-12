@@ -4,7 +4,7 @@
 --
 --  Created by John Welch on 5/18/18.
 --  Copyright © 2018 John Welch. All rights reserved.
-----step 1 : get a good sized pumpkin
+--step 1 : get a good sized pumpkin
 
 --1.0 goals: to delete users from a nagios server
 --1.1 goals: add a local user to a nagios server (make sure to label as "local only, no AD"
