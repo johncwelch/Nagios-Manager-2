@@ -219,6 +219,40 @@ script AppDelegate
 	on addServerToPrefs:sender --this was saveSettings:. I know renaming functions will cause problems in the short run, but better names will save pain in the long run
 		--also, it avoids name clash with existing stuff until I can get that cleaned up
 		
+		set theTempURL to my theSMServerURL as text  --Create a temp text version --I did this all AppleScript style, because it works
+		--and I was able to get it done faster this way. It may not execute as fast, but given the data sizes we're talking about,
+		--I doubt it's a problem on anything faster than a IIsi
+		
+		set theLastChar to last character of theTempURL --get the last character of the URL
+		
+		
+		if theLastChar is "/" then --if it's a trailing "/"
+			set theTempURL to text 1 thru -2 of theTempURL --trim the last character of the string
+			set my theSMServerURL to current application's NSString's stringWithString:theTempURL --rewrite theServerURL. As it turns out,
+			--you have to use the current application's NSString's stringWithString for this, NOT theServerURL's stringWithString. Beats me
+			--scoping maybe? <shrug>
+		end if
+		
+		set my theSMServerURL to my theSMServerURL's stringByAppendingString:"/nagiosxi/api/v1/system/user?apikey=" --NSSTring append
+		--this has the side benefit of showing up in the text box, so the user has a nice visual feedback outside of the table
+		--for about .something seconds.
+		
+		set thePrefsRecord to {theSMTableServerName:my theSMServerName,theSMTableServerURL:my theSMServerURL,theSMTableServerAPIKey:my theSMServerAPIKey} --build the record
+		
+		my theSMSettingsList's addObject:thePrefsRecord --add the record to the end of the settings list
+		
+		set my theSMDefaultsExist to true --since we're writing a setting, we want to set this correctly.
+		
+		theDefaults's setObject:my theSMSettingsList forKey:"serverSettingsList" --write the new settings list to defaults
+		theDefaults's setBool:my theSMDefaultsExist forKey:"hasDefaults" --setting hasDefaults to true (1)
+		
+		my loadServerTable:(missing value) --reload the server table function call. There's some cleanup that we'd have to dupe if we did it here
+		--anyway, so there's no point in not doing this
+		
+		set my theSMServerURL to "" --if you don't want the text fields to clear, delete/comment out these last three lines
+		set my theSMServerName to ""
+		set my theSMServerAPIKey to ""
+		
 	end addServerToPrefs:
 	
 	on loadServersFromPrefs:sender --this was getSettings:
