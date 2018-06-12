@@ -256,6 +256,13 @@ script AppDelegate
 	end addServerToPrefs:
 	
 	on loadServersFromPrefs:sender --this was getSettings:
+		my theSMSettingsList's removeAllObjects() -- blank out theSMSettingsList since we're reloading it. The () IS IMPORTANT
+		set theTempArray to current application's NSArray's arrayWithArray:(theDefaults's arrayForKey:"serverSettingsList") --since we're
+		--re-reading from the disk, we have to do the temp NSArray --> NSMutableArray dance again.
+		my theSMSettingsList's addObjectsFromArray:theTempArray --reload our NSMutableArray so it doesn't get coerced to NSArray
+		set my theSMDefaultsExist to theDefaults's boolForKey:"hasDefaults" --pull the "do we even have default settings" flag
+		my theServerTableController's removeObjects:(theServerTableController's arrangedObjects()) --blow out contents of the server table controller
+		my theServerTableController's addObjects:my theSMSettingsList --shove the current contents of thePrefsRecord into the array controller
 		
 	end loadServersFromPrefs:
 	
