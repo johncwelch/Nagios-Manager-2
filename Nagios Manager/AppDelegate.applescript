@@ -56,15 +56,7 @@ script AppDelegate
      
      --this is the list of records for the nagios servers. in v2, we'll be able to add/delete from this.
      
-     property theNagiosServerRecords : {{serverName:"INTMON1", serverURL:"https://nwr-nagios-internal.nwrdc.com/nagiosxi/api/v1/system/user?apikey=", serverAPIKey:"7kqlk2e8"}, ¬
-     {serverName:"INTMON2", serverURL:"https://nwr-nagios-internal2.nwrdc.com/nagiosxi/api/v1/system/user?apikey=", serverAPIKey:"8jelg6bq"}, ¬
-     {serverName:"DBSMON", serverURL:"http://10.105.1.79/nagiosxi/api/v1/system/user?apikey=", serverAPIKey:"orts7e5t"}, ¬
-     {serverName:"DOEMON", serverURL:"http://10.10.178.195/nagiosxi/api/v1/system/user?apikey=", serverAPIKey:"aVpCpQBflf2ldtpARhXWGNXFYIgnc0PlVuekE5TgkUEAn36eDjqfmITlGp2Rp8tF"}, ¬
-     {serverName:"OELMON", serverURL:"http://10.200.27.17/nagiosxi/api/v1/system/user?apikey=", serverAPIKey:"Y8HWHE7dbqjMshFb4d2kv994pVIILpDJBgWea3KkN4mvE2JXu0hjpqnSFlQmOpml"}, ¬
-     {serverName:"GALMON", serverURL:"http://10.200.64.148/nagiosxi/api/v1/system/user?apikey=", serverAPIKey:"Xin8iLnhB2WvpIOusJiXODWGqWv03KCg2gHD0lbBmnm65qDR9U5eO2TueIugonPJ"}, ¬
-     {serverName:"DORMON", serverURL:"http://204.89.125.112/nagiosxi/api/v1/system/user?apikey=", serverAPIKey:"mofJIoemgmeWZYVeBptfLKErCVnnIgflXN4VrBBKdOWd4RKEhdaiW4MOZqsXZKCd"}, ¬
-     {serverName:"SCMON", serverURL:"http://64.56.80.135/nagiosxi/api/v1/system/user?apikey=", serverAPIKey:"ZjlHn2IRRI56EMg4Gi2QPAa0is7AB6kApId6ZbWQ9hdM3MPY47PSHY9fLfPik993"}, ¬
-     {serverName:"VRMON", serverURL:"http://10.104.1.125/nagiosxi/api/v1/system/user?apikey=", serverAPIKey:"blP7RrD8A3rCAMR5glh2XWWUCXkWVF6mhcs8G6vsog4e2UiCASTNPPInN2kIHJ4e"}}
+     property theNagiosServerRecords : {{serverName:"VRMON", serverURL:"http://10.104.1.125/nagiosxi/api/v1/system/user?apikey=", serverAPIKey:"blP7RrD8A3rCAMR5glh2XWWUCXkWVF6mhcs8G6vsog4e2UiCASTNPPInN2kIHJ4e"}}
 	
 	-- User Manager IBOutlets
 	property theWindow : missing value
@@ -133,6 +125,7 @@ script AppDelegate
 	property theSMSettingsExist : "" --are there any settings already there?
 	property theSMDefaultsExist : "" --are there currently settings?
 	property theSMSettingsList : {} --settings list array
+	property theSMSDeletingLastServerFlag : false --if you're about to manually delete the last server, we set this to true so you don't get two alerts
 	
 	
      --General Other Properties
@@ -199,7 +192,7 @@ script AppDelegate
           my canAccessAdvancedFeatures's setState:1
           my readOnly's setEnabled:true
           my readOnly's setState:0
-		--current application's NSLog("admin button state: %@", my adminRadioButton's objectValue())
+		current application's NSLog("theSMSDeletingLastServerFlag state: %@", my theSMSDeletingLastServerFlag)
 		--current application's NSLog("user button state: %@", my userRadioButton's objectValue())
      end applicationWillFinishLaunching:
 	
@@ -288,6 +281,7 @@ script AppDelegate
 	
 	on deleteServerFromPrefs:sender --this was deleteServer:
 		--the ARE YOU SURE YOU WANT TO DO THIS??? warning
+		try
 		set theSelection to theServerTableController's selectedObjects() as record
 		set theServerNameToBeDeleted to theSMTableServerName of theSelection
 		
@@ -307,37 +301,58 @@ script AppDelegate
 			
 			if theServerTableControllerObjectCount = 0 then --if the list is empty (we just deleted the last thing) then we'll call deleteAllServersFromPrefs and
 				--save time since that's what deleteAllServersFromPrefs does, if you think about it
+				set my theSMSDeletingLastServerFlag to true --this will avoid double dialogs that this particular case can cause
 				my deleteAllServersFromPrefs:(missing value) --this handles explicitly clearing the defaults AND hasDefaults for us.
 				--technically that may not be necessary, but this way we KNOW.
 				
-				else --so we have entries in the array, let's write that to disk
+			else --so we have entries in the array, let's write that to disk
 				--what's interesting is that we already have theServerTableController and theSettingsList in the desired state, so this gets SIMPLE
 				set my theSMDefaultsExist to true --since we're writing a setting, we want to set this correctly.
 				
 				theDefaults's setObject:my theSMSettingsList forKey:"serverSettingsList" --write the new settings list to defaults
 				theDefaults's setBool:my theSMDefaultsExist forKey:"hasDefaults" --setting hasDefaults to true (1), this way we avoid the
 				--"but I thought it was okay" problem. We don't think we know what hasDefaults is on exit, we KNOW
+				my loadUserManagerPopup:(missing value) --reload the popup since we deleted a server out from under it. this loads the first object in the server array controller
 			end if
 		else if theDeleteServerButton is "Cancel" then --nope
 			return
 		end if
+		on error errorMessage number errorNumber
+		if errorNumber is -1728 then --nothing selected
+			display dialog "You don't have anything selected. You have to select a server to delete it" --error message for -1728
+			--if we get enough of these, we'll create a separate function just for them
+			current application's NSLog("Nothing Selected Error: %@", errorMessage) --log the error message
+		end if
+		
+		end try
 		
 	end deleteServerFromPrefs:
 	
 	on deleteAllServersFromPrefs:sender --this was clearSettings:
-		set theDeleteAllServersAlertButtonRecord to display alert "You are about to delete EVERY SERVER FROM THIS APP AND ITS SETTINGS. \r\rTHIS IS NOT UNDOABLE, ARE YOU SURE?" as critical buttons {"OK","Cancel"} default button "Cancel" giving up after 90
-		set theDeleteAllServersButton to button returned of theDeleteAllServersAlertButtonRecord
-		
-		if theDeleteAllServersButton is "OK" then --buh-bye
+		if not theSMSDeletingLastServerFlag then --you weren't just deleting the last server manually
+			set theDeleteAllServersAlertButtonRecord to display alert "You are about to delete EVERY SERVER FROM THIS APP AND ITS SETTINGS. \r\rTHIS IS NOT UNDOABLE, ARE YOU SURE?" as critical buttons {"OK","Cancel"} default button "Cancel" giving up after 90
+			set theDeleteAllServersButton to button returned of theDeleteAllServersAlertButtonRecord
+			
+			if theDeleteAllServersButton is "OK" then --buh-bye
+				theDefaults's removeObjectForKey:"serverSettingsList" --blank out defaults plist on disk
+				theDefaults's removeObjectForKey:"hasDefaults" --blank out the hasDefaults key, that is now false (0). Well, actually, it's nonexistent
+				--but really, that's the same thing for our needs. We can fix this later if we want.
+				my theSMSettingsList's removeAllObjects() -- blank out theSettingsList. The () IS IMPORTANT
+				my theServerTableController's removeObjects:(theServerTableController's arrangedObjects()) --blow out contents of that
+				--array controller here, rather than rerunning the loadserver function just to load an empty list
+			else if theDeleteAllServersButton is "Cancel" --nope
+				return
+			end if
+		else --you've just manually deleted the last server, so lets do this without an additional warning that does no good anyway
 			theDefaults's removeObjectForKey:"serverSettingsList" --blank out defaults plist on disk
 			theDefaults's removeObjectForKey:"hasDefaults" --blank out the hasDefaults key, that is now false (0). Well, actually, it's nonexistent
 			--but really, that's the same thing for our needs. We can fix this later if we want.
 			my theSMSettingsList's removeAllObjects() -- blank out theSettingsList. The () IS IMPORTANT
 			my theServerTableController's removeObjects:(theServerTableController's arrangedObjects()) --blow out contents of that
 			--array controller here, rather than rerunning the loadserver function just to load an empty list
-		else if theDeleteAllServersButton is "Cancel" --nope
-			return
 		end if
+		my userSelection's removeObjects:(my userSelection's arrangedObjects()) --since we've deleted all the servers, there's no point in having a list of users in the table. Probably a really bad idea.
+		set my theSMSDeletingLastServerFlag to false --reset this so you get the warning if you delete the last server, add one or more servers, then realize you want to delete them all
 		
 	end deleteAllServersFromPrefs:
 	
@@ -349,10 +364,16 @@ script AppDelegate
 	--load the popup (we'll need this for changes to the server list
 	
 	on loadUserManagerPopup:sender
+		if not theSMDefaultsExist then --if we have no defaults, there's no point in running this code
+			return
+		end if
 		--set x to my popupSelection's selectedObjects()'s firstObject() --this grabs the initial record
 		--set x to my popupSelection's arrangedObjects()'s firstObject() --this grabs the initial record
 		set x to my theServerTableController's arrangedObjects()'s firstObject()
-		current application's NSLog("first thing in server table controller: %@", x)
+		if x is missing value then --if there's nothing in x, stop the function
+			return
+		end if
+		--current application's NSLog("first thing in server table controller: %@", x)
 		--current application's NSLog("selected: %@", x)
 		--set my theServerName to x's serverName --grab the server name
 		--set my theServerAPIKey to x's serverAPIKey --grab the server key
@@ -360,9 +381,9 @@ script AppDelegate
 		set my theServerName to x's theSMTableServerName --grab the server name
 		set my theServerAPIKey to x's theSMTableServerAPIKey --grab the server key
 		set my theServerURL to x's theSMTableServerURL --grab the server URL
-		current application's NSLog("theServerName: %@", my theServerName)
-		current application's NSLog("theServerAPIKey: %@", my theServerAPIKey)
-		current application's NSLog("theServerURL: %@", my theServerURL)
+		--current application's NSLog("theServerName: %@", my theServerName)
+		--current application's NSLog("theServerAPIKey: %@", my theServerAPIKey)
+		--current application's NSLog("theServerURL: %@", my theServerURL)
 
 		my getServerUsers:(missing value) --use missing value because we have to pass something. in ths case, the ASOC version of nil
 
@@ -392,6 +413,9 @@ script AppDelegate
 	
      --function for if the user actually changes the default selection in the popup
      on selectedServerName:sender --the popup's sent action method is bound to this function
+		if not theSMDefaultsExist then --so if there are no servers in server manager, even if someone clicks on the list, we don't want things to happen here. This should prevent that
+			return
+		end if
           set thePopupIndex to sender's indexOfSelectedItem --get the index of the selected item, put it into thePopupIndex
           --set theResult to my popupSelection's setSelectionIndex:thePopupIndex --we don't actually care about the result,
           --it's a bool, but if this stops working, we know what to log. This sets the "current selection" of the
@@ -442,7 +466,7 @@ script AppDelegate
                     --if we get enough of these, we'll create a separate function just for them
                     current application's NSLog("Nothing Selected Error: %@", errorMessage) --log the error message
                end if
-               my getServerUsers:(missing value) --reload the list
+               --my getServerUsers:(missing value) --reload the list
                return
           end try
           
@@ -545,6 +569,11 @@ script AppDelegate
 		current application's NSLog("Add User Return: %@", my theRESTresults) --log the results of the command
 		set my theRESTresults to do shell script theAddCommand --add the user
 		my getServerUsers:(missing value) --reload the list
+		
+		set my theNagiosNewUserName to "" --blank out the add user fields after adding a user
+		set my theNagiosNewUserPassword to ""
+		set my theNagiosNewUserRealName to ""
+		set my theNagiosNewUserEmailAddress to ""
 	end addUser:
 	
 	on cancelAddUser:sender --cancel adding a user function. blank out text fields, reset checkboxes and radios to default states
