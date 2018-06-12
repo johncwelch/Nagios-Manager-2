@@ -172,6 +172,8 @@ script AppDelegate
 		end if
 		my loadServerTable:(missing value) --load existing data into the server table.
 		tell my theServerTable to setDoubleAction:"deleteServerFromPrefs:" --this ties a doubleclick in the server to deleting that server.
+		set theTest to my theServerTableController's arrangedObjects()'s firstObject()
+		--current application's NSLog("theServerTableController's first object: %@", theTest)
 		
 		
 		--USER MANAGER SETUP
@@ -344,51 +346,64 @@ script AppDelegate
 	--load the popup (we'll need this for changes to the server list
 	
 	on loadUserManagerPopup:sender
-		set x to my popupSelection's selectedObjects()'s firstObject() --this grabs the initial record
-		--current application's NSLog("first thing in popup controller: %@", x)
+		--set x to my popupSelection's selectedObjects()'s firstObject() --this grabs the initial record
+		--set x to my popupSelection's arrangedObjects()'s firstObject() --this grabs the initial record
+		set x to my theServerTableController's arrangedObjects()'s firstObject()
+		current application's NSLog("first thing in server table controller: %@", x)
 		--current application's NSLog("selected: %@", x)
-		set my theServerName to x's serverName --grab the server name
-		set my theServerAPIKey to x's serverAPIKey --grab the server key
-		set my theServerURL to x's serverURL --grab the server URL
+		--set my theServerName to x's serverName --grab the server name
+		--set my theServerAPIKey to x's serverAPIKey --grab the server key
+		--set my theServerURL to x's serverURL --grab the server URL
+		set my theServerName to x's theSMTableServerName --grab the server name
+		set my theServerAPIKey to x's theSMTableServerAPIKey --grab the server key
+		set my theServerURL to x's theSMTableServerURL --grab the server URL
+		current application's NSLog("theServerName: %@", my theServerName)
+		current application's NSLog("theServerAPIKey: %@", my theServerAPIKey)
+		current application's NSLog("theServerURL: %@", my theServerURL)
+
 		my getServerUsers:(missing value) --use missing value because we have to pass something. in ths case, the ASOC version of nil
 
 	end loadUserManagerPopup:
-     
+	
+	on getServerUsers:sender --this isn't attached to a specific button, but we'll leave the sender
+		--in case we want to do so at a future date
+		--set theTest to "/usr/bin/curl -XGET \"" & my theServerURL & my theServerAPIKey & "&pretty=1\""
+		set my theServerJSON to do shell script "/usr/bin/curl -XGET \"" & my theServerURL & my theServerAPIKey & "&pretty=1\"" --gets the JSON dump as text
+		set my theServerJSON to current application's NSString's stringWithString:my theServerJSON --convert text to NSSTring
+		set my theJSONData to my theServerJSON's dataUsingEncoding:(current application's NSUTF8StringEncoding) --convert NSString to NSData
+		set {my theJSONDict, theError} to current application's NSJSONSerialization's JSONObjectWithData:theJSONData options:0 |error|:(reference) --returns an NSData record of NSArrays
+		set my theServerUsers to users of my theJSONDict --yank out just the "users" section of the JSON return, that's
+		--all we care about
+		
+		--doing this the long way, will fix to be more "cocoa-y" later
+		repeat with x from 1 to count of my theServerUsers --iterate through theServerUsers
+			set theItem to item x of theServerUsers as record --convert NSDict to record because it's initially easier
+			set the end of my theUserNameList to {theUserName:|name| of theItem,theUserID:user_id of theItem} --build a list of records with the two values we care about
+		end repeat
+		--current application's NSLog("theUserNameList: %@", my theUserNameList)
+		my userSelection's removeObjects:(my userSelection's arrangedObjects()) --clear the table
+		my userSelection's addObjects:my theUserNameList --fill the table
+		set my theUserNameList to {} --clear out theUserNameList so it's got fresh data each time.
+		--set theItem to my userSelection's arrangedObjects() --as record
+	end getServerUsers:
+	
      --function for if the user actually changes the default selection in the popup
      on selectedServerName:sender --the popup's sent action method is bound to this function
-          set thePopupIndex to sender's indexOfSelectedItem --get the index of the selected item
-          set theResult to my popupSelection's setSelectionIndex:thePopupIndex --we don't actually care about the result,
+          set thePopupIndex to sender's indexOfSelectedItem --get the index of the selected item, put it into thePopupIndex
+          --set theResult to my popupSelection's setSelectionIndex:thePopupIndex --we don't actually care about the result,
           --it's a bool, but if this stops working, we know what to log. This sets the "current selection" of the
           --array controller to thePopupIndex, so we can pull the right info for the curl commands
-          set x to my popupSelection's selectedObjects() as record--grab the selected recored
-          set my theServerName to x's serverName --grab the server name
-          set my theServerAPIKey to x's serverAPIKey --grab the server key
-          set my theServerURL to x's serverURL --grab the server api
+		set theResult to my theServerTableController's setSelectionIndex:thePopupIndex --set the current selection in theServerTableController to thePopupIndex
+          --set x to my popupSelection's selectedObjects() as record--grab the selected record
+		set x to my theServerTableController's selectedObjects() as record--grab the selected record
+          set my theServerName to x's theSMTableServerName --grab the server name
+          set my theServerAPIKey to x's theSMTableServerAPIKey --grab the server key
+          set my theServerURL to x's theSMTableServerURL --grab the server api
           my getServerUsers:(missing value)
           
      end selectedServerName:
      
-     on getServerUsers:sender --this isn't attached to a specific button, but we'll leave the sender
-          --in case we want to do so at a future date
-          --set theTest to "/usr/bin/curl -XGET \"" & my theServerURL & my theServerAPIKey & "&pretty=1\""
-          set my theServerJSON to do shell script "/usr/bin/curl -XGET \"" & my theServerURL & my theServerAPIKey & "&pretty=1\"" --gets the JSON dump as text
-          set my theServerJSON to current application's NSString's stringWithString:my theServerJSON --convert text to NSSTring
-          set my theJSONData to my theServerJSON's dataUsingEncoding:(current application's NSUTF8StringEncoding) --convert NSString to NSData
-          set {my theJSONDict, theError} to current application's NSJSONSerialization's JSONObjectWithData:theJSONData options:0 |error|:(reference) --returns an NSData record of NSArrays
-          set my theServerUsers to users of my theJSONDict --yank out just the "users" section of the JSON return, that's
-          --all we care about
-          
-          --doing this the long way, will fix to be more "cocoa-y" later
-          repeat with x from 1 to count of my theServerUsers --iterate through theServerUsers
-               set theItem to item x of theServerUsers as record --convert NSDict to record because it's initially easier
-               set the end of my theUserNameList to {theUserName:|name| of theItem,theUserID:user_id of theItem} --build a list of records with the two values we care about
-          end repeat
-		--current application's NSLog("theUserNameList: %@", my theUserNameList)
-          my userSelection's removeObjects:(my userSelection's arrangedObjects()) --clear the table
-          my userSelection's addObjects:my theUserNameList --fill the table
-          set my theUserNameList to {} --clear out theUserNameList so it's got fresh data each time.
-          --set theItem to my userSelection's arrangedObjects() --as record
-     end getServerUsers:
+	
      
      on deleteSelectedUsers:sender --this activates for either the "delete user" button or a double click in the table
           try
@@ -401,7 +416,7 @@ script AppDelegate
                set theURLLength to theURLNSString's |length| --get length of the NSString SO MUCH MORE RELIABLE THAN AS WAY
                set theMatches to theRegEx's rangeOfFirstMatchInString:my theServerURL options:0 range:[0, theURLLength] --returns a range from 0 to location of question mark. we have to bar out length or we get errors.
                set |length| of theMatches to (|length| of theMatches) - 1 --change the range so we exclude the question mark
-               current application's NSLog("the matches: %@", theMatches)
+               --current application's NSLog("the matches: %@", theMatches)
                --while in theory you could use AS's "text num thru num of string" function here, it ends up erroring out all over the place.
                --dumping to NSString and back adds exactly one line of code and works. A favorable tradeoff I think.
                set theURLNSString to theURLNSString's substringToIndex:(theMatches's |length|) --substring everything up to the question mark

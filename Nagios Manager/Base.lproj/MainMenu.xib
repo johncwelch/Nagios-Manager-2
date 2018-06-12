@@ -983,7 +983,7 @@
                                             </popUpButtonCell>
                                             <connections>
                                                 <action selector="selectedServerName:" target="Voe-Tx-rLC" id="uCP-gZ-T5P"/>
-                                                <binding destination="rqX-rY-uxs" name="contentValues" keyPath="arrangedObjects.serverName" id="oKw-HW-7oW"/>
+                                                <binding destination="Av3-2s-jb3" name="contentValues" keyPath="arrangedObjects.theSMTableServerName" id="PB5-xf-egS"/>
                                             </connections>
                                         </popUpButton>
                                         <scrollView misplaced="YES" autohidesScrollers="YES" horizontalLineScroll="19" horizontalPageScroll="10" verticalLineScroll="19" verticalPageScroll="10" usesPredominantAxisScrolling="NO" id="z9W-1p-lVg">
@@ -1390,7 +1390,7 @@ Gw
         </window>
         <arrayController id="rqX-rY-uxs">
             <connections>
-                <binding destination="Voe-Tx-rLC" name="contentArray" keyPath="theNagiosServerRecords" id="fxr-bW-GTU">
+                <binding destination="Voe-Tx-rLC" name="contentArray" keyPath="theSMSettingsList" id="vuj-3N-3gh">
                     <dictionary key="options">
                         <bool key="NSHandlesContentAsCompoundValue" value="YES"/>
                         <bool key="NSValidatesImmediately" value="YES"/>
