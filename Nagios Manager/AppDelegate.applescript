@@ -178,13 +178,7 @@ script AppDelegate
 		
 		
 		if my theSMDefaultsExist then --if we have no servers in the defaults, there is no sense in sending curl commands to nothing or trying to fill the popup
-			set x to my popupSelection's selectedObjects()'s firstObject() --this grabs the initial record
-			--current application's NSLog("first thing in popup controller: %@", x)
-			--current application's NSLog("selected: %@", x)
-			set my theServerName to x's serverName --grab the server name
-			set my theServerAPIKey to x's serverAPIKey --grab the server key
-			set my theServerURL to x's serverURL --grab the server URL
-			my getServerUsers:(missing value) --use missing value because we have to pass something. in ths case, the ASOC version of nil
+			my loadUserManagerPopup:(missing value) --initial popup load, moved to a function here.
 		end if
 		
 		tell my userTable to setDoubleAction:"deleteSelectedUsers:" --this lets a doubleclick work as well as clicking the delete button. We may remove this
@@ -295,7 +289,7 @@ script AppDelegate
 		set theDeleteServerAlertButtonRecord to display alert "You are about to delete " & theServerNameToBeDeleted & " from the saved list of servers. \r\rTHIS IS NOT UNDOABLE, ARE YOU SURE?" as critical buttons {"OK","Cancel"} default button "Cancel" giving up after 90
 		set theDeleteServerButton to button returned of theDeleteServerAlertButtonRecord
 		
-		if theDeleteServerButton is "OK" then
+		if theDeleteServerButton is "OK" then --buh-bye
 			my theServerTableController's remove:(theServerTableController's selectedObjects()) --deletes the selected row right out of the controller
 			--my god, this was so easy once I doped it out
 			my theSMSettingsList's removeAllObjects() --blow out theSMSettingsList
@@ -319,26 +313,46 @@ script AppDelegate
 				theDefaults's setBool:my theSMDefaultsExist forKey:"hasDefaults" --setting hasDefaults to true (1), this way we avoid the
 				--"but I thought it was okay" problem. We don't think we know what hasDefaults is on exit, we KNOW
 			end if
-		else if theDeleteServerButton is "Cancel" then
+		else if theDeleteServerButton is "Cancel" then --nope
 			return
 		end if
 		
 	end deleteServerFromPrefs:
 	
 	on deleteAllServersFromPrefs:sender --this was clearSettings:
-		theDefaults's removeObjectForKey:"serverSettingsList" --blank out defaults plist on disk
-		theDefaults's removeObjectForKey:"hasDefaults" --blank out the hasDefaults key, that is now false (0). Well, actually, it's nonexistent
-		--but really, that's the same thing for our needs. We can fix this later if we want.
-		my theSMSettingsList's removeAllObjects() -- blank out theSettingsList. The () IS IMPORTANT
-		my theServerTableController's removeObjects:(theServerTableController's arrangedObjects()) --blow out contents of that
-		--array controller here, rather than rerunning the loadserver function just to load an empty list
-
+		set theDeleteAllServersAlertButtonRecord to display alert "You are about to delete EVERY SERVER FROM THIS APP AND ITS SETTINGS. \r\rTHIS IS NOT UNDOABLE, ARE YOU SURE?" as critical buttons {"OK","Cancel"} default button "Cancel" giving up after 90
+		set theDeleteAllServersButton to button returned of theDeleteAllServersAlertButtonRecord
+		
+		if theDeleteAllServersButton is "OK" then --buh-bye
+			theDefaults's removeObjectForKey:"serverSettingsList" --blank out defaults plist on disk
+			theDefaults's removeObjectForKey:"hasDefaults" --blank out the hasDefaults key, that is now false (0). Well, actually, it's nonexistent
+			--but really, that's the same thing for our needs. We can fix this later if we want.
+			my theSMSettingsList's removeAllObjects() -- blank out theSettingsList. The () IS IMPORTANT
+			my theServerTableController's removeObjects:(theServerTableController's arrangedObjects()) --blow out contents of that
+			--array controller here, rather than rerunning the loadserver function just to load an empty list
+		else if theDeleteAllServersButton is "Cancel" --nope
+			return
+		end if
+		
 	end deleteAllServersFromPrefs:
 	
 	
 	
 	
 	--USER MANAGER FUNCTIONS
+	
+	--load the popup (we'll need this for changes to the server list
+	
+	on loadUserManagerPopup:sender
+		set x to my popupSelection's selectedObjects()'s firstObject() --this grabs the initial record
+		--current application's NSLog("first thing in popup controller: %@", x)
+		--current application's NSLog("selected: %@", x)
+		set my theServerName to x's serverName --grab the server name
+		set my theServerAPIKey to x's serverAPIKey --grab the server key
+		set my theServerURL to x's serverURL --grab the server URL
+		my getServerUsers:(missing value) --use missing value because we have to pass something. in ths case, the ASOC version of nil
+
+	end loadUserManagerPopup:
      
      --function for if the user actually changes the default selection in the popup
      on selectedServerName:sender --the popup's sent action method is bound to this function
