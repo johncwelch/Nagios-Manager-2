@@ -219,6 +219,22 @@ script AppDelegate
 	on addServerToPrefs:sender --this was saveSettings:. I know renaming functions will cause problems in the short run, but better names will save pain in the long run
 		--also, it avoids name clash with existing stuff until I can get that cleaned up
 		
+		--check for blank fields, and handle them. This is all the sanity checking I plan on doing for now.
+		if (my theSMServerName is missing value) or (my theSMServerName is "") then --did they enter a name for the server?
+			set my theRESTresults to "The Server Name field cannot be blank"
+			return
+		end if
+		
+		if (my theSMServerURL is missing value) or (my theSMServerURL is "") then --did they enter a URL for the server?
+			set my theRESTresults to "The Server URL field cannot be blank"
+			return
+		end if
+		
+		if (my theSMServerAPIKey is missing value) or (my theSMServerAPIKey is "") then --did they enter an API Key for the server?
+			set my theRESTresults to "The Server API key field cannot be blank"
+			return
+		end if
+		
 		set theTempURL to my theSMServerURL as text  --Create a temp text version --I did this all AppleScript style, because it works
 		--and I was able to get it done faster this way. It may not execute as fast, but given the data sizes we're talking about,
 		--I doubt it's a problem on anything faster than a IIsi
