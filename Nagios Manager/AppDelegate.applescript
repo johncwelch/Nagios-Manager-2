@@ -268,6 +268,7 @@ script AppDelegate
 	
 	on deleteServerFromPrefs:sender --this was deleteServer:
 		
+		
 	end deleteServerFromPrefs:
 	
 	on deleteAllServersFromPrefs:sender --this was clearSettings:
