@@ -267,12 +267,34 @@ script AppDelegate
 	end loadServersFromPrefs:
 	
 	on deleteServerFromPrefs:sender --this was deleteServer:
+		my theServerTableController's remove:(theServerTableController's selectedObjects()) --deletes the selected row right out of the controller
+		--my god, this was so easy once I doped it out
+		my theSMSettingsList's removeAllObjects() --blow out theSMSettingsList
+		my theSMSettingsList's addObjectsFromArray:(theServerTableController's arrangedObjects()) --rebuild it from theServerTableController
+		--this way, at least in here, theServerTableController and theSettingsList are ALWAYS in sync and that's IMPORTANT.
 		
+		set theServerTableControllerObjectCount to my theServerTableController's arrangedObjects()'s |count|() --get number of objects left in
+		--the controller. Vertical bars are necessary because "count" is also an AppleScript keyword, so the bars keep it from being the AS count
+		--and instead use it as the ASOC count, which is what we want.
+		
+		if theServerTableControllerObjectCount = 0 then --if the list is empty (we just deleted the last thing) then we'll call deleteAllServersFromPrefs and
+			--save time since that's what deleteAllServersFromPrefs does, if you think about it
+			my deleteAllServersFromPrefs:(missing value) --this handles explicitly clearing the defaults AND hasDefaults for us.
+			--technically that may not be necessary, but this way we KNOW.
+			
+		else --so we have entries in the array, let's write that to disk
+		--what's interesting is that we already have theServerTableController and theSettingsList in the desired state, so this gets SIMPLE
+			set my theSMDefaultsExist to true --since we're writing a setting, we want to set this correctly.
+			
+			theDefaults's setObject:my theSMSettingsList forKey:"serverSettingsList" --write the new settings list to defaults
+			theDefaults's setBool:my theSMDefaultsExist forKey:"hasDefaults" --setting hasDefaults to true (1), this way we avoid the
+			--"but I thought it was okay" problem. We don't think we know what hasDefaults is on exit, we KNOW
+		end if
 		
 	end deleteServerFromPrefs:
 	
 	on deleteAllServersFromPrefs:sender --this was clearSettings:
-		
+		log "DELETE ALL THE THINGS"
 	end deleteAllServersFromPrefs:
 	
 	
