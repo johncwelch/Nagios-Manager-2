@@ -294,7 +294,13 @@ script AppDelegate
 	end deleteServerFromPrefs:
 	
 	on deleteAllServersFromPrefs:sender --this was clearSettings:
-		log "DELETE ALL THE THINGS"
+		theDefaults's removeObjectForKey:"serverSettingsList" --blank out defaults plist on disk
+		theDefaults's removeObjectForKey:"hasDefaults" --blank out the hasDefaults key, that is now false (0). Well, actually, it's nonexistent
+		--but really, that's the same thing for our needs. We can fix this later if we want.
+		my theSMSettingsList's removeAllObjects() -- blank out theSettingsList. The () IS IMPORTANT
+		my theServerTableController's removeObjects:(theServerTableController's arrangedObjects()) --blow out contents of that
+		--array controller here, rather than rerunning the loadserver function just to load an empty list
+
 	end deleteAllServersFromPrefs:
 	
 	
