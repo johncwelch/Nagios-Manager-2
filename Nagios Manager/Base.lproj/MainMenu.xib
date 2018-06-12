@@ -21,7 +21,6 @@
                 <outlet property="canReconfigureAllObjects" destination="1ak-Dl-V9F" id="s9h-Df-sUx"/>
                 <outlet property="canSeeAllObjects" destination="wnB-Ld-KVg" id="VKH-Ci-cA3"/>
                 <outlet property="canSeeOrConfigureMonitoringEngine" destination="WwK-vz-39Y" id="viW-61-yKE"/>
-                <outlet property="popupSelection" destination="rqX-rY-uxs" id="uJt-kR-iGg"/>
                 <outlet property="readOnly" destination="tLi-2o-hbI" id="MsM-zz-CWO"/>
                 <outlet property="theServerTable" destination="2mQ-JL-6Rl" id="3DA-Yp-Duf"/>
                 <outlet property="theServerTableController" destination="Av3-2s-jb3" id="aWR-8L-H4e"/>
@@ -1388,16 +1387,6 @@ Gw
             </view>
             <point key="canvasLocation" x="245" y="52"/>
         </window>
-        <arrayController id="rqX-rY-uxs">
-            <connections>
-                <binding destination="Voe-Tx-rLC" name="contentArray" keyPath="theSMSettingsList" id="vuj-3N-3gh">
-                    <dictionary key="options">
-                        <bool key="NSHandlesContentAsCompoundValue" value="YES"/>
-                        <bool key="NSValidatesImmediately" value="YES"/>
-                    </dictionary>
-                </binding>
-            </connections>
-        </arrayController>
         <arrayController selectsInsertedObjects="NO" id="FFf-nn-zo4">
             <connections>
                 <binding destination="Voe-Tx-rLC" name="contentArray" keyPath="userArray" id="HDw-a9-aC3">

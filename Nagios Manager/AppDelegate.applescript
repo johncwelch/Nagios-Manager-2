@@ -4,7 +4,7 @@
 --
 --  Created by John Welch on 5/18/18.
 --  Copyright © 2018 John Welch. All rights reserved.
---
+----step 1 : get a good sized pumpkin
 
 --1.0 goals: to delete users from a nagios server
 --1.1 goals: add a local user to a nagios server (make sure to label as "local only, no AD"
@@ -20,43 +20,40 @@
      --when using this, force_pw_change, email_info, monitoring_contact, enable_notifications are always set to 1
      --sans the NSMatrix object, point all "related" radio buttons at the same thing to get them to work "together" properly.
 	--BONUS, figured out autoincrementing builds (see the build phases for details)
+--step 2: cut pumpkin into wedges about 4" wide and remove pulp
 --1.2 goals : build tabbed interface so we can add a server manager (add/remove) tab that's separate from user manager (and other features eventually
 --1.3 move from hardcoded server list to user-entered list. This will be fun
+--1.4 Get a proper icon and make the menus in the menubar actually do something
 
 --changed from _() to : syntax in function calls
 --table columns are not editable. Table size atrib's are all solid bars
 --woohoo! don't need a separate get users button, that's handled on load and by changing selection.
+--step 3: heat oven to 400 degrees F. No, you're not pre-heating it, don't make me come over there
 
 --BINDINGS NOTES
 
 --array controllers
-     (*popup selection: content array bound to theNagiosServerRecords as source for array,  the referencing outlet is popupSelection, referencing bindings are from the server name popup list, its content values binds to serverName in theNagiosServerRecords, controller key is arrangedObjects*)
-
      (*User Selection: content array bound to user array, which is an empty list. We probably should fix that at some point, but currently causes zero harm. Referencing outlet is userSelection. Referencing bindings are from the user name/ID table. the value for the user name column binds to the array controler, model key path is theUserName, controller key is arranged objects. The user key column binds to the array controller, model key path is theUserID, controller key is arranged objects*)
-
+--step 5: cook pumpkin wedges for about 2 hours, maybe 2.5, skin-side down. If the skin's a bit burnt, that's fine, it comes off easier that way.
 --popup lists
 
-     (*server selection popup list: sent action binds to onSelectedServerName:, content values bind to the popup selection array controller*)
+     (*server selection popup list: sent action binds to onSelectedServerName:, content values bind to the server table array controller*)
 
 --pushbuttons
 
      (*get users button: sent action binds to getServerUsers:*)
      -- THIS HAS BEEN DELETED, BUT KEEPING COMMENT BECAUSE
      --WE MAY NEED TO PUT THIS BACK IN ONE DAY
-
+--Step 6: let pumpkin cool, then cut it out of the skin. I mean, you can do it right away, but it's kind of hot
      (*delete users button: sent action binds to deleteSelectedUsers:*)
 
      (*the user name/id table: (user table table view) has userTable as its referencing outlet*, user name column binds to theUserName in the user selection array controller. user id column binds to theUserID in the user selection array controller.*)
 
 	--minor comment note: I'm now trying to organize properties by what tab they apply to. So Server Manager, User Manager, etc.
-     
+--step 7: Run chunks through a mixer, then pipe the mixer output into a blender. You can skip the mixer, but it makes things a lot easier. basically, you want pumpkin slurry
 
 script AppDelegate
 	property parent : class "NSObject"
-     
-     --this is the list of records for the nagios servers. in v2, we'll be able to add/delete from this.
-     
-     property theNagiosServerRecords : {{serverName:"VRMON", serverURL:"http://10.104.1.125/nagiosxi/api/v1/system/user?apikey=", serverAPIKey:"blP7RrD8A3rCAMR5glh2XWWUCXkWVF6mhcs8G6vsog4e2UiCASTNPPInN2kIHJ4e"}}
 	
 	-- User Manager IBOutlets
 	property theWindow : missing value
@@ -74,6 +71,13 @@ script AppDelegate
      property readOnly : missing value --attached to same-named checkbox
      property adminRadioButton : missing value --attached to "admin" radio button
      property userRadioButton : missing value --attached to "user" radio button
+--step 8: other pie ingredients. This is per batch, each batch makes about 1.8 pies - 2 eggs, 1 3/4 cups pumpkin, 3/4ths cup brown sugar
+	--1 1/2 cups sweetened condensed milk. I just used the whole 14 oz. can, it's fine. It's pie, not souffle. 1/2 tsp salt
+	--1 tsp ground cinnamon
+	--1/2 tsp ground ginger
+	--1/4 tsp ground cloves
+	--pie crust of choice. This pie has flavor so a blander crust works better. I like graham cracker or 'nilla wafer crusts
+	--just buy them, this pie takes long enough as it is
 	
 	--User Manager Other properties
 	property theServerJSON:"" --the list of stuff from the server as JSON
@@ -84,18 +88,22 @@ script AppDelegate
 	property theUserID:"" --user id from the nagios server
 	property theUserNameList:{} --a list of records we convert from NSDicts
 	property theDeletePattern : "^.*\\?" --the pattern we use to find where the question mark is. There's only one, so for our needs this works. this allows us to split the string at the ? so we can build a proper delete URL
+--step 9: put all the ingredients in a blender (blenders are your friend) and run until everything is liquid AF
+	
 	
 	property theNewUserName : "" --name of user to be added
 	property theNewUserPassword : "" --password of user to be added
 	property theNewName : "" --name, not username of the user to be added
 	property theNewUserEmailAddress : "" --email address of user to be added
 	property theUserType : "" --used to test for user level
+--step 10: pour contents of blender into pie crust until almost full. There's not a lot of expansion, so no worries.
 	
 	--User Manager add user parameters
 	property theNagiosNewUserName: ""
 	property theNagiosNewUserPassword: ""
 	property theNagiosNewUserRealName: ""
 	property theNagiosNewUserEmailAddress: ""
+--step 11: heat oven to 425 degrees F. Again, if I hear you say "pre-heat, I'm stealing the pie
 	
 	--hardcoded Nagios create user parameters, these aren't initially settable, but later they might be so just in case
 	property theNagiosLanguage: "xi default" --use whatever the default for the server is
@@ -105,12 +113,14 @@ script AppDelegate
 	property theNagiosEmailAccountInfo : "1" --always email the user the account info
 	property theNagiosMonitoringContact : "1" --always a monitoring contact
 	property theNagiosEnableNotifications : "1" --always enable notifications
+--step 12: bake at 425 for 15 minutes or so, then reduce to 350 for 45 minutes or so until it passes the toothpick test
 
 
 	-- Server manager IBOutlets
 	property theDefaults : missing value --referencing outlet for our NSDefaults object
 	property theServerTable : missing value --table view referencing outlet
 	property theServerTableController : missing value --server table array controller referencing outlet
+--step 13: eat the hell out of that pie. See? a prize for reading comments!
 	
 	--Server manager other properties
 	
@@ -135,11 +145,7 @@ script AppDelegate
 	property theRESTresults : "" --so we can show the results of rest commands as appropriate. This is actually a generic display value for bottom information display
 		--I might fix it when I'm doing cleanup. or not.
 	
-	
-	
-	
 
-     
 	
      on applicationWillFinishLaunching:aNotification
 		-- Insert code here to initialize your application before any files are opened
@@ -192,8 +198,7 @@ script AppDelegate
           my canAccessAdvancedFeatures's setState:1
           my readOnly's setEnabled:true
           my readOnly's setState:0
-		current application's NSLog("theSMSDeletingLastServerFlag state: %@", my theSMSDeletingLastServerFlag)
-		--current application's NSLog("user button state: %@", my userRadioButton's objectValue())
+		
      end applicationWillFinishLaunching:
 	
      on applicationShouldTerminate:sender
@@ -282,56 +287,55 @@ script AppDelegate
 	on deleteServerFromPrefs:sender --this was deleteServer:
 		--the ARE YOU SURE YOU WANT TO DO THIS??? warning
 		try
-		set theSelection to theServerTableController's selectedObjects() as record
-		set theServerNameToBeDeleted to theSMTableServerName of theSelection
-		
-		set theDeleteServerAlertButtonRecord to display alert "You are about to delete " & theServerNameToBeDeleted & " from the saved list of servers. \r\rTHIS IS NOT UNDOABLE, ARE YOU SURE?" as critical buttons {"OK","Cancel"} default button "Cancel" giving up after 90
-		set theDeleteServerButton to button returned of theDeleteServerAlertButtonRecord
-		
-		if theDeleteServerButton is "OK" then --buh-bye
-			my theServerTableController's remove:(theServerTableController's selectedObjects()) --deletes the selected row right out of the controller
-			--my god, this was so easy once I doped it out
-			my theSMSettingsList's removeAllObjects() --blow out theSMSettingsList
-			my theSMSettingsList's addObjectsFromArray:(theServerTableController's arrangedObjects()) --rebuild it from theServerTableController
-			--this way, at least in here, theServerTableController and theSettingsList are ALWAYS in sync and that's IMPORTANT.
+			set theSelection to theServerTableController's selectedObjects() as record
+			set theServerNameToBeDeleted to theSMTableServerName of theSelection
 			
-			set theServerTableControllerObjectCount to my theServerTableController's arrangedObjects()'s |count|() --get number of objects left in
-			--the controller. Vertical bars are necessary because "count" is also an AppleScript keyword, so the bars keep it from being the AS count
-			--and instead use it as the ASOC count, which is what we want.
+			set theDeleteServerAlertButtonRecord to display alert "You are about to delete " & theServerNameToBeDeleted & " from the saved list of servers. \r\rTHIS IS NOT UNDOABLE, ARE YOU SURE?" as critical buttons {"OK","Cancel"} default button "Cancel" giving up after 90
+			set theDeleteServerButton to button returned of theDeleteServerAlertButtonRecord
 			
-			if theServerTableControllerObjectCount = 0 then --if the list is empty (we just deleted the last thing) then we'll call deleteAllServersFromPrefs and
-				--save time since that's what deleteAllServersFromPrefs does, if you think about it
-				set my theSMSDeletingLastServerFlag to true --this will avoid double dialogs that this particular case can cause
-				my deleteAllServersFromPrefs:(missing value) --this handles explicitly clearing the defaults AND hasDefaults for us.
-				--technically that may not be necessary, but this way we KNOW.
+			if theDeleteServerButton is "OK" then --buh-bye
+				my theServerTableController's remove:(theServerTableController's selectedObjects()) --deletes the selected row right out of the controller
+				--my god, this was so easy once I doped it out
+				my theSMSettingsList's removeAllObjects() --blow out theSMSettingsList
+				my theSMSettingsList's addObjectsFromArray:(theServerTableController's arrangedObjects()) --rebuild it from theServerTableController
+				--this way, at least in here, theServerTableController and theSettingsList are ALWAYS in sync and that's IMPORTANT.
 				
-			else --so we have entries in the array, let's write that to disk
-				--what's interesting is that we already have theServerTableController and theSettingsList in the desired state, so this gets SIMPLE
-				set my theSMDefaultsExist to true --since we're writing a setting, we want to set this correctly.
+				set theServerTableControllerObjectCount to my theServerTableController's arrangedObjects()'s |count|() --get number of objects left in
+				--the controller. Vertical bars are necessary because "count" is also an AppleScript keyword, so the bars keep it from being the AS count
+				--and instead use it as the ASOC count, which is what we want.
 				
-				theDefaults's setObject:my theSMSettingsList forKey:"serverSettingsList" --write the new settings list to defaults
-				theDefaults's setBool:my theSMDefaultsExist forKey:"hasDefaults" --setting hasDefaults to true (1), this way we avoid the
-				--"but I thought it was okay" problem. We don't think we know what hasDefaults is on exit, we KNOW
-				my loadUserManagerPopup:(missing value) --reload the popup since we deleted a server out from under it. this loads the first object in the server array controller
+				if theServerTableControllerObjectCount = 0 then --if the list is empty (we just deleted the last thing) then we'll call deleteAllServersFromPrefs and
+					--save time since that's what deleteAllServersFromPrefs does, if you think about it
+					set my theSMSDeletingLastServerFlag to true --this will avoid double dialogs that this particular case can cause
+					my deleteAllServersFromPrefs:(missing value) --this handles explicitly clearing the defaults AND hasDefaults for us.
+					--technically that may not be necessary, but this way we KNOW.
+					
+				else --so we have entries in the array, let's write that to disk
+					--what's interesting is that we already have theServerTableController and theSettingsList in the desired state, so this gets SIMPLE
+					set my theSMDefaultsExist to true --since we're writing a setting, we want to set this correctly.
+					
+					theDefaults's setObject:my theSMSettingsList forKey:"serverSettingsList" --write the new settings list to defaults
+					theDefaults's setBool:my theSMDefaultsExist forKey:"hasDefaults" --setting hasDefaults to true (1), this way we avoid the
+					--"but I thought it was okay" problem. We don't think we know what hasDefaults is on exit, we KNOW
+					my loadUserManagerPopup:(missing value) --reload the popup since we deleted a server out from under it. this loads the first object in the server array controller
+				end if
+			else if theDeleteServerButton is "Cancel" then --nope
+				return
 			end if
-		else if theDeleteServerButton is "Cancel" then --nope
-			return
-		end if
 		on error errorMessage number errorNumber
-		if errorNumber is -1728 then --nothing selected
-			display dialog "You don't have anything selected. You have to select a server to delete it" --error message for -1728
-			--if we get enough of these, we'll create a separate function just for them
-			current application's NSLog("Nothing Selected Error: %@", errorMessage) --log the error message
-		end if
-		
+			if errorNumber is -1728 then --nothing selected
+				display dialog "You don't have anything selected. You have to select a server to delete it" --error message for -1728
+				--if we get enough of these, we'll create a separate function just for them
+				current application's NSLog("Nothing Selected Error: %@", errorMessage) --log the error message
+			end if
 		end try
 		
 	end deleteServerFromPrefs:
 	
 	on deleteAllServersFromPrefs:sender --this was clearSettings:
 		if not theSMSDeletingLastServerFlag then --you weren't just deleting the last server manually
-			set theDeleteAllServersAlertButtonRecord to display alert "You are about to delete EVERY SERVER FROM THIS APP AND ITS SETTINGS. \r\rTHIS IS NOT UNDOABLE, ARE YOU SURE?" as critical buttons {"OK","Cancel"} default button "Cancel" giving up after 90
-			set theDeleteAllServersButton to button returned of theDeleteAllServersAlertButtonRecord
+			set theDeleteAllServersAlertButtonRecord to display alert "You are about to delete EVERY SERVER FROM THIS APP AND ITS SETTINGS. \r\rTHIS IS NOT UNDOABLE, ARE YOU SURE?" as critical buttons {"OK","Cancel"} default button "Cancel" giving up after 90 --ARE YOU SURE YOU WANT TO DO THIS?
+			set theDeleteAllServersButton to button returned of theDeleteAllServersAlertButtonRecord --grab button text of the clicked button
 			
 			if theDeleteAllServersButton is "OK" then --buh-bye
 				theDefaults's removeObjectForKey:"serverSettingsList" --blank out defaults plist on disk
@@ -341,7 +345,7 @@ script AppDelegate
 				my theServerTableController's removeObjects:(theServerTableController's arrangedObjects()) --blow out contents of that
 				--array controller here, rather than rerunning the loadserver function just to load an empty list
 			else if theDeleteAllServersButton is "Cancel" --nope
-				return
+				return --dump out of the function
 			end if
 		else --you've just manually deleted the last server, so lets do this without an additional warning that does no good anyway
 			theDefaults's removeObjectForKey:"serverSettingsList" --blank out defaults plist on disk
@@ -365,26 +369,19 @@ script AppDelegate
 	
 	on loadUserManagerPopup:sender
 		if not theSMDefaultsExist then --if we have no defaults, there's no point in running this code
-			return
+			return --back to main loop
 		end if
-		--set x to my popupSelection's selectedObjects()'s firstObject() --this grabs the initial record
-		--set x to my popupSelection's arrangedObjects()'s firstObject() --this grabs the initial record
-		set x to my theServerTableController's arrangedObjects()'s firstObject()
+		
+		set x to my theServerTableController's arrangedObjects()'s firstObject() --get the first object in the array controller
+		
 		if x is missing value then --if there's nothing in x, stop the function
-			return
+			return --back to the main loop
 		end if
-		--current application's NSLog("first thing in server table controller: %@", x)
-		--current application's NSLog("selected: %@", x)
-		--set my theServerName to x's serverName --grab the server name
-		--set my theServerAPIKey to x's serverAPIKey --grab the server key
-		--set my theServerURL to x's serverURL --grab the server URL
+		
 		set my theServerName to x's theSMTableServerName --grab the server name
 		set my theServerAPIKey to x's theSMTableServerAPIKey --grab the server key
 		set my theServerURL to x's theSMTableServerURL --grab the server URL
-		--current application's NSLog("theServerName: %@", my theServerName)
-		--current application's NSLog("theServerAPIKey: %@", my theServerAPIKey)
-		--current application's NSLog("theServerURL: %@", my theServerURL)
-
+		
 		my getServerUsers:(missing value) --use missing value because we have to pass something. in ths case, the ASOC version of nil
 
 	end loadUserManagerPopup:
@@ -404,29 +401,30 @@ script AppDelegate
 			set theItem to item x of theServerUsers as record --convert NSDict to record because it's initially easier
 			set the end of my theUserNameList to {theUserName:|name| of theItem,theUserID:user_id of theItem} --build a list of records with the two values we care about
 		end repeat
-		--current application's NSLog("theUserNameList: %@", my theUserNameList)
+		
 		my userSelection's removeObjects:(my userSelection's arrangedObjects()) --clear the table
 		my userSelection's addObjects:my theUserNameList --fill the table
 		set my theUserNameList to {} --clear out theUserNameList so it's got fresh data each time.
-		--set theItem to my userSelection's arrangedObjects() --as record
+		
 	end getServerUsers:
 	
-     --function for if the user actually changes the default selection in the popup
+     --function for if the user actually changes the  selection in the popup
      on selectedServerName:sender --the popup's sent action method is bound to this function
 		if not theSMDefaultsExist then --so if there are no servers in server manager, even if someone clicks on the list, we don't want things to happen here. This should prevent that
 			return
 		end if
           set thePopupIndex to sender's indexOfSelectedItem --get the index of the selected item, put it into thePopupIndex
-          --set theResult to my popupSelection's setSelectionIndex:thePopupIndex --we don't actually care about the result,
-          --it's a bool, but if this stops working, we know what to log. This sets the "current selection" of the
-          --array controller to thePopupIndex, so we can pull the right info for the curl commands
-		set theResult to my theServerTableController's setSelectionIndex:thePopupIndex --set the current selection in theServerTableController to thePopupIndex
-          --set x to my popupSelection's selectedObjects() as record--grab the selected record
+		
+		set theResult to my theServerTableController's setSelectionIndex:thePopupIndex --set the current selection in theServerTableController to thePopupIndex. we don't actually care about the result,
+		--it's a bool, but if this stops working, we know what to log. This sets the "current selection" of the server array controller to thePopupIndex,
+		--so we can pull the right info for the curl commands
+		
 		set x to my theServerTableController's selectedObjects() as record--grab the selected record
           set my theServerName to x's theSMTableServerName --grab the server name
           set my theServerAPIKey to x's theSMTableServerAPIKey --grab the server key
           set my theServerURL to x's theSMTableServerURL --grab the server api
-          my getServerUsers:(missing value)
+		
+		my getServerUsers:(missing value) --load the user manager user table data
           
      end selectedServerName:
      
@@ -440,10 +438,10 @@ script AppDelegate
                set theUserNameToBeDeleted to |theUserName| of theSelection --set user name to local var
                set theRegEx to current application's NSRegularExpression's regularExpressionWithPattern:my theDeletePattern options:1 |error|:(missing value) --sets up the expression paramater
                set theURLNSString to current application's NSString's stringWithString:my theServerURL --create an NSSTring version of theServerURL
-               set theURLLength to theURLNSString's |length| --get length of the NSString SO MUCH MORE RELIABLE THAN AS WAY
+               set theURLLength to theURLNSString's |length| --get length of the NSString SO MUCH MORE RELIABLE THAN THE APPLESCRIPT WAY
                set theMatches to theRegEx's rangeOfFirstMatchInString:my theServerURL options:0 range:[0, theURLLength] --returns a range from 0 to location of question mark. we have to bar out length or we get errors.
                set |length| of theMatches to (|length| of theMatches) - 1 --change the range so we exclude the question mark
-               --current application's NSLog("the matches: %@", theMatches)
+			
                --while in theory you could use AS's "text num thru num of string" function here, it ends up erroring out all over the place.
                --dumping to NSString and back adds exactly one line of code and works. A favorable tradeoff I think.
                set theURLNSString to theURLNSString's substringToIndex:(theMatches's |length|) --substring everything up to the question mark
@@ -466,7 +464,7 @@ script AppDelegate
                     --if we get enough of these, we'll create a separate function just for them
                     current application's NSLog("Nothing Selected Error: %@", errorMessage) --log the error message
                end if
-               --my getServerUsers:(missing value) --reload the list
+			
                return
           end try
           
@@ -474,8 +472,7 @@ script AppDelegate
      
      on getUserLevel:sender --This is only here to handle the user type radio buttons. but, it works well enough for that.
           set my theUserType to sender's title as text--get user level as text
-          --certain checkboxes.
-          --current application's NSLog("sender's title: %@", theUserType)
+		
           if my theUserType is "Admin" then --set the checkbutton states to the appropriate setting for an admin
                my canSeeAllObjects's setState:1
                my canReconfigureAllObjects's setState:1
@@ -499,8 +496,7 @@ script AppDelegate
           if sender's intValue() = 1 then --if we set it to read only, we clear all the other buttons and disable them
                --we also force the user type to "user" and disable the admin radio button. A read-only admin is stupid.
                --again, this is how nagios does it in the web UI, so we shall here
-                --ALWAYS USE () FOR THIS KIND OF THING ELSE YOU WILL BE IN HELL!
-              --current application's NSLog("admin button's integer value: %@", theTest)
+			--ALWAYS USE () FOR THIS KIND OF THING ELSE YOU WILL BE IN HELL!
                my canSeeAllObjects's setEnabled:false
                my canSeeAllObjects's setState:0
                my canReconfigureAllObjects's setEnabled:false
@@ -515,7 +511,6 @@ script AppDelegate
                my adminRadioButton's setState:0
                my adminRadioButton's setEnabled:false
           else if sender's intValue() = 0 then --don't try to reset the state, just re-enable the other checkbox buttons
-              --current application's NSLog("admin button's integer value: %@", theTest)
                my canSeeAllObjects's setEnabled:true
                my canSeeAllObjects's setState:1
                my canReconfigureAllObjects's setEnabled:true
@@ -528,8 +523,6 @@ script AppDelegate
                my canAccessAdvancedFeatures's setState:1
                my adminRadioButton's setEnabled:true
           end if
-          --set theTest to my readOnly's intValue
-          --current application's NSLog("read only's integer value: %@", readOnlyToggle) --log the error message
           
      end enabledReadOnly:
 	
