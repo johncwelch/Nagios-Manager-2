@@ -215,6 +215,9 @@ script AppDelegate
 		--array controller
 		my theServerTableController's addObjects:my theSMSettingsList --shove the current contents of theSettingsList into the array controller
 		set my theSMDefaultsExist to theDefaults's boolForKey:"hasDefaults" --grab current state for this every time this function runs
+		if my theSMDefaultsExist then --we want to refresh the user manager popup when we add or delete a server
+			my loadUserManagerPopup:(missing value) --refresh the popup data too
+		end if
 	end loadServerTable:
 	
 	on addServerToPrefs:sender --this was saveSettings:. I know renaming functions will cause problems in the short run, but better names will save pain in the long run
