@@ -47,6 +47,8 @@
      (*delete users button: sent action binds to deleteSelectedUsers:*)
 
      (*the user name/id table: (user table table view) has userTable as its referencing outlet*, user name column binds to theUserName in the user selection array controller. user id column binds to theUserID in the user selection array controller.*)
+
+	--minor comment note: I'm now trying to organize properties by what tab they apply to. So Server Manager, User Manager, etc.
      
 
 script AppDelegate
@@ -64,7 +66,7 @@ script AppDelegate
      {serverName:"SCMON", serverURL:"http://64.56.80.135/nagiosxi/api/v1/system/user?apikey=", serverAPIKey:"ZjlHn2IRRI56EMg4Gi2QPAa0is7AB6kApId6ZbWQ9hdM3MPY47PSHY9fLfPik993"}, ¬
      {serverName:"VRMON", serverURL:"http://10.104.1.125/nagiosxi/api/v1/system/user?apikey=", serverAPIKey:"blP7RrD8A3rCAMR5glh2XWWUCXkWVF6mhcs8G6vsog4e2UiCASTNPPInN2kIHJ4e"}}
 	
-	-- IBOutlets
+	-- User Manager IBOutlets
 	property theWindow : missing value
      property popupSelection:missing value --this is attached to the array controller's referencing outlet
      --it contains the full record for the selected server name in the popup list
@@ -80,28 +82,28 @@ script AppDelegate
      property readOnly : missing value --attached to same-named checkbox
      property adminRadioButton : missing value --attached to "admin" radio button
      property userRadioButton : missing value --attached to "user" radio button
-     
-     
-     --Other Properties
-     property theServerName:"" --name of the server for curl ops
-     property theServerAPIKey:"" --API key of server for curl ops
-     property theServerURL:"" --URL of server for curl ops
-     
-     property theServerJSON:"" --the list of stuff from the server as JSON
-     property theJSONData:"" --used to hold the converted theServerJSON text data as an NSData object
-     property theJSONDict:"" --this holds the result of NSJSONSerialization as an NSArray of NSDicts
-     property theServerUsers:"" --grabs just the users out of theJSONDict as a NSArray of NSDicts
-     property theUserName:"" --user name from the nagios server
-     property theUserID:"" --user id from the nagios server
-     property theUserNameList:{} --a list of records we convert from NSDicts
-     property theDeletePattern : "^.*\\?" --the pattern we use to find where the question mark is. There's only one, so for our needs this works. this allows us to split the string at the ? so we can build a proper delete URL
-     property theRESTresults : "" --so we can show the results of rest commands as appropriate
-     
-     property theNewUserName : "" --name of user to be added
-     property theNewUserPassword : "" --password of user to be added
-     property theNewName : "" --name, not username of the user to be added
-     property theNewUserEmailAddress : "" --email address of user to be added
+	
+	--User Manager Other properties
+	property theServerJSON:"" --the list of stuff from the server as JSON
+	property theJSONData:"" --used to hold the converted theServerJSON text data as an NSData object
+	property theJSONDict:"" --this holds the result of NSJSONSerialization as an NSArray of NSDicts
+	property theServerUsers:"" --grabs just the users out of theJSONDict as a NSArray of NSDicts
+	property theUserName:"" --user name from the nagios server
+	property theUserID:"" --user id from the nagios server
+	property theUserNameList:{} --a list of records we convert from NSDicts
+	property theDeletePattern : "^.*\\?" --the pattern we use to find where the question mark is. There's only one, so for our needs this works. this allows us to split the string at the ? so we can build a proper delete URL
+	
+	property theNewUserName : "" --name of user to be added
+	property theNewUserPassword : "" --password of user to be added
+	property theNewName : "" --name, not username of the user to be added
+	property theNewUserEmailAddress : "" --email address of user to be added
 	property theUserType : "" --used to test for user level
+	
+	--User Manager add user parameters
+	property theNagiosNewUserName: ""
+	property theNagiosNewUserPassword: ""
+	property theNagiosNewUserRealName: ""
+	property theNagiosNewUserEmailAddress: ""
 	
 	--hardcoded Nagios create user parameters, these aren't initially settable, but later they might be so just in case
 	property theNagiosLanguage: "xi default" --use whatever the default for the server is
@@ -111,18 +113,68 @@ script AppDelegate
 	property theNagiosEmailAccountInfo : "1" --always email the user the account info
 	property theNagiosMonitoringContact : "1" --always a monitoring contact
 	property theNagiosEnableNotifications : "1" --always enable notifications
+
+
+	-- Server manager IBOutlets
+	property theDefaults : missing value --referencing outlet for our NSDefaults object
+	property theServerTable : missing value --table view referencing outlet
+	property theServerTableController : missing value --server table array controller referencing outlet
 	
-	--other add user parameters
-	property theNagiosNewUserName: ""
-	property theNagiosNewUserPassword: ""
-	property theNagiosNewUserRealName: ""
-	property theNagiosNewUserEmailAddress: ""
-     
+	--Server manager other properties
+	
+	property theSMServerName : "" --used to be theServerName, avoiding overuse of properties here
+	property theSMServerURL : "" --used to be theServerURL, avoiding overuse of properties here
+	property theSMServerAPIKey : "" --used to be theServerAPIKey, avoiding overuse of properties here
+	property theSMServerTableControllerArray : {} --bound to content of the server table controller, not used
+	property theSMTableServerName : "" --bound to server name column in table
+	property theSMTableServerURL : "" --bound to server url column in table
+	property theSMTableServerAPIKey : "" --bound to server API Key column in table
+	
+	property theSMSettingsExist : "" --are there any settings already there?
+	property theSMDefaultsExist : "" --are there currently settings?
+	property theSMSettingsList : {} --settings list array
+	
+	
+     --General Other Properties
+     property theServerName:"" --name of the server for curl ops
+     property theServerAPIKey:"" --API key of server for curl ops
+     property theServerURL:"" --URL of server for curl ops
+	property theRESTresults : "" --so we can show the results of rest commands as appropriate. This is actually a generic display value for bottom information display
+		--I might fix it when I'm doing cleanup. or not.
+	
+	
+	
+	
+
      
 	
      on applicationWillFinishLaunching:aNotification
 		-- Insert code here to initialize your application before any files are opened
           --initialize our properties to the default value in the popup
+		
+		--SERVER MANAGER SETUP
+		set theDefaults to current application's NSUserDefaults's standardUserDefaults() --make theDefaults the container
+		--for defaults operations
+		theDefaults's registerDefaults:{serverSettingsList:""} --sets up "serverSettingsList" as a valid defaults key
+		--of the keys used in the defaults
+		set my theSMSettingsList to current application's NSMutableArray's arrayWithCapacity:1 --initialize the internal array
+		--we use for this
+		set theTempArray to current application's NSArray's arrayWithArray:(theDefaults's arrayForKey:"serverSettingsList") --we do this because
+		--NSDefaults arrayForKey coerces NSMutableArray to NSArray, which is annoying. At some point we can replace this using mutable copy, but we have to deal with
+		--nil returns for first run, etc.
+		set my theSMDefaultsExist to theDefaults's boolForKey:"hasDefaults"
+		--current application's NSLog("theDefaultsExist: %@", my theDefaultsExist) --this is just here for when I need it elsewhere, I can
+		--copy/paste easier
+		my theSMSettingsList's addObjectsFromArray:theTempArray --copy all the data from theTempArray into theSettingList, which keeps the
+		--latter mutable
+		if not my theSMDefaultsExist then
+			display dialog "there are no default settings existing at launch" --my version of a first run warning. Slick, ain't it.
+		end if
+		my loadServerTable:(missing value) --load existing data into the server table.
+		tell my theServerTable to setDoubleAction:"deleteServerFromPrefs:" --this ties a doubleclick in the server to deleting that server.
+		
+		
+		--USER MANAGER SETUP
           set x to my popupSelection's selectedObjects()'s firstObject() --this grabs the initial record
 		--current application's NSLog("first thing in popup controller: %@", x)
           --current application's NSLog("selected: %@", x)
@@ -154,6 +206,37 @@ script AppDelegate
 		-- Insert code here to do any housekeeping before your application quits 
 		return current application's NSTerminateNow
      end applicationShouldTerminate:
+	
+	--SERVER MANAGER FUNCTIONS
+	
+	on loadServerTable:sender --push the saved server array theSettingsList into an array controller that runs a table
+		my theServerTableController's removeObjects:(theServerTableController's arrangedObjects()) --blow out contents of that
+		--array controller
+		my theServerTableController's addObjects:my theSMSettingsList --shove the current contents of theSettingsList into the array controller
+		set my theSMDefaultsExist to theDefaults's boolForKey:"hasDefaults" --grab current state for this every time this function runs
+	end loadServerTable:
+	
+	on addServerToPrefs:sender --this was saveSettings:. I know renaming functions will cause problems in the short run, but better names will save pain in the long run
+		--also, it avoids name clash with existing stuff until I can get that cleaned up
+		
+	end addServerToPrefs:
+	
+	on loadServersFromPrefs:sender --this was getSettings:
+		
+	end loadServersFromPrefs:
+	
+	on deleteServerFromPrefs:sender --this was deleteServer:
+		
+	end deleteServerFromPrefs:
+	
+	on deleteAllServersFromPrefs:sender --this was clearSettings:
+		
+	end deleteAllServersFromPrefs:
+	
+	
+	
+	
+	--USER MANAGER FUNCTIONS
      
      --function for if the user actually changes the default selection in the popup
      on selectedServerName:sender --the popup's sent action method is bound to this function
@@ -352,7 +435,7 @@ script AppDelegate
           userSelection's removeObjects:(userSelection's arrangedObjects()) --clear the table
           set my theUserNameList to {} --not doing this was causing our problems
      end clearTable:*)
-     
+	
      on applicationShouldTerminateAfterLastWindowClosed:sender
           return true
      end applicationShouldTerminateAfterLastWindowClosed:
