@@ -175,15 +175,19 @@ script AppDelegate
 		
 		
 		--USER MANAGER SETUP
-          set x to my popupSelection's selectedObjects()'s firstObject() --this grabs the initial record
-		--current application's NSLog("first thing in popup controller: %@", x)
-          --current application's NSLog("selected: %@", x)
-          set my theServerName to x's serverName --grab the server name
-          set my theServerAPIKey to x's serverAPIKey --grab the server key
-          set my theServerURL to x's serverURL --grab the server URL
-          tell my userTable to setDoubleAction:"deleteSelectedUsers:" --this lets a doubleclick work as well as clicking the delete button. We may remove this
-		--because it could be dangrous
-          my getServerUsers:(missing value) --use missing value because we have to pass something. in ths case, the ASOC version of nil
+		
+		
+		if my theSMDefaultsExist then --if we have no servers in the defaults, there is no sense in sending curl commands to nothing or trying to fill the popup
+			set x to my popupSelection's selectedObjects()'s firstObject() --this grabs the initial record
+			--current application's NSLog("first thing in popup controller: %@", x)
+			--current application's NSLog("selected: %@", x)
+			set my theServerName to x's serverName --grab the server name
+			set my theServerAPIKey to x's serverAPIKey --grab the server key
+			set my theServerURL to x's serverURL --grab the server URL
+			tell my userTable to setDoubleAction:"deleteSelectedUsers:" --this lets a doubleclick work as well as clicking the delete button. We may remove this
+			--because it could be dangrous
+			my getServerUsers:(missing value) --use missing value because we have to pass something. in ths case, the ASOC version of nil
+		end if
           
           --set the initial state and enabled of the checkboxes
           my canSeeAllObjects's setEnabled:true
