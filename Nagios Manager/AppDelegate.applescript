@@ -152,20 +152,18 @@ script AppDelegate
           --initialize our properties to the default value in the popup
 		
 		--SERVER MANAGER SETUP
-		set theDefaults to current application's NSUserDefaults's standardUserDefaults() --make theDefaults the container
+		set my theDefaults to current application's NSUserDefaults's standardUserDefaults() --make theDefaults the container
 		--for defaults operations
-		theDefaults's registerDefaults:{serverSettingsList:""} --sets up "serverSettingsList" as a valid defaults key
-		--of the keys used in the defaults
-		set my theSMSettingsList to current application's NSMutableArray's arrayWithCapacity:1 --initialize the internal array
-		--we use for this
-		set theTempArray to current application's NSArray's arrayWithArray:(theDefaults's arrayForKey:"serverSettingsList") --we do this because
-		--NSDefaults arrayForKey coerces NSMutableArray to NSArray, which is annoying. At some point we can replace this using mutable copy, but we have to deal with
-		--nil returns for first run, etc.
+		my theDefaults's registerDefaults:{serverSettingsList:{}} --sets up "serverSettingsList" as a valid defaults key
+		--changed to more correctly init as array instead of string. It also deals with nils much better
+		
+		set my theSMSettingsList to (my theDefaults's arrayForKey:"serverSettingsList")'s mutableCopy() --this removes a bit of code by
+		--folding the NSMutableArray initialization and keeps it mutable even after copying the contents of serverSettingsList into it.
+		
 		set my theSMDefaultsExist to theDefaults's boolForKey:"hasDefaults"
 		--current application's NSLog("theDefaultsExist: %@", my theDefaultsExist) --this is just here for when I need it elsewhere, I can
 		--copy/paste easier
-		my theSMSettingsList's addObjectsFromArray:theTempArray --copy all the data from theTempArray into theSettingList, which keeps the
-		--latter mutable
+		
 		if not my theSMDefaultsExist then
 			display dialog "there are no default settings existing at launch" --my version of a first run warning. Slick, ain't it.
 		end if
@@ -275,9 +273,7 @@ script AppDelegate
 	
 	on loadServersFromPrefs:sender --this was getSettings:
 		my theSMSettingsList's removeAllObjects() -- blank out theSMSettingsList since we're reloading it. The () IS IMPORTANT
-		set theTempArray to current application's NSArray's arrayWithArray:(theDefaults's arrayForKey:"serverSettingsList") --since we're
-		--re-reading from the disk, we have to do the temp NSArray --> NSMutableArray dance again.
-		my theSMSettingsList's addObjectsFromArray:theTempArray --reload our NSMutableArray so it doesn't get coerced to NSArray
+		set my theSMSettingsList to (my theDefaults's arrayForKey:"serverSettingsList")'s mutableCopy() --same as in applicationWillFinishLaunching:
 		set my theSMDefaultsExist to theDefaults's boolForKey:"hasDefaults" --pull the "do we even have default settings" flag
 		my theServerTableController's removeObjects:(theServerTableController's arrangedObjects()) --blow out contents of the server table controller
 		my theServerTableController's addObjects:my theSMSettingsList --shove the current contents of thePrefsRecord into the array controller
@@ -563,10 +559,10 @@ script AppDelegate
 		set my theRESTresults to do shell script theAddCommand --add the user
 		my getServerUsers:(missing value) --reload the list
 		
-		set my theNagiosNewUserName to "" --blank out the add user fields after adding a user
-		set my theNagiosNewUserPassword to ""
-		set my theNagiosNewUserRealName to ""
-		set my theNagiosNewUserEmailAddress to ""
+		--set my theNagiosNewUserName to "" --blank out the add user fields after adding a user
+		--set my theNagiosNewUserPassword to ""
+		--set my theNagiosNewUserRealName to ""
+		--set my theNagiosNewUserEmailAddress to ""
 	end addUser:
 	
 	on cancelAddUser:sender --cancel adding a user function. blank out text fields, reset checkboxes and radios to default states
