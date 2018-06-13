@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		3403CFDC20D1C9C200A4DB40 /* readme.md in Resources */ = {isa = PBXBuildFile; fileRef = 3403CFDB20D1C9C200A4DB40 /* readme.md */; };
 		34C481A120AF5B610020AF01 /* AppleScriptObjC.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 34C481A020AF5B610020AF01 /* AppleScriptObjC.framework */; };
 		34C481A420AF5B610020AF01 /* AppDelegate.applescript in Sources */ = {isa = PBXBuildFile; fileRef = 34C481A320AF5B610020AF01 /* AppDelegate.applescript */; };
 		34C481A620AF5B630020AF01 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 34C481A520AF5B630020AF01 /* Assets.xcassets */; };
@@ -15,7 +16,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		3403CFD920D1C8A700A4DB40 /* readme.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = readme.md; sourceTree = "<group>"; };
+		3403CFDB20D1C9C200A4DB40 /* readme.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = readme.md; sourceTree = "<group>"; };
 		34C4819D20AF5B610020AF01 /* Nagios Manager.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Nagios Manager.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		34C481A020AF5B610020AF01 /* AppleScriptObjC.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppleScriptObjC.framework; path = System/Library/Frameworks/AppleScriptObjC.framework; sourceTree = SDKROOT; };
 		34C481A320AF5B610020AF01 /* AppDelegate.applescript */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.applescript; path = AppDelegate.applescript; sourceTree = "<group>"; };
@@ -43,7 +44,6 @@
 				34C481A220AF5B610020AF01 /* Nagios Manager */,
 				34C4819F20AF5B610020AF01 /* Frameworks */,
 				34C4819E20AF5B610020AF01 /* Products */,
-				3403CFD920D1C8A700A4DB40 /* readme.md */,
 			);
 			sourceTree = "<group>";
 			usesTabs = 1;
@@ -67,6 +67,7 @@
 		34C481A220AF5B610020AF01 /* Nagios Manager */ = {
 			isa = PBXGroup;
 			children = (
+				3403CFDB20D1C9C200A4DB40 /* readme.md */,
 				34C481A320AF5B610020AF01 /* AppDelegate.applescript */,
 				34C481A520AF5B630020AF01 /* Assets.xcassets */,
 				34C481A720AF5B630020AF01 /* MainMenu.xib */,
@@ -135,6 +136,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				34C481A620AF5B630020AF01 /* Assets.xcassets in Resources */,
+				3403CFDC20D1C9C200A4DB40 /* readme.md in Resources */,
 				34C481A920AF5B630020AF01 /* MainMenu.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
