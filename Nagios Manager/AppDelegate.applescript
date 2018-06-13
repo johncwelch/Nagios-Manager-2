@@ -51,6 +51,7 @@
 
 	--minor comment note: I'm now trying to organize properties by what tab they apply to. So Server Manager, User Manager, etc.
 --step 7: Run chunks through a mixer, then pipe the mixer output into a blender. You can skip the mixer, but it makes things a lot easier. basically, you want pumpkin slurry
+-- god I hate git
 
 script AppDelegate
 	property parent : class "NSObject"
