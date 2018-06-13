@@ -15,6 +15,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		3403CFD920D1C8A700A4DB40 /* readme.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = readme.md; sourceTree = "<group>"; };
 		34C4819D20AF5B610020AF01 /* Nagios Manager.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Nagios Manager.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		34C481A020AF5B610020AF01 /* AppleScriptObjC.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppleScriptObjC.framework; path = System/Library/Frameworks/AppleScriptObjC.framework; sourceTree = SDKROOT; };
 		34C481A320AF5B610020AF01 /* AppDelegate.applescript */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.applescript; path = AppDelegate.applescript; sourceTree = "<group>"; };
@@ -42,6 +43,7 @@
 				34C481A220AF5B610020AF01 /* Nagios Manager */,
 				34C4819F20AF5B610020AF01 /* Frameworks */,
 				34C4819E20AF5B610020AF01 /* Products */,
+				3403CFD920D1C8A700A4DB40 /* readme.md */,
 			);
 			sourceTree = "<group>";
 			usesTabs = 1;
