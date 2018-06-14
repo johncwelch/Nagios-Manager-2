@@ -401,12 +401,13 @@ script AppDelegate
 		set my theServerUsers to users of my theJSONDict --yank out just the "users" section of the JSON return, that's
 		--all we care about
 		
+		set my theOtherUserInfoList to current application's NSMutableArray's array --init this as an NSMutableArray
 		--doing this the long way, will fix to be more "cocoa-y" later
 		repeat with x from 1 to count of my theServerUsers --iterate through theServerUsers
 			set theItem to item x of theServerUsers as record --convert NSDict to record because it's initially easier
 			set the end of my theUserNameList to {theUserName:|name| of theItem,theUserID:user_id of theItem} --build a list of records with the two values we care about
 			--also, don't use "my" within the record definition!
-			set the end of my theOtherUserInfoList to {otherUserFullName:|name| of theItem,otherUserID:user_id of theItem,otherUserEnabled:|enabled| of theItem,otherUserEmail:|email| of theItem, otherUserName:|username| of theItem} --we use this in displayUserInfo. I know it's inelegant, but for now it works.
+			my theOtherUserInfoList's addObject:theItem --shove theItem on the end of the array
 			
 		end repeat
 		my userSelection's removeObjects:(my userSelection's arrangedObjects()) --clear the table
@@ -417,13 +418,10 @@ script AppDelegate
 	
 	on displayUserInfo:sender --this is a VERY inelegant way of displaying basic info on the selected user in the user manager table
 		set theTempID to theUserID of my userSelection's selectedObjects() as text --grab the user id
-		repeat with x in theOtherUserInfoList --run theOtherUserInfoList
-			if otherUserID of x is theTempID then --found it?
-				set theTempRecord to contents of x -- grab the info as a record
-				exit repeat --done with the loop
-			end if
-		end repeat
-		set my theRESTresults to "Full Name: " & theTempRecord's otherUserFullName & "\rUsername: " & theTempRecord's otherUserName & "\rUser ID: " & theTempRecord's otherUserID & "\rEmail Address: " & theTempRecord's otherUserEmail & "\rUser Enabled: " & theTempRecord's otherUserEnabled --display the user info
+		set theTempPredicate to current application's NSPredicate's predicateWithFormat:("user_id = \"" & theTempID & "\"") --build a predicate which ends up
+		--looking like: user_id == "234" or whatever the user_id is
+		set theTempRecord to my theOtherUserInfoList's filteredArrayUsingPredicate:theTempPredicate --get an array with a single NSDictionary containing what we want
+		set my theRESTresults to "Full Name: " & theTempRecord's |name| & "\rUsername: " & theTempRecord's username & "\rUser ID: " & theTempRecord's user_id & "\rEmail Address: " & theTempRecord's email & "\rUser Enabled: " & theTempRecord's enabled --display the user info from theTempRecord
 	end displayUserInfo:
 	
      --function for if the user actually changes the  selection in the popup
