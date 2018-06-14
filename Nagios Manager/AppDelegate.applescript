@@ -85,8 +85,16 @@ script AppDelegate
 	property theJSONData:"" --used to hold the converted theServerJSON text data as an NSData object
 	property theJSONDict:"" --this holds the result of NSJSONSerialization as an NSArray of NSDicts
 	property theServerUsers:"" --grabs just the users out of theJSONDict as a NSArray of NSDicts
-	property theUserName:"" --user name from the nagios server
+	property theUserName:"" --user full name from the nagios server
 	property theUserID:"" --user id from the nagios server
+	
+	property otherUserFullName : "" --user full name from the nagios server, used for user info
+	property otherUserID : "" --user id from the nagios server, used for user info
+	property otherUserEnabled : "" --the user enabled flag from the nagios server, used for user info
+	property otherUserEmail : "" --the user email address from the nagios server, used for user info
+	property otherUserName : "" --the short username from the nagios server, used for user info
+	property theOtherUserInfoList : {} -- alist of records we'll need to do something cool without a gob of recoding
+	
 	property theUserNameList:{} --a list of records we convert from NSDicts
 	property theDeletePattern : "^.*\\?" --the pattern we use to find where the question mark is. There's only one, so for our needs this works. this allows us to split the string at the ? so we can build a proper delete URL
 --step 9: put all the ingredients in a blender (blenders are your friend) and run until everything is liquid AF
@@ -397,13 +405,26 @@ script AppDelegate
 		repeat with x from 1 to count of my theServerUsers --iterate through theServerUsers
 			set theItem to item x of theServerUsers as record --convert NSDict to record because it's initially easier
 			set the end of my theUserNameList to {theUserName:|name| of theItem,theUserID:user_id of theItem} --build a list of records with the two values we care about
+			--also, don't use "my" within the record definition!
+			set the end of my theOtherUserInfoList to {otherUserFullName:|name| of theItem,otherUserID:user_id of theItem,otherUserEnabled:|enabled| of theItem,otherUserEmail:|email| of theItem, otherUserName:|username| of theItem} --we use this in displayUserInfo. I know it's inelegant, but for now it works.
+			
 		end repeat
-		
 		my userSelection's removeObjects:(my userSelection's arrangedObjects()) --clear the table
 		my userSelection's addObjects:my theUserNameList --fill the table
 		set my theUserNameList to {} --clear out theUserNameList so it's got fresh data each time.
 		
 	end getServerUsers:
+	
+	on displayUserInfo:sender --this is a VERY inelegant way of displaying basic info on the selected user in the user manager table
+		set theTempID to theUserID of my userSelection's selectedObjects() as text --grab the user id
+		repeat with x in theOtherUserInfoList --run theOtherUserInfoList
+			if otherUserID of x is theTempID then --found it?
+				set theTempRecord to contents of x -- grab the info as a record
+				exit repeat --done with the loop
+			end if
+		end repeat
+		set my theRESTresults to "Full Name: " & theTempRecord's otherUserFullName & "\rUsername: " & theTempRecord's otherUserName & "\rUser ID: " & theTempRecord's otherUserID & "\rEmail Address: " & theTempRecord's otherUserEmail & "\rUser Enabled: " & theTempRecord's otherUserEnabled --display the user info
+	end displayUserInfo:
 	
      --function for if the user actually changes the  selection in the popup
      on selectedServerName:sender --the popup's sent action method is bound to this function

@@ -1041,6 +1041,9 @@
                                                                 </connections>
                                                             </tableColumn>
                                                         </tableColumns>
+                                                        <connections>
+                                                            <action selector="displayUserInfo:" target="Voe-Tx-rLC" id="NG4-pv-YYX"/>
+                                                        </connections>
                                                     </tableView>
                                                 </subviews>
                                                 <nil key="backgroundColor"/>
@@ -1362,16 +1365,16 @@ Gw
                                                 <action selector="enabledReadOnly:" target="Voe-Tx-rLC" id="y2Q-pF-EOU"/>
                                             </connections>
                                         </button>
-                                        <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" misplaced="YES" id="2pd-hL-U33">
-                                            <rect key="frame" x="15" y="17" width="630" height="72"/>
-                                            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                                            <textFieldCell key="cell" sendsActionOnEndEditing="YES" allowsEditingTextAttributes="YES" id="XLo-zL-YyZ">
-                                                <font key="font" metaFont="systemLight" size="13"/>
-                                                <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
-                                                <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                                        <textField verticalHuggingPriority="750" misplaced="YES" id="7yd-pA-wfw">
+                                            <rect key="frame" x="17" y="-3" width="626" height="92"/>
+                                            <autoresizingMask key="autoresizingMask" widthSizable="YES"/>
+                                            <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" borderStyle="bezel" id="lS7-GJ-NEz">
+                                                <font key="font" metaFont="system"/>
+                                                <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
+                                                <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                                             </textFieldCell>
                                             <connections>
-                                                <binding destination="Voe-Tx-rLC" name="value" keyPath="theRESTresults" id="0f2-kT-ORJ">
+                                                <binding destination="Voe-Tx-rLC" name="value" keyPath="theRESTresults" id="M3C-tE-xjT">
                                                     <dictionary key="options">
                                                         <bool key="NSContinuouslyUpdatesValue" value="YES"/>
                                                     </dictionary>
