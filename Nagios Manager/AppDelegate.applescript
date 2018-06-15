@@ -56,8 +56,11 @@
 script AppDelegate
 	property parent : class "NSObject"
 	
+	--Application - level IBOutlets
+	property theWindow : missing value --outlet for theWindow
+	property theTabView : missing value --outlet for the tab view. not any individual tab, but all the tabs
+	
 	-- User Manager IBOutlets
-	property theWindow : missing value
      property popupSelection:missing value --this is attached to the array controller's referencing outlet
      --it contains the full record for the selected server name in the popup list
      property userSelection : missing value--this is attached to the user array referencing outlet
@@ -156,6 +159,11 @@ script AppDelegate
 		-- Insert code here to initialize your application before any files are opened
           --initialize our properties to the default value in the popup
 		
+		set theTest to my theTabView's numberOfTabViewItems()
+		log "Number of Tab View Items: " & theTest as text
+		set theTest to my theTabView's tabViewItems()
+		current application's NSLog("tabViewItems: %@", theTest)
+		
 		--SERVER MANAGER SETUP
 		set my theDefaults to current application's NSUserDefaults's standardUserDefaults() --make theDefaults the container
 		--for defaults operations
@@ -210,6 +218,20 @@ script AppDelegate
 		-- Insert code here to do any housekeeping before your application quits 
 		return current application's NSTerminateNow
      end applicationShouldTerminate:
+	
+	--WINDOW TAB FUNCTIONS
+	
+	on selectedServerManagerTab:sender --select server manager tab with Window Menu item or key equivalent (cmd-1)
+		my theTabView's selectTabViewItemAtIndex:0
+	end selectedServerManagerTab:
+	
+	on selectedUserManagerTab:sender --select user manager tab with Window Menu item or key equivalent (cmd-2)
+		my theTabView's selectTabViewItemAtIndex:1
+	end selectedUserManagerTab:
+	
+	on selectedHostManagerTab:sender --select host manager tab with Window Menu item or key equivalent (cmd-3)
+		my theTabView's selectTabViewItemAtIndex:2
+	end selectedHostManagerTab:
 	
 	--SERVER MANAGER FUNCTIONS
 	

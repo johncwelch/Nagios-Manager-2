@@ -24,6 +24,7 @@
                 <outlet property="readOnly" destination="tLi-2o-hbI" id="MsM-zz-CWO"/>
                 <outlet property="theServerTable" destination="2mQ-JL-6Rl" id="3DA-Yp-Duf"/>
                 <outlet property="theServerTableController" destination="Av3-2s-jb3" id="aWR-8L-H4e"/>
+                <outlet property="theTabView" destination="Kwi-PM-7bd" id="cyb-zZ-Oeu"/>
                 <outlet property="theWindow" destination="QvC-M9-y7g" id="gIp-Ho-8D9"/>
                 <outlet property="userRadioButton" destination="dwM-41-H7r" id="6C6-6A-mMs"/>
                 <outlet property="userSelection" destination="FFf-nn-zo4" id="tAC-0E-17H"/>
@@ -669,9 +670,21 @@
                                 </connections>
                             </menuItem>
                             <menuItem isSeparatorItem="YES" id="3kg-d6-DJh"/>
-                            <menuItem title="Server Manager" keyEquivalent="1" id="ycK-FT-knm"/>
-                            <menuItem title="User Manager" keyEquivalent="2" id="6r5-O6-FKH"/>
-                            <menuItem title="Host Manager" keyEquivalent="3" id="pDv-p1-fLg"/>
+                            <menuItem title="Server Manager" keyEquivalent="1" id="ycK-FT-knm">
+                                <connections>
+                                    <action selector="selectedServerManagerTab:" target="Voe-Tx-rLC" id="jzu-Cl-gw5"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem title="User Manager" keyEquivalent="2" id="6r5-O6-FKH">
+                                <connections>
+                                    <action selector="selectedUserManagerTab:" target="Voe-Tx-rLC" id="1Qk-lG-LI4"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem title="Host Manager" keyEquivalent="3" id="pDv-p1-fLg">
+                                <connections>
+                                    <action selector="selectedHostManagerTab:" target="Voe-Tx-rLC" id="TdU-oj-rvv"/>
+                                </connections>
+                            </menuItem>
                             <menuItem isSeparatorItem="YES" id="eu3-7i-yIM"/>
                             <menuItem title="Bring All to Front" id="LE2-aR-0XJ">
                                 <modifierMask key="keyEquivalentModifierMask"/>
