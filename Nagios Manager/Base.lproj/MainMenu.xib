@@ -1384,6 +1384,12 @@ Gw
                                     </subviews>
                                 </view>
                             </tabViewItem>
+                            <tabViewItem label="Host Manager" identifier="" id="sSp-aF-Iug">
+                                <view key="view" id="x1X-Fu-OxP">
+                                    <rect key="frame" x="10" y="33" width="660" height="590"/>
+                                    <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                </view>
+                            </tabViewItem>
                         </tabViewItems>
                     </tabView>
                 </subviews>
