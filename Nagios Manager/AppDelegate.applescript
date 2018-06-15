@@ -88,11 +88,6 @@ script AppDelegate
 	property theUserName:"" --user full name from the nagios server
 	property theUserID:"" --user id from the nagios server
 	
-	property otherUserFullName : "" --user full name from the nagios server, used for user info
-	property otherUserID : "" --user id from the nagios server, used for user info
-	property otherUserEnabled : "" --the user enabled flag from the nagios server, used for user info
-	property otherUserEmail : "" --the user email address from the nagios server, used for user info
-	property otherUserName : "" --the short username from the nagios server, used for user info
 	property theOtherUserInfoList : {} -- alist of records we'll need to do something cool without a gob of recoding
 	
 	property theUserNameList:{} --a list of records we convert from NSDicts
@@ -145,6 +140,7 @@ script AppDelegate
 	property theSMDefaultsExist : "" --are there currently settings?
 	property theSMSettingsList : {} --settings list array
 	property theSMSDeletingLastServerFlag : false --if you're about to manually delete the last server, we set this to true so you don't get two alerts
+	property theSMStatusFieldText : "" --binding for the text field at the bottom of the Server Manager. Allows it and User Manager to have different statuses
 	
 	
      --General Other Properties
@@ -175,11 +171,13 @@ script AppDelegate
 		
 		if not my theSMDefaultsExist then
 			display dialog "there are no default settings existing at launch" --my version of a first run warning. Slick, ain't it.
+			set my theSMStatusFieldText to "If you're seeing this, then there's no servers saved in the app's settings. This tab is where you add them.\r\rYou'll need three things - the server's name, URL and API Key. For the URL, only the first part, i.e. https://server.com/ is needed. The \"full\" URL is generated from that.\r\rThe app itself is pretty simple. You can add or remove servers. Those are saved locally on your mac.\rThose servers are used to pull down user info in the User Manager tab. More info will be in the (currently nonexistent) help. One day, that help will exist. This is not that day."
 		end if
 		my loadServerTable:(missing value) --load existing data into the server table.
 		tell my theServerTable to setDoubleAction:"deleteServerFromPrefs:" --this ties a doubleclick in the server to deleting that server.
-		set theTest to my theServerTableController's arrangedObjects()'s firstObject()
 		--current application's NSLog("theServerTableController's first object: %@", theTest)
+		
+		
 		
 		
 		--USER MANAGER SETUP
@@ -230,17 +228,17 @@ script AppDelegate
 		
 		--check for blank fields, and handle them. This is all the sanity checking I plan on doing for now.
 		if (my theSMServerName is missing value) or (my theSMServerName is "") then --did they enter a name for the server?
-			set my theRESTresults to "The Server Name field cannot be blank"
+			set my theSMStatusFieldText to "The Server Name field cannot be blank"
 			return
 		end if
 		
 		if (my theSMServerURL is missing value) or (my theSMServerURL is "") then --did they enter a URL for the server?
-			set my theRESTresults to "The Server URL field cannot be blank"
+			set my theSMStatusFieldText to "The Server URL field cannot be blank"
 			return
 		end if
 		
 		if (my theSMServerAPIKey is missing value) or (my theSMServerAPIKey is "") then --did they enter an API Key for the server?
-			set my theRESTresults to "The Server API key field cannot be blank"
+			set my theSMStatusFieldText to "The Server API key field cannot be blank"
 			return
 		end if
 		
@@ -393,7 +391,6 @@ script AppDelegate
 	
 	on getServerUsers:sender --this isn't attached to a specific button, but we'll leave the sender
 		--in case we want to do so at a future date
-		--set theTest to "/usr/bin/curl -XGET \"" & my theServerURL & my theServerAPIKey & "&pretty=1\""
 		set my theServerJSON to do shell script "/usr/bin/curl -XGET \"" & my theServerURL & my theServerAPIKey & "&pretty=1\"" --gets the JSON dump as text
 		set my theServerJSON to current application's NSString's stringWithString:my theServerJSON --convert text to NSSTring
 		set my theJSONData to my theServerJSON's dataUsingEncoding:(current application's NSUTF8StringEncoding) --convert NSString to NSData

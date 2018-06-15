@@ -840,13 +840,13 @@
                                         <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" misplaced="YES" id="qJ3-fB-h2k">
                                             <rect key="frame" x="15" y="17" width="638" height="191"/>
                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                                            <textFieldCell key="cell" sendsActionOnEndEditing="YES" allowsEditingTextAttributes="YES" id="DBC-Xv-1CU">
+                                            <textFieldCell key="cell" selectable="YES" allowsUndo="NO" sendsActionOnEndEditing="YES" allowsEditingTextAttributes="YES" id="DBC-Xv-1CU">
                                                 <font key="font" metaFont="systemLight" size="13"/>
                                                 <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                                                 <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                                             </textFieldCell>
                                             <connections>
-                                                <binding destination="Voe-Tx-rLC" name="value" keyPath="theRESTresults" id="LJK-6M-YQ5">
+                                                <binding destination="Voe-Tx-rLC" name="value" keyPath="theSMStatusFieldText" id="cBb-mI-vbU">
                                                     <dictionary key="options">
                                                         <bool key="NSContinuouslyUpdatesValue" value="YES"/>
                                                     </dictionary>
@@ -1366,9 +1366,9 @@ Gw
                                             </connections>
                                         </button>
                                         <textField verticalHuggingPriority="750" misplaced="YES" id="7yd-pA-wfw">
-                                            <rect key="frame" x="17" y="-3" width="626" height="92"/>
+                                            <rect key="frame" x="15" y="-3" width="630" height="92"/>
                                             <autoresizingMask key="autoresizingMask" widthSizable="YES"/>
-                                            <textFieldCell key="cell" sendsActionOnEndEditing="YES" allowsEditingTextAttributes="YES" id="lS7-GJ-NEz">
+                                            <textFieldCell key="cell" selectable="YES" allowsUndo="NO" sendsActionOnEndEditing="YES" allowsEditingTextAttributes="YES" id="lS7-GJ-NEz">
                                                 <font key="font" metaFont="systemLight" size="13"/>
                                                 <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                                                 <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
