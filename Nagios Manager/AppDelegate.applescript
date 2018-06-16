@@ -256,6 +256,34 @@ script AppDelegate
 			my loadUserManagerPopup:(missing value) --refresh the popup data too
 		end if
 	end loadServerTable:
+
+	on getSMServerStatus:sender
+		set theSMServerStatusSearchPattern to "/user" --the pattern we're using for the regex
+		set theSMServerStatusReplacementPattern to "/status" --the replacement pattern we're using for the regex
+
+		set theSelectedServer to my theServerTableController's selectedObjects()
+		--current application's NSLog("theSelectedServer: %@", theSelectedServer)
+
+		set theSMSelectedURL to theSelectedServer's theSMTableServerURL as text --get the URL for the server that was clicked on in the Server
+		--manager table. Note, the conversion to text is necessary, or you get as a single item array or dictionary. Either way, it makes
+		--rangeOfFirstMatchInString REALLY UNHAPPY
+		set theSMSelectedAPIKey to theSelectedServer's theSMTableServerAPIKey as text --pull the selected server's API key as text
+		set theRegEx to current application's NSRegularExpression's regularExpressionWithPattern:(theSMServerStatusSearchPattern) options:1 |error|:(missing value) --create regex object with the the search pattern as what it's looking for
+		set theSMSelectedURLLength to theSMSelectedURL's length --get the length in characters of the selected server's URL
+		set theSMMatches to theRegEx's rangeOfFirstMatchInString:(theSMSelectedURL) options:0 range:[0, theSMSelectedURLLength] --get the start
+		--of /user and how long it is.
+		set theSMStatusURL to theRegEx's stringByReplacingMatchesInString:theSMSelectedURL options:0 range:theSMMatches withTemplate:(theSMServerStatusReplacementPattern) --builds the status URL by replacing the /user in the URL with /status
+		set theSMServerStatusCommand to "/usr/bin/curl -XGET \"" & theSMStatusURL & theSMSelectedAPIKey & "&pretty=1\"" --build the server
+		--status command
+		set theSMServerStatusJSON to do shell script theSMServerStatusCommand --run the command to pull the JSON from the server
+		set theSMServerStatusJSON to current application's NSString's stringWithString:theSMServerStatusJSON --convert this to NSString
+		set theSMServerStatusJSONData to theSMServerStatusJSON's dataUsingEncoding:(current application's NSUTF8StringEncoding) --convert
+		--NSString to NSData, needed for NSJSONSerialization
+		set {theSMSServerStatusJSONDict, theError} to current application's NSJSONSerialization's JSONObjectWithData:theSMServerStatusJSONData options:0 |error|:(reference) --returns an NSData record of NSArrays, technically an NSJSON object. It looks a LOT like an AS
+		--record. You can even reference elements the way you would a record. W00T!!!
+		set my theSMStatusFieldText to "active host checks enabled: " & theSMSServerStatusJSONDict's active_host_checks_enabled & "\ractive service checks enabled: " & theSMSServerStatusJSONDict's active_service_checks_enabled & "\rNagios in daemon mode: " & theSMSServerStatusJSONDict's daemon_mode & "\revent handlers enabled: " & theSMSServerStatusJSONDict's event_handlers_enabled & "\rflap detection enabled: " & theSMSServerStatusJSONDict's flap_detection_enabled & "\rlast log rotation: " & theSMSServerStatusJSONDict's last_log_rotation & "\rnotifications enabled: " & theSMSServerStatusJSONDict's notifications_enabled & "\rpassive host checks enabled: " & theSMSServerStatusJSONDict's passive_host_checks_enabled & "\rpassive service checks enabled: " & theSMSServerStatusJSONDict's passive_service_checks_enabled & "\rprocess id: " & theSMSServerStatusJSONDict's process_id
+
+	end getSMServerStatus:
 	
 	on addServerToPrefs:sender --this was saveSettings:. I know renaming functions will cause problems in the short run, but better names will save pain in the long run
 		--also, it avoids name clash with existing stuff until I can get that cleaned up
