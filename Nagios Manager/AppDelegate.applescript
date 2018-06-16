@@ -37,6 +37,15 @@
 --step 5: cook pumpkin wedges for about 2 hours, maybe 2.5, skin-side down. If the skin's a bit burnt, that's fine, it comes off easier that way.
 --popup lists
 
+	(*Server Table Controller: array controller bound to server array. This is filled from the defaults plist file.
+		referencing outlet: theServerTableController
+		content array: theSMServerTableControllerArray
+		referencing bindings:
+			arranged objects.theSMTableServerAPIKey value is server api key column in server table
+			arranged objects.theSMTableServerName value is server name
+				content value is item 1  in the server selection popup in User manager. This is so that the popup there can use the server name in the prefs
+			arranged objects.theSMTableURL value is server url*)
+
      (*server selection popup list: sent action binds to onSelectedServerName:, content values bind to the server table array controller*)
 
 --pushbuttons
@@ -94,7 +103,8 @@ script AppDelegate
 	property theOtherUserInfoList : {} -- alist of records we'll need to do something cool without a gob of recoding
 	
 	property theUserNameList:{} --a list of records we convert from NSDicts
-	property theDeletePattern : "^.*\\?" --the pattern we use to find where the question mark is. There's only one, so for our needs this works. this allows us to split the string at the ? so we can build a proper delete URL
+	--property theDeletePattern : "^.*\\?" --the pattern we use to find where the question mark is. There's only one, so for our needs this works. this allows us to split the string at the ? so we can build a proper delete URL
+	property theDeletePattern : "\\?" --figured out how to do NSRegularExpressions SO much better. This is the new pattern
 --step 9: put all the ingredients in a blender (blenders are your friend) and run until everything is liquid AF
 	
 	
@@ -160,9 +170,9 @@ script AppDelegate
           --initialize our properties to the default value in the popup
 		
 		set theTest to my theTabView's numberOfTabViewItems()
-		log "Number of Tab View Items: " & theTest as text
-		set theTest to my theTabView's tabViewItems()
-		current application's NSLog("tabViewItems: %@", theTest)
+		--log "Number of Tab View Items: " & theTest as text
+		--set theTest to my theTabView's tabViewItems()
+		--current application's NSLog("tabViewItems: %@", theTest)
 		
 		--SERVER MANAGER SETUP
 		set my theDefaults to current application's NSUserDefaults's standardUserDefaults() --make theDefaults the container
@@ -221,16 +231,18 @@ script AppDelegate
 	
 	--WINDOW TAB FUNCTIONS
 	
+	--these are all bound to the appropriate menu items' sent action
+	
 	on selectedServerManagerTab:sender --select server manager tab with Window Menu item or key equivalent (cmd-1)
-		my theTabView's selectTabViewItemAtIndex:0
+		my theTabView's selectTabViewItemAtIndex:0 --sets the tab with the specified index to be frontmost/current
 	end selectedServerManagerTab:
 	
 	on selectedUserManagerTab:sender --select user manager tab with Window Menu item or key equivalent (cmd-2)
-		my theTabView's selectTabViewItemAtIndex:1
+		my theTabView's selectTabViewItemAtIndex:1 --sets the tab with the specified index to be frontmost/current
 	end selectedUserManagerTab:
 	
 	on selectedHostManagerTab:sender --select host manager tab with Window Menu item or key equivalent (cmd-3)
-		my theTabView's selectTabViewItemAtIndex:2
+		my theTabView's selectTabViewItemAtIndex:2 --sets the tab with the specified index to be frontmost/current
 	end selectedHostManagerTab:
 	
 	--SERVER MANAGER FUNCTIONS
@@ -468,22 +480,25 @@ script AppDelegate
      on deleteSelectedUsers:sender --this activates for either the "delete user" button or a double click in the table
           try
                set theSelection to userSelection's selectedObjects() as record --this gets the selection in the table row
-               --and converts the NSArray to an AS record
-               set theUserIDToBeDeleted to |theUserID| of theSelection --set user id to local var
+               --and converts the NSArray to an AS record. Is it strictly needed? No, but it's not a big deal either.
+               set theUserIDToBeDeleted to |theUserID| of theSelection  --set user id to local var
                set theUserNameToBeDeleted to |theUserName| of theSelection --set user name to local var
-               set theRegEx to current application's NSRegularExpression's regularExpressionWithPattern:my theDeletePattern options:1 |error|:(missing value) --sets up the expression paramater
-               set theURLNSString to current application's NSString's stringWithString:my theServerURL --create an NSSTring version of theServerURL
-               set theURLLength to theURLNSString's |length| --get length of the NSString SO MUCH MORE RELIABLE THAN THE APPLESCRIPT WAY
-               set theMatches to theRegEx's rangeOfFirstMatchInString:my theServerURL options:0 range:[0, theURLLength] --returns a range from 0 to location of question mark. we have to bar out length or we get errors.
-               set |length| of theMatches to (|length| of theMatches) - 1 --change the range so we exclude the question mark
-			
-               --while in theory you could use AS's "text num thru num of string" function here, it ends up erroring out all over the place.
-               --dumping to NSString and back adds exactly one line of code and works. A favorable tradeoff I think.
-               set theURLNSString to theURLNSString's substringToIndex:(theMatches's |length|) --substring everything up to the question mark
-               set theDeleteURL to theURLNSString as text --create a text version of the NSString
-               set theDeleteURL to theDeleteURL & "/" --need the trailing slash there
-               set theDeleteUIDCommand to "/usr/bin/curl -XDELETE \"" & theDeleteURL & theUserIDToBeDeleted & "?apikey=" & theServerAPIKey & "&pretty=1\""
-               set deleteUserButtonRecord to display alert  "You are about to delete user " & theUserNameToBeDeleted & " from " & theServerName & "\r\rARE YOU SURE?" as critical buttons {"OK","Cancel"} default button "Cancel" giving up after 90 --last chance warning
+
+			set theDeleteReplacement to "/" & theUserIDToBeDeleted & "\\?" --this sets the replacement string to be "/<the user_id>?"
+			--replacing "?"
+			set theRegEx to current application's NSRegularExpression's regularExpressionWithPattern:(my theDeletePattern) options:1 |error|:(missing value)
+			--current application's NSLog("theRegEx: %@", theRegEx)
+			set theURLLength to my theServerURL's |length| --get the length of the URL, we need that to get the range for
+			--rangeOfFirstMatchInString
+			set theMatches to theRegEx's rangeOfFirstMatchInString:(my theServerURL) options:0 range:[0, theURLLength] --this gets the starting
+			--point for the match and how long it is. In this case, it's one character, and it starts and ends in the same place.
+			set theDeleteURL to theRegEx's stringByReplacingMatchesInString:my theServerURL options:0 range:theMatches withTemplate:(theDeleteReplacement) --replace the characters in range theMatches. This is literally a "replace "?" with "/<user_id>?
+			--which is what we need for a delete string. Does it all in one blush, saves a bunch of "build it the hard way code
+			set theDeleteUIDCommand to "/usr/bin/curl -XDELETE \"" & theDeleteURL & my theServerAPIKey & "&pretty=1\"" --builds the full
+			--command for the do shell script step. Yes, there may be a more cocoa-y way, but I'm pretty sure it's not more efficient in terms
+			--of coding, (two lines) and I doubt it runs significantly faster.
+
+			set deleteUserButtonRecord to display alert  "You are about to delete user " & theUserNameToBeDeleted & " from " & theServerName & "\r\rARE YOU SURE?" as critical buttons {"OK","Cancel"} default button "Cancel" giving up after 90 --last chance warning
                set deleteUserButton to button returned of deleteUserButtonRecord --get button user clicked
                 
                if deleteUserButton is "OK" then --buh-bye
