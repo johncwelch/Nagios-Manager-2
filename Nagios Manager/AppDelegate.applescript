@@ -157,6 +157,11 @@ script AppDelegate
 	property theSMSDeletingLastServerFlag : false --if you're about to manually delete the last server, we set this to true so you don't get two alerts
 	property theSMStatusFieldText : "" --binding for the text field at the bottom of the Server Manager. Allows it and User Manager to have different statuses
 	
+	--Host Manager IB Outlets
+	property theHostTableController : missing value --referencing outlet for host array controller
+	
+	--Host Manager Other properties
+	property theHMHostTableControllerArray : {} --bound to content of the host manager array controller, probably not used.
 	
      --General Other Properties
      property theServerName:"" --name of the server for curl ops
@@ -193,11 +198,13 @@ script AppDelegate
 		--current application's NSLog("theDefaultsExist: %@", my theDefaultsExist) --this is just here for when I need it elsewhere, I can
 		--copy/paste easier
 		
-		if not my theSMDefaultsExist then
+		if not my theSMDefaultsExist then --if there are not defaults, let the user know this so they can fix that issue.
 			display dialog "there are no default settings existing at launch" --my version of a first run warning. Slick, ain't it.
 			set my theSMStatusFieldText to "If you're seeing this, then there's no servers saved in the app's settings. This tab is where you add them.\r\rYou'll need three things - the server's name, URL and API Key. For the URL, only the first part, i.e. https://server.com/ is needed. The \"full\" URL is generated from that.\r\rThe app itself is pretty simple. You can add or remove servers. Those are saved locally on your mac.\rThose servers are used to pull down user info in the User Manager tab. More info will be in the (currently nonexistent) help. One day, that help will exist. This is not that day."
+		else if my theSMDefaultsExist then --there's no point in running loadServerTable: if there's no data to load
+			my loadServerTable:(missing value) -- initial load of existing data into the server table.
 		end if
-		my loadServerTable:(missing value) --load existing data into the server table.
+		
 		tell my theServerTable to setDoubleAction:"deleteServerFromPrefs:" --this ties a doubleclick in the server to deleting that server.
 		--current application's NSLog("theServerTableController's first object: %@", theTest)
 		
@@ -206,10 +213,8 @@ script AppDelegate
 		
 		--USER MANAGER SETUP
 		
-		
-		--if my theSMDefaultsExist then --if we have no servers in the defaults, there is no sense in sending curl commands to nothing or trying to fill the popup
-		--	my loadUserManagerPopup:(missing value) --initial popup load, moved to a function here.
-		--end if
+		--we moved the initial load of user data from here so that it only does the initial load when the user manager tab is selected.
+		--speeds up app launch. It's now in tabView:tabView didSelectTabViewItem:sender
 		
 		tell my userTable to setDoubleAction:"deleteSelectedUsers:" --this lets a doubleclick work as well as clicking the delete button. We may remove this
 		--because it could be dangerous
@@ -267,10 +272,12 @@ script AppDelegate
 			set my theSelectedTabViewItemIndex to tabView's indexOfTabViewItem:(sender)
 			set my theSelectedTabViewItemIndex to my theSelectedTabViewItemIndex as text
 			if theSelectedTabIsCorrect then
-				if my theSelectedTabViewItemIndex is "0" then --clicked on Server Manager tab
-					log "server"
-					else if my theSelectedTabViewItemIndex is "1" then
-					log "user"
+				if my theSelectedTabViewItemIndex is "0" then --clicked on Server Manager tab. Honestly, this may never do much of anything
+					--the initial server tab operations are handled in applicationWillFinishLaunching and other places. But just in case
+					--it's here
+					--log "server"
+				else if my theSelectedTabViewItemIndex is "1" then --this moves the initial user load to a more lazy system, where it doesn't
+				--kick in until the user tab is selected at least once.
 					if not theUMInitialUserLoadDone then --the user manager hasn't loaded at least once. This prevents us from continually
 						--sending curl commands every time someone clicks on a tab
 						if my theSMDefaultsExist then --if we have no servers in the defaults, there is no sense in sending curl commands to
@@ -280,8 +287,12 @@ script AppDelegate
 							set theUMInitialUserLoadDone to true
 						end if
 					end if
-					else if my theSelectedTabViewItemIndex is "2" then --we won't do anything here until this is actually doing something
-					log "host"
+				else if my theSelectedTabViewItemIndex is "2" then --we won't do anything here until this is actually doing something
+					if my theSMDefaultsExist then --again, if we have no prefs, we have no servers. If we have no servers, we have nothing to get
+						--host data for.
+						
+					end if
+					--log "host"
 				end if
 			end if
 		end if
@@ -707,6 +718,11 @@ script AppDelegate
 		
 		set my theRESTresults to "" --clear the notification field value
 	end cancelAddUser:
+	
+	
+	--HOST MANAGER FUNCTIONS
+	
+	
      
      (*on clearTable:sender --test function to see why we aren't clearing table data correctly.
           userSelection's removeObjects:(userSelection's arrangedObjects()) --clear the table

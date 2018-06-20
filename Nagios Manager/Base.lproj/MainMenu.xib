@@ -22,6 +22,7 @@
                 <outlet property="canSeeAllObjects" destination="wnB-Ld-KVg" id="VKH-Ci-cA3"/>
                 <outlet property="canSeeOrConfigureMonitoringEngine" destination="WwK-vz-39Y" id="viW-61-yKE"/>
                 <outlet property="readOnly" destination="tLi-2o-hbI" id="MsM-zz-CWO"/>
+                <outlet property="theHostTableController" destination="au1-f9-c4y" id="NJk-m7-dgJ"/>
                 <outlet property="theServerTable" destination="2mQ-JL-6Rl" id="3DA-Yp-Duf"/>
                 <outlet property="theServerTableController" destination="Av3-2s-jb3" id="aWR-8L-H4e"/>
                 <outlet property="theTabView" destination="Kwi-PM-7bd" id="cyb-zZ-Oeu"/>
@@ -1433,6 +1434,15 @@ Gw
         <arrayController id="Av3-2s-jb3">
             <connections>
                 <binding destination="Voe-Tx-rLC" name="contentArray" keyPath="theSMServerTableControllerArray" id="fu2-Ju-Y0T">
+                    <dictionary key="options">
+                        <bool key="NSHandlesContentAsCompoundValue" value="YES"/>
+                    </dictionary>
+                </binding>
+            </connections>
+        </arrayController>
+        <arrayController id="au1-f9-c4y">
+            <connections>
+                <binding destination="Voe-Tx-rLC" name="contentArray" keyPath="theHMHostTableControllerArray" id="mYs-RT-vbJ">
                     <dictionary key="options">
                         <bool key="NSHandlesContentAsCompoundValue" value="YES"/>
                     </dictionary>
