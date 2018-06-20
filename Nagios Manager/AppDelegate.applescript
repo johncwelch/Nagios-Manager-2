@@ -162,6 +162,8 @@ script AppDelegate
 	
 	--Host Manager Other properties
 	property theHMHostTableControllerArray : {} --bound to content of the host manager array controller, probably not used.
+	property theHMHostSearchPattern : "system/user"
+	property theHMHostReplacementPattern : "objects/host"
 	
      --General Other Properties
      property theServerName:"" --name of the server for curl ops
@@ -290,7 +292,7 @@ script AppDelegate
 				else if my theSelectedTabViewItemIndex is "2" then --we won't do anything here until this is actually doing something
 					if my theSMDefaultsExist then --again, if we have no prefs, we have no servers. If we have no servers, we have nothing to get
 						--host data for.
-						
+						my getHostList:(missing value)
 					end if
 					--log "host"
 				end if
@@ -722,7 +724,15 @@ script AppDelegate
 	
 	--HOST MANAGER FUNCTIONS
 	
-	
+	on getHostList:sender --pull down the initial list of hosts
+		set theRegEx to current application's NSRegularExpression's regularExpressionWithPattern:(theHMHostSearchPattern) options:1 |error|:(missing value) --create the RegEx object
+		set theURLLength to my theServerURL's |length| --get the length of the URL, we need that to get the range for
+		--rangeOfFirstMatchInString
+		set theMatches to theRegEx's rangeOfFirstMatchInString:(my theServerURL) options:0 range:[0, theURLLength] --this gets the starting
+		--point for the match and how long it is. In this case, it's one character, and it starts and ends in the same place.
+		set theHMHostStatusURL to theRegEx's stringByReplacingMatchesInString:my theServerURL options:0 range:theMatches withTemplate:(my theHMHostReplacementPattern) --replace the characters in range theMatches. This is literally a "replace "system/user" with "objects/host" operation" which is what we need for a url to get a list of hosts.
+		current application's NSLog("theHMHostStatusURL: %@", theHMHostStatusURL)
+	end getHostList:
      
      (*on clearTable:sender --test function to see why we aren't clearing table data correctly.
           userSelection's removeObjects:(userSelection's arrangedObjects()) --clear the table
