@@ -249,6 +249,8 @@ script AppDelegate
 		my theTabView's selectTabViewItemAtIndex:0 --this ensures the server manager tab is always the active tab on launch
 		--note that we do this in a few places, but if the application hard crashes, there's not anything we can do to set things correctly in time. So hopefully, the application won't crash.
 		set my theSelectedTabIsCorrect to true
+		
+		--HOST MANAGER SETUP
      end applicationWillFinishLaunching:
 	
 	on applicationDidFinishLaunching:aNotification
@@ -308,6 +310,7 @@ script AppDelegate
 							--host data for.
 							--also we need to set this up ala user manager tab so we don't reload EVERY time someone clicks the tab.
 							my loadHostManagerFromPopup:(missing value)
+							set my theHMStatusDisplay to "Because of how dependencies work within Nagios, this app currently can't delete a host. That will hopefully change over time."
 							set my theHMInitialUserLoadDone to true --load is done, set flag correctly
 						end if
 					end if
