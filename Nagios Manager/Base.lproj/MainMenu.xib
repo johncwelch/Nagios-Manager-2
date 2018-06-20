@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="14113" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" customObjectInstantitationMethod="direct">
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="14269.14" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" customObjectInstantitationMethod="direct">
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="14113"/>
+        <deployment identifier="macosx"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="14269.14"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
-        <capability name="system font weights other than Regular or Bold" minToolsVersion="7.0"/>
     </dependencies>
     <objects>
         <customObject id="-2" userLabel="File's Owner" customClass="NSApplication">
@@ -885,7 +885,7 @@
                                                         <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
                                                         <color key="gridColor" name="gridColor" catalog="System" colorSpace="catalog"/>
                                                         <tableColumns>
-                                                            <tableColumn identifier="" width="116" minWidth="40" maxWidth="1000" id="agT-dE-W1X">
+                                                            <tableColumn width="116" minWidth="40" maxWidth="1000" id="agT-dE-W1X">
                                                                 <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border" title="Server Name">
                                                                     <font key="font" metaFont="smallSystem"/>
                                                                     <color key="textColor" name="headerTextColor" catalog="System" colorSpace="catalog"/>
@@ -905,7 +905,7 @@
                                                                     </binding>
                                                                 </connections>
                                                             </tableColumn>
-                                                            <tableColumn identifier="" width="140" minWidth="40" maxWidth="1000" id="KYX-Xv-W5g">
+                                                            <tableColumn width="140" minWidth="40" maxWidth="1000" id="KYX-Xv-W5g">
                                                                 <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border" title="Server URL">
                                                                     <font key="font" metaFont="smallSystem"/>
                                                                     <color key="textColor" name="headerTextColor" catalog="System" colorSpace="catalog"/>
@@ -925,7 +925,7 @@
                                                                     </binding>
                                                                 </connections>
                                                             </tableColumn>
-                                                            <tableColumn identifier="" width="96" minWidth="10" maxWidth="3.4028234663852886e+38" id="7Sf-DZ-B2t">
+                                                            <tableColumn width="96" minWidth="10" maxWidth="3.4028234663852886e+38" id="7Sf-DZ-B2t">
                                                                 <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border" alignment="left" title="Server API Key">
                                                                     <font key="font" metaFont="smallSystem"/>
                                                                     <color key="textColor" name="headerTextColor" catalog="System" colorSpace="catalog"/>
@@ -1011,7 +1011,7 @@
                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                             <clipView key="contentView" drawsBackground="NO" id="rAa-PW-jfz">
                                                 <rect key="frame" x="1" y="0.0" width="350" height="439"/>
-                                                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                                <autoresizingMask key="autoresizingMask"/>
                                                 <subviews>
                                                     <tableView verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="firstColumnOnly" columnSelection="YES" multipleSelection="NO" autosaveColumns="NO" rowSizeStyle="automatic" headerView="es9-5J-ksV" viewBased="YES" id="fVd-64-b9e">
                                                         <rect key="frame" x="0.0" y="0.0" width="350" height="416"/>
@@ -1020,7 +1020,7 @@
                                                         <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
                                                         <color key="gridColor" name="gridColor" catalog="System" colorSpace="catalog"/>
                                                         <tableColumns>
-                                                            <tableColumn identifier="" editable="NO" width="257" minWidth="40" maxWidth="1000" id="hDp-kf-vhI">
+                                                            <tableColumn editable="NO" width="257" minWidth="40" maxWidth="1000" id="hDp-kf-vhI">
                                                                 <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border" alignment="left" title="User Name">
                                                                     <font key="font" metaFont="smallSystem"/>
                                                                     <color key="textColor" name="headerTextColor" catalog="System" colorSpace="catalog"/>
@@ -1041,7 +1041,7 @@
                                                                     </binding>
                                                                 </connections>
                                                             </tableColumn>
-                                                            <tableColumn identifier="" editable="NO" width="87" minWidth="40" maxWidth="1000" id="bL0-TP-gyi">
+                                                            <tableColumn editable="NO" width="87" minWidth="40" maxWidth="1000" id="bL0-TP-gyi">
                                                                 <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border" alignment="left" title="User ID">
                                                                     <font key="font" metaFont="smallSystem"/>
                                                                     <color key="textColor" name="headerTextColor" catalog="System" colorSpace="catalog"/>
@@ -1412,6 +1412,10 @@ Gw
                                 </view>
                             </tabViewItem>
                         </tabViewItems>
+                        <connections>
+                            <binding destination="Voe-Tx-rLC" name="selectedIndex" keyPath="theSelectedTabViewItemIndex" id="nD9-Fb-GTY"/>
+                            <outlet property="delegate" destination="Voe-Tx-rLC" id="161-VM-Yc2"/>
+                        </connections>
                     </tabView>
                 </subviews>
             </view>
@@ -1435,6 +1439,5 @@ Gw
                 </binding>
             </connections>
         </arrayController>
-        <userDefaultsController representsSharedInstance="YES" id="0ib-H2-GH2"/>
     </objects>
 </document>

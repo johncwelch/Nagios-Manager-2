@@ -69,6 +69,8 @@ script AppDelegate
 	property theWindow : missing value --outlet for theWindow
 	property theTabView : missing value --outlet for the tab view. not any individual tab, but all the tabs
 	
+	
+	
 	-- User Manager IBOutlets
      property popupSelection:missing value --this is attached to the array controller's referencing outlet
      --it contains the full record for the selected server name in the popup list
@@ -162,6 +164,10 @@ script AppDelegate
      property theServerURL:"" --URL of server for curl ops
 	property theRESTresults : "" --so we can show the results of rest commands as appropriate. This is actually a generic display value for bottom information display
 		--I might fix it when I'm doing cleanup. or not.
+	property theSelectedTabViewItemIndex : "" --the index of the currently selected tab view item. Note this doesn't have any real value until a
+	--selection is made via mouse or key combo or menu item
+	property theSelectedTabIsCorrect:false
+	property theUMInitialUserLoadDone : false
 	
 
 	
@@ -201,9 +207,9 @@ script AppDelegate
 		--USER MANAGER SETUP
 		
 		
-		if my theSMDefaultsExist then --if we have no servers in the defaults, there is no sense in sending curl commands to nothing or trying to fill the popup
-			my loadUserManagerPopup:(missing value) --initial popup load, moved to a function here.
-		end if
+		--if my theSMDefaultsExist then --if we have no servers in the defaults, there is no sense in sending curl commands to nothing or trying to fill the popup
+		--	my loadUserManagerPopup:(missing value) --initial popup load, moved to a function here.
+		--end if
 		
 		tell my userTable to setDoubleAction:"deleteSelectedUsers:" --this lets a doubleclick work as well as clicking the delete button. We may remove this
 		--because it could be dangerous
@@ -221,11 +227,22 @@ script AppDelegate
           my canAccessAdvancedFeatures's setState:1
           my readOnly's setEnabled:true
           my readOnly's setState:0
-		
+		my theTabView's selectTabViewItemAtIndex:0 --this ensures the server manager tab is always the active tab on launch
+		--note that we do this in a few places, but if the application hard crashes, there's not anything we can do to set things correctly in time. So hopefully, the application won't crash.
+		set my theSelectedTabIsCorrect to true
      end applicationWillFinishLaunching:
 	
+	on applicationDidFinishLaunching:aNotification
+		my theTabView's selectTabViewItemAtIndex:0 --this ensures the server manager tab is always the active tab on launch.
+		--well, it's an attempt to do that
+		set my theSelectedTabIsCorrect to true
+	end applicationDidFinishLaunching:
+	
      on applicationShouldTerminate:sender
-		-- Insert code here to do any housekeeping before your application quits 
+		-- Insert code here to do any housekeeping before your application quits
+		my theTabView's selectTabViewItemAtIndex:0 --this ensures the server manager tab is always the active tab on launch
+		set my theSelectedTabIsCorrect to false --reset this to the correct application quit state
+		set theUMInitialUserLoadDone to false --reset this to the correct application quit state
 		return current application's NSTerminateNow
      end applicationShouldTerminate:
 	
@@ -244,7 +261,33 @@ script AppDelegate
 	on selectedHostManagerTab:sender --select host manager tab with Window Menu item or key equivalent (cmd-3)
 		my theTabView's selectTabViewItemAtIndex:2 --sets the tab with the specified index to be frontmost/current
 	end selectedHostManagerTab:
-	
+
+	on tabView:tabView didSelectTabViewItem:sender --this runs any time a tab is selected via click, menu item or programmatically.
+		if theSelectedTabIsCorrect then
+			set my theSelectedTabViewItemIndex to tabView's indexOfTabViewItem:(sender)
+			set my theSelectedTabViewItemIndex to my theSelectedTabViewItemIndex as text
+			if theSelectedTabIsCorrect then
+				if my theSelectedTabViewItemIndex is "0" then --clicked on Server Manager tab
+					log "server"
+					else if my theSelectedTabViewItemIndex is "1" then
+					log "user"
+					if not theUMInitialUserLoadDone then --the user manager hasn't loaded at least once. This prevents us from continually
+						--sending curl commands every time someone clicks on a tab
+						if my theSMDefaultsExist then --if we have no servers in the defaults, there is no sense in sending curl commands to
+							--nothing or trying to fill the popup. putting this here is a bit lazy, but it means launching the application
+							--when it's open to a different tab won't load this for no good reason. Speeds things up a bit. Maybe.
+							my loadUserManagerPopup:(missing value) --initial popup load, moved to a function here.
+							set theUMInitialUserLoadDone to true
+						end if
+					end if
+					else if my theSelectedTabViewItemIndex is "2" then --we won't do anything here until this is actually doing something
+					log "host"
+				end if
+			end if
+		end if
+	end tabView:didSelectTabViewItem:
+
+
 	--SERVER MANAGER FUNCTIONS
 	
 	on loadServerTable:sender --push the saved server array theSettingsList into an array controller that runs a table
