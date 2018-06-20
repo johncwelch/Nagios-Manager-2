@@ -165,12 +165,15 @@ script AppDelegate
 	property theHMHostTableControllerArray : {} --bound to content of the host manager array controller, probably not used.
 	property theHMHostSearchPattern : "system/user"
 	property theHMHostReplacementPattern : "objects/host"
-	property theHMHostListJSON : ""
-	property theHMHostListJSONData : {}
-	property theHMHostListJSONDict : {}
-	property theHMHostCount : ""
-	property theHMHostListRecord : {}
-	property theHMStatusDisplay : ""
+	property theHMHostListJSON : "" --the initial storage for the result of the get all hosts curl command
+	property theHMHostListJSONData : {} --the NSData version of theHMHostListJSON
+	property theHMHostListJSONDict : {} --the NSDictionary version of theHMHostListJSONData
+	property theHMHostCount : "" --holds a count of hosts
+	property theHMHostListRecord : {} --the array we use to load all the host info into the host array controller
+	property theHMStatusDisplay : "" --for status messages in the host tab
+	property theHMServerName : "" -- current host manager server name, used to populate the host manager server popup
+	property theHMServerAPIKey : "" --current host manager server API key
+	property theHMServerURL : "" --current host manager server URL
 	
 	
      --General Other Properties
@@ -304,7 +307,7 @@ script AppDelegate
 						if my theSMDefaultsExist then --again, if we have no prefs, we have no servers. If we have no servers, we have nothing to get
 							--host data for.
 							--also we need to set this up ala user manager tab so we don't reload EVERY time someone clicks the tab.
-							my getHostList:(missing value)
+							my loadHostManagerFromPopup:(missing value)
 							set my theHMInitialUserLoadDone to true --load is done, set flag correctly
 						end if
 					end if
@@ -740,13 +743,13 @@ script AppDelegate
 	
 	on getHostList:sender --pull down the initial list of hosts
 		set theRegEx to current application's NSRegularExpression's regularExpressionWithPattern:(theHMHostSearchPattern) options:1 |error|:(missing value) --create the RegEx object
-		set theURLLength to my theServerURL's |length| --get the length of the URL, we need that to get the range for
+		set theURLLength to my theHMServerURL's |length| --get the length of the URL, we need that to get the range for
 		--rangeOfFirstMatchInString
-		set theMatches to theRegEx's rangeOfFirstMatchInString:(my theServerURL) options:0 range:[0, theURLLength] --this gets the starting
+		set theMatches to theRegEx's rangeOfFirstMatchInString:(my theHMServerURL) options:0 range:[0, theURLLength] --this gets the starting
 		--point for the match and how long it is. In this case, it's one character, and it starts and ends in the same place.
-		set theHMHostStatusURL to theRegEx's stringByReplacingMatchesInString:my theServerURL options:0 range:theMatches withTemplate:(my theHMHostReplacementPattern) --replace the characters in range theMatches. This is literally a "replace "system/user" with "objects/host" operation" which is what we need for a url to get a list of hosts.
+		set theHMHostStatusURL to theRegEx's stringByReplacingMatchesInString:my theHMServerURL options:0 range:theMatches withTemplate:(my theHMHostReplacementPattern) --replace the characters in range theMatches. This is literally a "replace "system/user" with "objects/host" operation" which is what we need for a url to get a list of hosts.
 		--current application's NSLog("theHMHostStatusURL: %@", theHMHostStatusURL)
-		set theHMGetHostListCommand to "/usr/bin/curl -XGET \"" & theHMHostStatusURL & my theServerAPIKey & "&pretty=1\"" --build the curl command to get the hosts
+		set theHMGetHostListCommand to "/usr/bin/curl -XGET \"" & theHMHostStatusURL & my theHMServerAPIKey & "&pretty=1\"" --build the curl command to get the hosts
 		--current application's NSLog("theHMGetHostListCommand: %@", theHMGetHostListCommand)
 		set my theHMHostListJSON to do shell script theHMGetHostListCommand --get the initial JSON dump from nagios
 		--current application's NSLog("theHMHostListJSON: %@", theHMHostListJSON)
@@ -768,8 +771,32 @@ script AppDelegate
 		--current application's NSLog("theTest: %@", theTest)
 	end getHostList:
 	
+	on loadHostManagerFromPopup:sender --runs when the host manager tab is clicked. we may flag this so it only runs once, but it's all local data, so it's pretty fast
+		--and, if something changes in the server manager, we want this running anyway.
+		if not theSMDefaultsExist then --if we have no defaults, there's no point in running this code
+			return --back to main loop
+		end if
+		set x to my theServerTableController's arrangedObjects()'s firstObject() --get the first object in the array controller. the way this runs, this is the initial load of things. So we want it to be the first thing in the list. When someone manually changes that, it would handled in selectedHMServerName
+		if x is missing value then --if there's nothing in x, stop the function
+			return --back to the main loop
+		end if
+		
+		set my theHMServerName to x's theSMTableServerName --grab the server name
+		set my theHMServerAPIKey to x's theSMTableServerAPIKey --grab the server key
+		set my theHMServerURL to x's theSMTableServerURL --grab the server URL
+		my getHostList:(missing value)
+		
+	end loadHostManagerFromPopup:
+	
 	on selectedHMServerName:sender --we could just share everything with the user manager server, but, letting host functionality not determine what's in the user manager
 		--ultimately makes things more flexible.
+		if not theSMDefaultsExist then --so if there are no servers in server manager, even if someone clicks on the list, we don't want things to happen here. This should prevent that
+			return
+		end if
+		set thePopupIndex to sender's indexOfSelectedItem --get the index of the selected item, put it into thePopupIndex
+		set theResult to my theServerTableController's setSelectionIndex:thePopupIndex --set the current selection in theServerTableController to thePopupIndex. we don't actually care about the result,
+		--it's a bool, but if this stops working, we know what to log. This sets the "current selection" of the server array controller to thePopupIndex,
+		--so we can pull the right info for the curl commands
 		
 	end selectedHMServerName:
      

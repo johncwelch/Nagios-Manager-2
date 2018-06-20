@@ -1513,7 +1513,7 @@ Gw
                                             </textFieldCell>
                                         </textField>
                                         <popUpButton verticalHuggingPriority="750" misplaced="YES" id="EzK-E3-SvV">
-                                            <rect key="frame" x="15" y="538" width="90" height="26"/>
+                                            <rect key="frame" x="15" y="538" width="102" height="26"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                             <popUpButtonCell key="cell" type="push" title="Item 1" bezelStyle="rounded" alignment="left" lineBreakMode="truncatingTail" state="on" borderStyle="borderAndBezel" imageScaling="proportionallyDown" inset="2" selectedItem="VUe-Aj-aiR" id="HdC-df-I2L">
                                                 <behavior key="behavior" lightByBackground="YES" lightByGray="YES"/>
@@ -1526,6 +1526,10 @@ Gw
                                                     </items>
                                                 </menu>
                                             </popUpButtonCell>
+                                            <connections>
+                                                <action selector="selectedHMServerName:" target="Voe-Tx-rLC" id="FJq-rn-Raf"/>
+                                                <binding destination="Av3-2s-jb3" name="contentValues" keyPath="arrangedObjects.theSMTableServerName" id="W3G-Kq-n6O"/>
+                                            </connections>
                                         </popUpButton>
                                     </subviews>
                                 </view>
