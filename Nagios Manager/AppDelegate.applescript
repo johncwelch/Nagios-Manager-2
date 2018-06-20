@@ -570,7 +570,7 @@ script AppDelegate
 		set x to my theServerTableController's selectedObjects() as record--grab the selected record
           set my theServerName to x's theSMTableServerName --grab the server name
           set my theServerAPIKey to x's theSMTableServerAPIKey --grab the server key
-          set my theServerURL to x's theSMTableServerURL --grab the server api
+          set my theServerURL to x's theSMTableServerURL --grab the server url
 		
 		my getServerUsers:(missing value) --load the user manager user table data
           
@@ -743,7 +743,10 @@ script AppDelegate
 	
 	on getHostList:sender --pull down the initial list of hosts
 		set theRegEx to current application's NSRegularExpression's regularExpressionWithPattern:(theHMHostSearchPattern) options:1 |error|:(missing value) --create the RegEx object
-		set theURLLength to my theHMServerURL's |length| --get the length of the URL, we need that to get the range for
+		
+		set theHMServerURL to current application's NSString's stringWithString:my theHMServerURL --for whatever reason, this function required this so that we could get the length
+		--beats the heck outta me
+		set theURLLength to my theHMServerURL's |length|() --get the length of the URL, we need that to get the range for
 		--rangeOfFirstMatchInString
 		set theMatches to theRegEx's rangeOfFirstMatchInString:(my theHMServerURL) options:0 range:[0, theURLLength] --this gets the starting
 		--point for the match and how long it is. In this case, it's one character, and it starts and ends in the same place.
@@ -797,6 +800,11 @@ script AppDelegate
 		set theResult to my theServerTableController's setSelectionIndex:thePopupIndex --set the current selection in theServerTableController to thePopupIndex. we don't actually care about the result,
 		--it's a bool, but if this stops working, we know what to log. This sets the "current selection" of the server array controller to thePopupIndex,
 		--so we can pull the right info for the curl commands
+		set x to my theServerTableController's selectedObjects() as record--grab the selected record
+		set my theHMServerName to x's theSMTableServerName --grab the server name
+		set my theHMServerAPIKey to x's theSMTableServerAPIKey --grab the server key
+		set my theHMServerURL to x's theSMTableServerURL --grab the server api
+		my getHostList:(missing value)
 		
 	end selectedHMServerName:
      
