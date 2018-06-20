@@ -159,11 +159,19 @@ script AppDelegate
 	
 	--Host Manager IB Outlets
 	property theHostTableController : missing value --referencing outlet for host array controller
+	property theHostTable : missing value --referencing outlet for host table
 	
 	--Host Manager Other properties
 	property theHMHostTableControllerArray : {} --bound to content of the host manager array controller, probably not used.
 	property theHMHostSearchPattern : "system/user"
 	property theHMHostReplacementPattern : "objects/host"
+	property theHMHostListJSON : ""
+	property theHMHostListJSONData : {}
+	property theHMHostListJSONDict : {}
+	property theHMHostCount : ""
+	property theHMHostListRecord : {}
+	property theHMStatusDisplay : ""
+	
 	
      --General Other Properties
      property theServerName:"" --name of the server for curl ops
@@ -173,8 +181,9 @@ script AppDelegate
 		--I might fix it when I'm doing cleanup. or not.
 	property theSelectedTabViewItemIndex : "" --the index of the currently selected tab view item. Note this doesn't have any real value until a
 	--selection is made via mouse or key combo or menu item
-	property theSelectedTabIsCorrect:false
-	property theUMInitialUserLoadDone : false
+	property theSelectedTabIsCorrect:false --flag for making sure the initial tab on launch is correct
+	property theUMInitialUserLoadDone : false --flag to check if the initial user table load was done. false by default so that the first tab click/selection does the load
+	property theHMInitialUserLoadDone : false --flag to check if the initial host table load was done. false by default so that the first tab click/selection does the load
 	
 
 	
@@ -280,19 +289,24 @@ script AppDelegate
 					--log "server"
 				else if my theSelectedTabViewItemIndex is "1" then --this moves the initial user load to a more lazy system, where it doesn't
 				--kick in until the user tab is selected at least once.
-					if not theUMInitialUserLoadDone then --the user manager hasn't loaded at least once. This prevents us from continually
+					if not my theUMInitialUserLoadDone then --the user manager hasn't loaded at least once. This prevents us from continually
 						--sending curl commands every time someone clicks on a tab
 						if my theSMDefaultsExist then --if we have no servers in the defaults, there is no sense in sending curl commands to
 							--nothing or trying to fill the popup. putting this here is a bit lazy, but it means launching the application
 							--when it's open to a different tab won't load this for no good reason. Speeds things up a bit. Maybe.
 							my loadUserManagerPopup:(missing value) --initial popup load, moved to a function here.
-							set theUMInitialUserLoadDone to true
+							set my theUMInitialUserLoadDone to true
 						end if
 					end if
 				else if my theSelectedTabViewItemIndex is "2" then --we won't do anything here until this is actually doing something
-					if my theSMDefaultsExist then --again, if we have no prefs, we have no servers. If we have no servers, we have nothing to get
-						--host data for.
-						my getHostList:(missing value)
+					if not theHMInitialUserLoadDone then --the host manager hasn't loaded at least once. this prevents us from continuously sending
+						--curl commands every time someone clicks on a tab.
+						if my theSMDefaultsExist then --again, if we have no prefs, we have no servers. If we have no servers, we have nothing to get
+							--host data for.
+							--also we need to set this up ala user manager tab so we don't reload EVERY time someone clicks the tab.
+							my getHostList:(missing value)
+							set my theHMInitialUserLoadDone to true --load is done, set flag correctly
+						end if
 					end if
 					--log "host"
 				end if
@@ -731,8 +745,33 @@ script AppDelegate
 		set theMatches to theRegEx's rangeOfFirstMatchInString:(my theServerURL) options:0 range:[0, theURLLength] --this gets the starting
 		--point for the match and how long it is. In this case, it's one character, and it starts and ends in the same place.
 		set theHMHostStatusURL to theRegEx's stringByReplacingMatchesInString:my theServerURL options:0 range:theMatches withTemplate:(my theHMHostReplacementPattern) --replace the characters in range theMatches. This is literally a "replace "system/user" with "objects/host" operation" which is what we need for a url to get a list of hosts.
-		current application's NSLog("theHMHostStatusURL: %@", theHMHostStatusURL)
+		--current application's NSLog("theHMHostStatusURL: %@", theHMHostStatusURL)
+		set theHMGetHostListCommand to "/usr/bin/curl -XGET \"" & theHMHostStatusURL & my theServerAPIKey & "&pretty=1\"" --build the curl command to get the hosts
+		--current application's NSLog("theHMGetHostListCommand: %@", theHMGetHostListCommand)
+		set my theHMHostListJSON to do shell script theHMGetHostListCommand --get the initial JSON dump from nagios
+		--current application's NSLog("theHMHostListJSON: %@", theHMHostListJSON)
+		set my theHMHostListJSON to current application's NSString's stringWithString:my theHMHostListJSON --convert this to NSString
+		set my theHMHostListJSONData to my theHMHostListJSON's dataUsingEncoding:(current application's NSUTF8StringEncoding) --convert NSString to NSData
+		set {my theHMHostListJSONDict, theError} to current application's NSJSONSerialization's JSONObjectWithData:theHMHostListJSONData options:0 |error|:(reference) --returns an NSData record of NSArrays
+		--current application's NSLog("theHMHostListJSONDict: %@", my theHMHostListJSONDict)
+		set my theHMHostCount to recordcount of my theHMHostListJSONDict's hostlist --we have to pull it from hostlist of the Dict because it buries everything in hostlist
+		set my theHMHostListRecord to |host| of my theHMHostListJSONDict's hostlist --e have to pull it from hostlist of the Dict because it buries everything in hostlist.
+		--note that if we want to pull the numerical ID of the host, that's buried in attributes of a given host. So that'll suck.
+		--current application's NSLog("theHMHostCount: %@", my theHMHostCount)
+		--current application's NSLog("theHMHostListRecord: %@", my theHMHostListRecord)
+		--attributes we initially want: host_name,address,display_name,alias,is_active,active_checks_enabled,passive_checks_enabled,notifications_enabled,notification_interval,
+			--first_notification_delay,check_interval,retry_interval,max_checks_attempt
+		my theHostTableController's removeObjects:(my theHostTableController's arrangedObjects()) --clear out the host array controller
+		my theHostTableController's addObjects:my theHMHostListRecord
+		
+		--set theTest to my theHostTableController's arrangedObjects()'s firstObject()
+		--current application's NSLog("theTest: %@", theTest)
 	end getHostList:
+	
+	on selectedHMServerName:sender --we could just share everything with the user manager server, but, letting host functionality not determine what's in the user manager
+		--ultimately makes things more flexible.
+		
+	end selectedHMServerName:
      
      (*on clearTable:sender --test function to see why we aren't clearing table data correctly.
           userSelection's removeObjects:(userSelection's arrangedObjects()) --clear the table
