@@ -22,6 +22,7 @@
                 <outlet property="canSeeAllObjects" destination="wnB-Ld-KVg" id="VKH-Ci-cA3"/>
                 <outlet property="canSeeOrConfigureMonitoringEngine" destination="WwK-vz-39Y" id="viW-61-yKE"/>
                 <outlet property="readOnly" destination="tLi-2o-hbI" id="MsM-zz-CWO"/>
+                <outlet property="theHostStatusHUD" destination="ld8-96-Rom" id="SIu-tl-F8A"/>
                 <outlet property="theHostTable" destination="edc-nj-R3v" id="NSj-tF-9Xw"/>
                 <outlet property="theHostTableController" destination="au1-f9-c4y" id="NJk-m7-dgJ"/>
                 <outlet property="theServerTable" destination="2mQ-JL-6Rl" id="DPC-vb-Ura"/>
@@ -859,7 +860,7 @@
                                         </button>
                                         <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" misplaced="YES" id="qJ3-fB-h2k">
                                             <rect key="frame" x="15" y="17" width="638" height="191"/>
-                                            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                            <autoresizingMask key="autoresizingMask" widthSizable="YES"/>
                                             <textFieldCell key="cell" selectable="YES" allowsUndo="NO" sendsActionOnEndEditing="YES" allowsEditingTextAttributes="YES" id="DBC-Xv-1CU">
                                                 <font key="font" metaFont="systemLight" size="13"/>
                                                 <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
@@ -1446,7 +1447,7 @@ Gw
                                                                     </binding>
                                                                 </connections>
                                                             </tableColumn>
-                                                            <tableColumn width="165" minWidth="40" maxWidth="1000" id="Q6H-vD-R0Q">
+                                                            <tableColumn width="145" minWidth="40" maxWidth="1000" id="Q6H-vD-R0Q">
                                                                 <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border" title="Address">
                                                                     <font key="font" metaFont="smallSystem"/>
                                                                     <color key="textColor" name="headerTextColor" catalog="System" colorSpace="catalog"/>
@@ -1466,7 +1467,7 @@ Gw
                                                                     </binding>
                                                                 </connections>
                                                             </tableColumn>
-                                                            <tableColumn width="47" minWidth="10" maxWidth="3.4028234663852886e+38" id="Px5-Yf-ZmA">
+                                                            <tableColumn width="67" minWidth="10" maxWidth="3.4028234663852886e+38" id="Px5-Yf-ZmA">
                                                                 <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border" alignment="left" title="Is Active">
                                                                     <font key="font" metaFont="smallSystem"/>
                                                                     <color key="textColor" name="headerTextColor" catalog="System" colorSpace="catalog"/>
@@ -1487,6 +1488,10 @@ Gw
                                                                 </connections>
                                                             </tableColumn>
                                                         </tableColumns>
+                                                        <connections>
+                                                            <action selector="displayHMHostInfo:" target="Voe-Tx-rLC" id="pzh-s2-w1n"/>
+                                                            <outlet property="delegate" destination="Voe-Tx-rLC" id="OmH-MA-aNc"/>
+                                                        </connections>
                                                     </tableView>
                                                 </subviews>
                                             </clipView>
@@ -1533,7 +1538,7 @@ Gw
                                         </popUpButton>
                                         <textField verticalHuggingPriority="750" misplaced="YES" id="CTE-mS-EXT">
                                             <rect key="frame" x="7" y="17" width="646" height="91"/>
-                                            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                            <autoresizingMask key="autoresizingMask" widthSizable="YES"/>
                                             <textFieldCell key="cell" selectable="YES" allowsUndo="NO" sendsActionOnEndEditing="YES" allowsEditingTextAttributes="YES" id="3Df-kr-CSY">
                                                 <font key="font" metaFont="systemLight" size="13"/>
                                                 <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
@@ -1551,6 +1556,43 @@ Gw
                                             <rect key="frame" x="9" y="114" width="642" height="5"/>
                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
                                         </box>
+                                        <button verticalHuggingPriority="750" misplaced="YES" id="c07-aD-9L0">
+                                            <rect key="frame" x="11" y="493" width="137" height="32"/>
+                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                            <buttonCell key="cell" type="push" title="Get Host Status" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="mZY-k0-rrr">
+                                                <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                                                <font key="font" metaFont="system"/>
+                                            </buttonCell>
+                                            <connections>
+                                                <action selector="getHMHostStatus:" target="Voe-Tx-rLC" id="Qn8-48-mDN"/>
+                                            </connections>
+                                        </button>
+                                        <button verticalHuggingPriority="750" misplaced="YES" id="1rC-lB-vXZ">
+                                            <rect key="frame" x="173" y="136" width="82" height="32"/>
+                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                            <buttonCell key="cell" type="push" title="Cancel" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="yTk-U5-tb8">
+                                                <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                                                <font key="font" metaFont="system"/>
+                                                <string key="keyEquivalent" base64-UTF8="YES">
+Gw
+</string>
+                                            </buttonCell>
+                                        </button>
+                                        <box verticalHuggingPriority="750" misplaced="YES" boxType="separator" id="fRh-iD-rny">
+                                            <rect key="frame" x="17" y="477" width="231" height="5"/>
+                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                        </box>
+                                        <button verticalHuggingPriority="750" misplaced="YES" id="Ngz-7X-47f">
+                                            <rect key="frame" x="-5" y="136" width="97" height="32"/>
+                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                            <buttonCell key="cell" type="push" title="Add Host" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="Jcq-RD-no4">
+                                                <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                                                <font key="font" metaFont="system"/>
+                                                <string key="keyEquivalent" base64-UTF8="YES">
+DQ
+</string>
+                                            </buttonCell>
+                                        </button>
                                     </subviews>
                                 </view>
                             </tabViewItem>
@@ -1562,7 +1604,7 @@ Gw
                     </tabView>
                 </subviews>
             </view>
-            <point key="canvasLocation" x="245" y="52"/>
+            <point key="canvasLocation" x="-65" y="81"/>
         </window>
         <arrayController selectsInsertedObjects="NO" id="FFf-nn-zo4">
             <connections>
@@ -1591,5 +1633,18 @@ Gw
                 </binding>
             </connections>
         </arrayController>
+        <window title="Host Information" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" releasedWhenClosed="NO" visibleAtLaunch="NO" frameAutosaveName="" animationBehavior="default" titlebarAppearsTransparent="YES" id="ld8-96-Rom" customClass="NSPanel">
+            <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES" resizable="YES" utility="YES" HUD="YES"/>
+            <rect key="contentRect" x="880" y="323" width="554" height="477"/>
+            <rect key="screenRect" x="1280" y="-280" width="1920" height="1080"/>
+            <view key="contentView" misplaced="YES" id="Ugz-o2-Gcu">
+                <rect key="frame" x="0.0" y="0.0" width="554" height="477"/>
+                <autoresizingMask key="autoresizingMask"/>
+            </view>
+            <connections>
+                <outlet property="delegate" destination="Voe-Tx-rLC" id="T8M-L8-OI0"/>
+            </connections>
+            <point key="canvasLocation" x="609" y="-127"/>
+        </window>
     </objects>
 </document>

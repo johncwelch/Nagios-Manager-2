@@ -160,6 +160,7 @@ script AppDelegate
 	--Host Manager IB Outlets
 	property theHostTableController : missing value --referencing outlet for host array controller
 	property theHostTable : missing value --referencing outlet for host table
+	property theHostStatusHUD : missing value --referencing outlet for host status info hud
 	
 	--Host Manager Other properties
 	property theHMHostTableControllerArray : {} --bound to content of the host manager array controller, probably not used.
@@ -301,6 +302,7 @@ script AppDelegate
 							--when it's open to a different tab won't load this for no good reason. Speeds things up a bit. Maybe.
 							my loadUserManagerPopup:(missing value) --initial popup load, moved to a function here.
 							set my theUMInitialUserLoadDone to true
+							my userSelection's setSelectionIndex:0
 						end if
 					end if
 				else if my theSelectedTabViewItemIndex is "2" then --we won't do anything here until this is actually doing something
@@ -309,9 +311,10 @@ script AppDelegate
 						if my theSMDefaultsExist then --again, if we have no prefs, we have no servers. If we have no servers, we have nothing to get
 							--host data for.
 							--also we need to set this up ala user manager tab so we don't reload EVERY time someone clicks the tab.
-							my loadHostManagerFromPopup:(missing value)
-							set my theHMStatusDisplay to "Because of how dependencies work within Nagios, this app currently can't delete a host. That will hopefully change over time."
+							my loadHostManagerFromPopup:(missing value) --initial load of window.
+							set my theHMStatusDisplay to "Because of how dependencies work within Nagios, this app doesn't delete hosts. Barring a way to handle dependencies via the API, it won't."
 							set my theHMInitialUserLoadDone to true --load is done, set flag correctly
+							my theHostTableController's setSelectionIndex:0
 						end if
 					end if
 					--log "host"
@@ -794,8 +797,7 @@ script AppDelegate
 		
 	end loadHostManagerFromPopup:
 	
-	on selectedHMServerName:sender --we could just share everything with the user manager server, but, letting host functionality not determine what's in the user manager
-		--ultimately makes things more flexible.
+	on selectedHMServerName:sender -- This runs when you select a server in the popup list. we could just share everything with the user manager server, but, letting host functionality not determine what's in the user manager ultimately makes things more flexible.
 		if not theSMDefaultsExist then --so if there are no servers in server manager, even if someone clicks on the list, we don't want things to happen here. This should prevent that
 			return
 		end if
@@ -810,6 +812,29 @@ script AppDelegate
 		my getHostList:(missing value)
 		
 	end selectedHMServerName:
+	
+	on displayHMHostInfo:sender
+		set theTempHostName to host_name of my theHostTableController's selectedObjects() as text
+		
+		set theTempHMPredicate to current application's NSPredicate's predicateWithFormat:("host_name = \"" & theTempHostName & "\"") --build a predicate which ends up
+		set theTempHMArray to current application's NSArray's arrayWithArray:(my theHostTableController's arrangedObjects())
+		--looking like: host_name == "foo server" or whatever the host_name is
+		
+		set theTempRecord to theTempHMArray's filteredArrayUsingPredicate:theTempHMPredicate --get an array with a single NSDictionary containing what we want
+		
+		set my theHMStatusDisplay to "Basic Host Info:\rDisplay Name: " & theTempRecord's display_name & "\tAlias: " & theTempRecord's |alias| & "\rActive Checks Enabled: " & theTempRecord's active_checks_enabled & "\t\tPassive Checks Enabled: " & theTempRecord's passive_checks_enabled & "\t\tNotifications Enabled: " & theTempRecord's notifications_enabled & "\rCheck Interval: " & theTempRecord's check_interval & "\t\t\t\tRetry Interval: " & theTempRecord's retry_interval & "\t\t\t\t\t\t\t\t\tMax Check Attempts: " & theTempRecord's max_check_attempts & "\rNotification Interval: " & theTempRecord's notification_interval & "\t\t\tFirst Notification Delay: " & theTempRecord's first_notification_delay --set the status display to show basic host info
+	end displayHMHostInfo:
+	
+	on getHMHostStatus:sender
+		my theHostStatusHUD's makeKeyAndOrderFront:(me)
+	end getHMHostStatus:
+	
+	on tableViewSelectionDidChange:(sender)
+		log sender's object
+		if (sender's object) = (my theHostTable) then
+			log "host table"
+		end if
+	end tableViewSelectionDidChange:
      
      (*on clearTable:sender --test function to see why we aren't clearing table data correctly.
           userSelection's removeObjects:(userSelection's arrangedObjects()) --clear the table
