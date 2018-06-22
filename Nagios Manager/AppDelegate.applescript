@@ -24,6 +24,7 @@
 --1.2 goals : build tabbed interface so we can add a server manager (add/remove) tab that's separate from user manager (and other features eventually
 --1.3 move from hardcoded server list to user-entered list. This will be fun
 --1.4 Get a proper icon and make the menus in the menubar actually do something
+--1.5 convert time periods and contacts in new host to pulldowns/popups and see about duplicate code, like grep & json code
 
 --changed from _() to : syntax in function calls
 --table columns are not editable. Table size atrib's are all solid bars
@@ -189,6 +190,28 @@ script AppDelegate
 	property theHMHostProblemAcknowledged : "" --binding for the "Problem Acknowledged?"
 	
 	
+	--hardcoded values for adding new hosts
+	property theHMNewHostCheckCommand : "check_command=check-host-alive"
+	property theHMNewHostActiveChecksEnabled : "active_checks_enabled=1"
+	property theHMNewHostPassiveChecksEnabled : "passive_checks_enabled=1"
+	property theHMNewHostCheckPeriod : "check_period=xi_timeperiod_24x7" --this will eventually be a selectable popup/dropdown
+	property theHMNewHostProcessPerfData: "process_perf_data=1"
+	
+	--user-set values for adding new hosts, with some (changeable) defaults
+	property theHMNewHostName: ""
+	property theHMNewHostAddress: ""
+	property theHMNewHostCheckInterval : "5"
+	property theHMNewHostRetryInterval : "1"
+	property theHMNewHostMaxCheckAttempts : "5"
+	property theHMNewHostNotificationsEnabled : "1"
+	property theHMNewHostNotificationOptions : "d,u,r"
+	property theHMNewHostFirstNotificationDelay : "0"
+	property theHMNewHostNotificationInterval : "5"
+	property theHMNewHostContacts : "" --this will eventually be a selectable popup/dropdown
+	property theHMNewHostNotificationPeriod : "xi_timeperiod_24x7" --this will eventually be a selectable popup/dropdown
+	
+	
+	
      --General Other Properties
      property theServerName:"" --name of the server for curl ops
      property theServerAPIKey:"" --API key of server for curl ops
@@ -349,31 +372,42 @@ script AppDelegate
 	end loadServerTable:
 
 	on getSMServerStatus:sender
-		set theSMServerStatusSearchPattern to "/user" --the pattern we're using for the regex
-		set theSMServerStatusReplacementPattern to "/status" --the replacement pattern we're using for the regex
+		try
+			set theSMServerStatusSearchPattern to "/user" --the pattern we're using for the regex
+			set theSMServerStatusReplacementPattern to "/status" --the replacement pattern we're using for the regex
 
-		set theSelectedServer to my theServerTableController's selectedObjects()
-		--current application's NSLog("theSelectedServer: %@", theSelectedServer)
+			set theSelectedServer to my theServerTableController's selectedObjects()
+			--current application's NSLog("theSelectedServer: %@", theSelectedServer)
 
-		set theSMSelectedURL to theSelectedServer's theSMTableServerURL as text --get the URL for the server that was clicked on in the Server
-		--manager table. Note, the conversion to text is necessary, or you get as a single item array or dictionary. Either way, it makes
-		--rangeOfFirstMatchInString REALLY UNHAPPY
-		set theSMSelectedAPIKey to theSelectedServer's theSMTableServerAPIKey as text --pull the selected server's API key as text
-		set theRegEx to current application's NSRegularExpression's regularExpressionWithPattern:(theSMServerStatusSearchPattern) options:1 |error|:(missing value) --create regex object with the the search pattern as what it's looking for
-		set theSMSelectedURLLength to theSMSelectedURL's length --get the length in characters of the selected server's URL
-		set theSMMatches to theRegEx's rangeOfFirstMatchInString:(theSMSelectedURL) options:0 range:[0, theSMSelectedURLLength] --get the start
-		--of /user and how long it is.
-		set theSMStatusURL to theRegEx's stringByReplacingMatchesInString:theSMSelectedURL options:0 range:theSMMatches withTemplate:(theSMServerStatusReplacementPattern) --builds the status URL by replacing the /user in the URL with /status
-		set theSMServerStatusCommand to "/usr/bin/curl -XGET \"" & theSMStatusURL & theSMSelectedAPIKey & "&pretty=1\"" --build the server
-		--status command
-		set theSMServerStatusJSON to do shell script theSMServerStatusCommand --run the command to pull the JSON from the server
-		set theSMServerStatusJSON to current application's NSString's stringWithString:theSMServerStatusJSON --convert this to NSString
-		set theSMServerStatusJSONData to theSMServerStatusJSON's dataUsingEncoding:(current application's NSUTF8StringEncoding) --convert
-		--NSString to NSData, needed for NSJSONSerialization
-		set {theSMSServerStatusJSONDict, theError} to current application's NSJSONSerialization's JSONObjectWithData:theSMServerStatusJSONData options:0 |error|:(reference) --returns an NSData record of NSArrays, technically an NSJSON object. It looks a LOT like an AS
-		--record. You can even reference elements the way you would a record. W00T!!!
-		set my theSMStatusFieldText to "active host checks enabled: " & theSMSServerStatusJSONDict's active_host_checks_enabled & "\ractive service checks enabled: " & theSMSServerStatusJSONDict's active_service_checks_enabled & "\rNagios in daemon mode: " & theSMSServerStatusJSONDict's daemon_mode & "\revent handlers enabled: " & theSMSServerStatusJSONDict's event_handlers_enabled & "\rflap detection enabled: " & theSMSServerStatusJSONDict's flap_detection_enabled & "\rlast log rotation: " & theSMSServerStatusJSONDict's last_log_rotation & "\rnotifications enabled: " & theSMSServerStatusJSONDict's notifications_enabled & "\rpassive host checks enabled: " & theSMSServerStatusJSONDict's passive_host_checks_enabled & "\rpassive service checks enabled: " & theSMSServerStatusJSONDict's passive_service_checks_enabled & "\rprocess id: " & theSMSServerStatusJSONDict's process_id
-
+			set theSMSelectedURL to theSelectedServer's theSMTableServerURL as text --get the URL for the server that was clicked on in the Server
+			--manager table. Note, the conversion to text is necessary, or you get as a single item array or dictionary. Either way, it makes
+			--rangeOfFirstMatchInString REALLY UNHAPPY
+			set theSMSelectedAPIKey to theSelectedServer's theSMTableServerAPIKey as text --pull the selected server's API key as text
+			set theRegEx to current application's NSRegularExpression's regularExpressionWithPattern:(theSMServerStatusSearchPattern) options:1 |error|:(missing value)
+			--create regex object with the the search pattern as what it's looking for
+			set theSMSelectedURLLength to theSMSelectedURL's length --get the length in characters of the selected server's URL
+			set theSMMatches to theRegEx's rangeOfFirstMatchInString:(theSMSelectedURL) options:0 range:[0, theSMSelectedURLLength] --get the start
+			--of /user and how long it is.
+			set theSMStatusURL to theRegEx's stringByReplacingMatchesInString:theSMSelectedURL options:0 range:theSMMatches withTemplate:(theSMServerStatusReplacementPattern)
+			--builds the status URL by replacing the /user in the URL with /status
+			set theSMServerStatusCommand to "/usr/bin/curl -XGET \"" & theSMStatusURL & theSMSelectedAPIKey & "&pretty=1\"" --build the server
+			--status command
+			set theSMServerStatusJSON to do shell script theSMServerStatusCommand --run the command to pull the JSON from the server
+			set theSMServerStatusJSON to current application's NSString's stringWithString:theSMServerStatusJSON --convert this to NSString
+			set theSMServerStatusJSONData to theSMServerStatusJSON's dataUsingEncoding:(current application's NSUTF8StringEncoding) --convert
+			--NSString to NSData, needed for NSJSONSerialization
+			set {theSMSServerStatusJSONDict, theError} to current application's NSJSONSerialization's JSONObjectWithData:theSMServerStatusJSONData options:0 |error|:(reference)
+			--returns an NSData record of NSArrays, technically an NSJSON object. It looks a LOT like an AS
+			--record. You can even reference elements the way you would a record. W00T!!!
+			set my theSMStatusFieldText to "active host checks enabled: " & theSMSServerStatusJSONDict's active_host_checks_enabled & "\ractive service checks enabled: " & theSMSServerStatusJSONDict's active_service_checks_enabled & "\rNagios in daemon mode: " & theSMSServerStatusJSONDict's daemon_mode & "\revent handlers enabled: " & theSMSServerStatusJSONDict's event_handlers_enabled & "\rflap detection enabled: " & theSMSServerStatusJSONDict's flap_detection_enabled & "\rlast log rotation: " & theSMSServerStatusJSONDict's last_log_rotation & "\rnotifications enabled: " & theSMSServerStatusJSONDict's notifications_enabled & "\rpassive host checks enabled: " & theSMSServerStatusJSONDict's passive_host_checks_enabled & "\rpassive service checks enabled: " & theSMSServerStatusJSONDict's passive_service_checks_enabled & "\rprocess id: " & theSMSServerStatusJSONDict's process_id
+		on error errorMessage number errorNumber
+			if errorNumber is -1700 then
+				--we do nothing here, but we want to note the specific error we're trying to sink. Other errors, we want to know about so we can handle them
+				--differently, if needed.
+			else if errorNumber is -128 then
+				--user hit cancel on the "you have to have something selected to delete it dialog. So we don't care about that one either.
+			end if
+		end try
 	end getSMServerStatus:
 	
 	on addServerToPrefs:sender --this was saveSettings:. I know renaming functions will cause problems in the short run, but better names will save pain in the long run
@@ -483,6 +517,8 @@ script AppDelegate
 				display dialog "You don't have anything selected. You have to select a server to delete it" --error message for -1728
 				--if we get enough of these, we'll create a separate function just for them
 				current application's NSLog("Nothing Selected Error: %@", errorMessage) --log the error message
+			else if errorNumber is -128 then
+				--user hit cancel on the "you have to have something selected to delete it dialog. So we don't care about that one either.
 			end if
 		end try
 		
@@ -567,11 +603,18 @@ script AppDelegate
 	end getServerUsers:
 	
 	on displayUserInfo:sender --this is a VERY inelegant way of displaying basic info on the selected user in the user manager table
-		set theTempID to theUserID of my userSelection's selectedObjects() as text --grab the user id
-		set theTempPredicate to current application's NSPredicate's predicateWithFormat:("user_id = \"" & theTempID & "\"") --build a predicate which ends up
-		--looking like: user_id == "234" or whatever the user_id is
-		set theTempRecord to my theOtherUserInfoList's filteredArrayUsingPredicate:theTempPredicate --get an array with a single NSDictionary containing what we want
-		set my theRESTresults to "Full Name: " & theTempRecord's |name| & "\rUsername: " & theTempRecord's username & "\rUser ID: " & theTempRecord's user_id & "\rEmail Address: " & theTempRecord's email & "\rUser Enabled: " & theTempRecord's enabled --display the user info from theTempRecord
+		try
+			set theTempID to theUserID of my userSelection's selectedObjects() as text --grab the user id
+			set theTempPredicate to current application's NSPredicate's predicateWithFormat:("user_id = \"" & theTempID & "\"") --build a predicate which ends up
+			--looking like: user_id == "234" or whatever the user_id is
+			set theTempRecord to my theOtherUserInfoList's filteredArrayUsingPredicate:theTempPredicate --get an array with a single NSDictionary containing what we want
+			set my theRESTresults to "Full Name: " & theTempRecord's |name| & "\rUsername: " & theTempRecord's username & "\rUser ID: " & theTempRecord's user_id & "\rEmail Address: " & theTempRecord's email & "\rUser Enabled: " & theTempRecord's enabled --display the user info from theTempRecord
+		on error errorMessage number errorNumber
+			if errorNumber is -1700 then
+				--we do nothing here, but we want to note the specific error we're trying to sink. Other errors, we want to know about so we can handle them
+				--differently, if needed.
+			end if
+		end try
 	end displayUserInfo:
 	
      --function for if the user actually changes the  selection in the popup
@@ -819,47 +862,47 @@ script AppDelegate
 	end selectedHMServerName:
 	
 	on displayHMHostInfo:sender
-		set theTempHostName to host_name of my theHostTableController's selectedObjects() as text
-		
-		set theTempHMPredicate to current application's NSPredicate's predicateWithFormat:("host_name = \"" & theTempHostName & "\"") --build a predicate which ends up
-		set theTempHMArray to current application's NSArray's arrayWithArray:(my theHostTableController's arrangedObjects())
-		--looking like: host_name == "foo server" or whatever the host_name is
-		
-		set theTempRecord to theTempHMArray's filteredArrayUsingPredicate:theTempHMPredicate --get an array with a single NSDictionary containing what we want
-		
-		set my theHMStatusDisplay to "Basic Host Info:\rDisplay Name: " & theTempRecord's display_name & "\tAlias: " & theTempRecord's |alias| & "\rActive Checks Enabled: " & theTempRecord's active_checks_enabled & "\t\tPassive Checks Enabled: " & theTempRecord's passive_checks_enabled & "\t\tNotifications Enabled: " & theTempRecord's notifications_enabled & "\rCheck Interval: " & theTempRecord's check_interval & "\t\t\t\tRetry Interval: " & theTempRecord's retry_interval & "\t\t\t\t\t\t\t\t\tMax Check Attempts: " & theTempRecord's max_check_attempts & "\rNotification Interval: " & theTempRecord's notification_interval & "\t\t\tFirst Notification Delay: " & theTempRecord's first_notification_delay --set the status display to show basic host info
+		try
+			set theTempHostName to host_name of my theHostTableController's selectedObjects() as text
+			
+			set theTempHMPredicate to current application's NSPredicate's predicateWithFormat:("host_name = \"" & theTempHostName & "\"") --build a predicate which ends up
+			set theTempHMArray to current application's NSArray's arrayWithArray:(my theHostTableController's arrangedObjects())
+			--looking like: host_name == "foo server" or whatever the host_name is
+			
+			set theTempRecord to theTempHMArray's filteredArrayUsingPredicate:theTempHMPredicate --get an array with a single NSDictionary containing what we want
+			
+			set my theHMStatusDisplay to "Basic Host Info:\rDisplay Name: " & theTempRecord's display_name & "\tAlias: " & theTempRecord's |alias| & "\rActive Checks Enabled: " & theTempRecord's active_checks_enabled & "\t\tPassive Checks Enabled: " & theTempRecord's passive_checks_enabled & "\t\tNotifications Enabled: " & theTempRecord's notifications_enabled & "\rCheck Interval: " & theTempRecord's check_interval & "\t\t\t\tRetry Interval: " & theTempRecord's retry_interval & "\t\t\t\t\t\t\t\t\tMax Check Attempts: " & theTempRecord's max_check_attempts & "\rNotification Interval: " & theTempRecord's notification_interval & "\t\t\tFirst Notification Delay: " & theTempRecord's first_notification_delay --set the status display to show basic host info
+		on error errorMessage number errorNumber
+			if errorNumber is -1700 then
+				--we do nothing here, but we want to note the specific error we're trying to sink. Other errors, we want to know about so we can handle them
+				--differently, if needed.
+			end if
+		end try
 	end displayHMHostInfo:
 	
 	on getHMHostStatus:sender
 		set theHostStatusName to host_name of my theHostTableController's selectedObjects() as text
-		--log theHostStatusName
 		set theRegEx to current application's NSRegularExpression's regularExpressionWithPattern:(theHMHostSearchPattern) options:1 |error|:(missing value) --create the RegEx object
-		--current application's NSLog("theRegEx: %@", theRegEx)
 		set theHMServerURL to current application's NSString's stringWithString:my theHMServerURL --for whatever reason, this function required this so that we could get the length
 		--beats the heck outta me
-		--log theHMServerURL
 		set theURLLength to my theHMServerURL's |length|() --get the length of the URL, we need that to get the range for
 		--rangeOfFirstMatchInString
-		--log theURLLength as text
 		set theMatches to theRegEx's rangeOfFirstMatchInString:(my theHMServerURL) options:0 range:[0, theURLLength] --this gets the starting
 		--point for the match and how long it is. In this case, it's one character, and it starts and ends in the same place.
-		--current application's NSLog("theRegEx: %@", theRegEx)
 		set theMatches to theRegEx's rangeOfFirstMatchInString:(my theHMServerURL) options:0 range:[0, theURLLength] --this gets the starting
 		--point for the match and how long it is. In this case, it's one character, and it starts and ends in the same place.
 		set theHMHostStatusURL to theRegEx's stringByReplacingMatchesInString:my theHMServerURL options:0 range:theMatches withTemplate:(my theHMHostStatusReplacementPattern)
 			--replace the characters in range theMatches. This is literally a "replace "system/user" with "objects/hoststatus" operation" which is what we need for a url to get a
 			--list of hosts.
-		--current application's NSLog("theHMHostStatusURL: %@", theHMHostStatusURL)
 		set theHMGetHostStatusCommand to "/usr/bin/curl -XGET \"" & theHMHostStatusURL & my theHMServerAPIKey & "&host_name=" & theHostStatusName & "&pretty=1\""
 			--build the curl command to get the host status for the specified host
-		--current application's NSLog("theHMGetHostStatusCommand: %@", theHMGetHostStatusCommand)
 		set theHMGetHostStatusJSON to do shell script theHMGetHostStatusCommand --get the initial JSON dump from nagios
 		set theHMGetHostStatusJSON to current application's NSString's stringWithString:theHMGetHostStatusJSON --convert this to NSString
 		set theHMGetHostStatusJSONData to theHMGetHostStatusJSON's dataUsingEncoding:(current application's NSUTF8StringEncoding) --convert NSString to NSData
 		set {theHMGetHostStatusJSONDict, theError} to current application's NSJSONSerialization's JSONObjectWithData:theHMGetHostStatusJSONData options:0 |error|:(reference) --returns an NSData record of NSArrays
 		set theHMHostStatusRecord to hoststatus of theHMGetHostStatusJSONDict's hoststatuslist --we have to pull it from hostlist of the Dict because it buries everything in
 		--hoststatuslist.
-		--current application's NSLog("theHMHostStatusRecord: %@", theHMHostStatusRecord)
+		
 		--fill in the fields in the HUD
 		set my theHMHostID to host_id of theHMHostStatusRecord
 		set my theHMHostLastStatus to status_text of theHMHostStatusRecord
@@ -875,12 +918,34 @@ script AppDelegate
 	end getHMHostStatus:
 	
 	on tableViewSelectionDidChange:(sender)
-		if sender's object()'s isEqualTo:my theHostTable then
-			log "host table"
+		if sender's object()'s isEqualTo:my theHostTable then --all three try blocks are here to sink the error 1700 that happens if a null selection in a table view
+			--is made
+			try
+				my displayHMHostInfo:(missing value)
+			on error errorMessage number errorNumber
+				if errorNumber is -1700 then
+					--we do nothing here, but we want to note the specific error we're trying to sink. Other errors, we want to know about so we can handle them
+					--differently, if needed.
+				end if
+			end try
 		else if sender's object()'s isEqualTo:my userTable then
-			log "user table"
+			try
+				my displayUserInfo:(missing value)
+			on error errorMessage number errorNumber
+				if errorNumber is -1700 then
+					--we do nothing here, but we want to note the specific error we're trying to sink. Other errors, we want to know about so we can handle them
+					--differently, if needed.
+				end if
+			end try
 		else if sender's object()'s isEqualTo:my theServerTable then
-			log "server table"
+			try
+				my getSMServerStatus:(missing value)
+			on error errorMessage number errorNumber
+				if errorNumber is -1700 then
+					--we do nothing here, but we want to note the specific error we're trying to sink. Other errors, we want to know about so we can handle them
+					--differently, if needed.
+				end if
+			end try
 		end if
 	end tableViewSelectionDidChange:
      
