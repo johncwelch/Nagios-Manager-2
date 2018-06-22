@@ -166,6 +166,7 @@ script AppDelegate
 	property theHMHostTableControllerArray : {} --bound to content of the host manager array controller, probably not used.
 	property theHMHostSearchPattern : "system/user"
 	property theHMHostReplacementPattern : "objects/host"
+	property theHMHostStatusReplacementPattern: "objects/hoststatus"
 	property theHMHostListJSON : "" --the initial storage for the result of the get all hosts curl command
 	property theHMHostListJSONData : {} --the NSData version of theHMHostListJSON
 	property theHMHostListJSONDict : {} --the NSDictionary version of theHMHostListJSONData
@@ -175,6 +176,17 @@ script AppDelegate
 	property theHMServerName : "" -- current host manager server name, used to populate the host manager server popup
 	property theHMServerAPIKey : "" --current host manager server API key
 	property theHMServerURL : "" --current host manager server URL
+	
+	property theHMHostID : "" --binding for "host ID" field in the host status HUD
+	property theHMHostLastStatus : "" --binding for the "Last Status" field in the Host status HUD
+	property theHMHostLastStatusUpdateTime : "" --binding for the "Last Status Update Time" field in the host status HUD
+	property theHMHostLastTimeDown : "" --binding for the "Last Time Down" field in the host status HUD
+	property theHMHostLastTimeUnreachable : "" --binding for the "Last Time Unreachable" field in the host status HUD
+	property theHMHostLastCheck : "" --binding for the "Last Check" field in the host status HUD
+	property theHMHostNextCheck : "" --binding for the "Next Check" field in the host status HUD
+	property theHMHostFlapDetectionEnabled : "" --binding for the "Flap Detection Enabled" field in the host status HUD
+	property theHMHostIsFLapping : "" --binding for the "Is Flapping?" field in the host status HUD
+	property theHMHostProblemAcknowledged : "" --binding for the "Problem Acknowledged?"
 	
 	
      --General Other Properties
@@ -757,27 +769,20 @@ script AppDelegate
 		set theMatches to theRegEx's rangeOfFirstMatchInString:(my theHMServerURL) options:0 range:[0, theURLLength] --this gets the starting
 		--point for the match and how long it is. In this case, it's one character, and it starts and ends in the same place.
 		set theHMHostStatusURL to theRegEx's stringByReplacingMatchesInString:my theHMServerURL options:0 range:theMatches withTemplate:(my theHMHostReplacementPattern) --replace the characters in range theMatches. This is literally a "replace "system/user" with "objects/host" operation" which is what we need for a url to get a list of hosts.
-		--current application's NSLog("theHMHostStatusURL: %@", theHMHostStatusURL)
 		set theHMGetHostListCommand to "/usr/bin/curl -XGET \"" & theHMHostStatusURL & my theHMServerAPIKey & "&pretty=1\"" --build the curl command to get the hosts
-		--current application's NSLog("theHMGetHostListCommand: %@", theHMGetHostListCommand)
 		set my theHMHostListJSON to do shell script theHMGetHostListCommand --get the initial JSON dump from nagios
-		--current application's NSLog("theHMHostListJSON: %@", theHMHostListJSON)
 		set my theHMHostListJSON to current application's NSString's stringWithString:my theHMHostListJSON --convert this to NSString
 		set my theHMHostListJSONData to my theHMHostListJSON's dataUsingEncoding:(current application's NSUTF8StringEncoding) --convert NSString to NSData
 		set {my theHMHostListJSONDict, theError} to current application's NSJSONSerialization's JSONObjectWithData:theHMHostListJSONData options:0 |error|:(reference) --returns an NSData record of NSArrays
-		--current application's NSLog("theHMHostListJSONDict: %@", my theHMHostListJSONDict)
-		set my theHMHostCount to recordcount of my theHMHostListJSONDict's hostlist --we have to pull it from hostlist of the Dict because it buries everything in hostlist
-		set my theHMHostListRecord to |host| of my theHMHostListJSONDict's hostlist --e have to pull it from hostlist of the Dict because it buries everything in hostlist.
+		set my theHMHostCount to recordcount of my theHMHostListJSONDict's hostlist --get the host count for that server. May use it some day
+		set my theHMHostListRecord to |host| of my theHMHostListJSONDict's hostlist --we have to pull it from hostlist of the Dict because it buries everything in hostlist.
 		--note that if we want to pull the numerical ID of the host, that's buried in attributes of a given host. So that'll suck.
-		--current application's NSLog("theHMHostCount: %@", my theHMHostCount)
-		--current application's NSLog("theHMHostListRecord: %@", my theHMHostListRecord)
 		--attributes we initially want: host_name,address,display_name,alias,is_active,active_checks_enabled,passive_checks_enabled,notifications_enabled,notification_interval,
 			--first_notification_delay,check_interval,retry_interval,max_checks_attempt
 		my theHostTableController's removeObjects:(my theHostTableController's arrangedObjects()) --clear out the host array controller
 		my theHostTableController's addObjects:my theHMHostListRecord
 		
 		--set theTest to my theHostTableController's arrangedObjects()'s firstObject()
-		--current application's NSLog("theTest: %@", theTest)
 	end getHostList:
 	
 	on loadHostManagerFromPopup:sender --runs when the host manager tab is clicked. we may flag this so it only runs once, but it's all local data, so it's pretty fast
@@ -826,6 +831,46 @@ script AppDelegate
 	end displayHMHostInfo:
 	
 	on getHMHostStatus:sender
+		set theHostStatusName to host_name of my theHostTableController's selectedObjects() as text
+		--log theHostStatusName
+		set theRegEx to current application's NSRegularExpression's regularExpressionWithPattern:(theHMHostSearchPattern) options:1 |error|:(missing value) --create the RegEx object
+		--current application's NSLog("theRegEx: %@", theRegEx)
+		set theHMServerURL to current application's NSString's stringWithString:my theHMServerURL --for whatever reason, this function required this so that we could get the length
+		--beats the heck outta me
+		--log theHMServerURL
+		set theURLLength to my theHMServerURL's |length|() --get the length of the URL, we need that to get the range for
+		--rangeOfFirstMatchInString
+		--log theURLLength as text
+		set theMatches to theRegEx's rangeOfFirstMatchInString:(my theHMServerURL) options:0 range:[0, theURLLength] --this gets the starting
+		--point for the match and how long it is. In this case, it's one character, and it starts and ends in the same place.
+		--current application's NSLog("theRegEx: %@", theRegEx)
+		set theMatches to theRegEx's rangeOfFirstMatchInString:(my theHMServerURL) options:0 range:[0, theURLLength] --this gets the starting
+		--point for the match and how long it is. In this case, it's one character, and it starts and ends in the same place.
+		set theHMHostStatusURL to theRegEx's stringByReplacingMatchesInString:my theHMServerURL options:0 range:theMatches withTemplate:(my theHMHostStatusReplacementPattern)
+			--replace the characters in range theMatches. This is literally a "replace "system/user" with "objects/hoststatus" operation" which is what we need for a url to get a
+			--list of hosts.
+		--current application's NSLog("theHMHostStatusURL: %@", theHMHostStatusURL)
+		set theHMGetHostStatusCommand to "/usr/bin/curl -XGET \"" & theHMHostStatusURL & my theHMServerAPIKey & "&host_name=" & theHostStatusName & "&pretty=1\""
+			--build the curl command to get the host status for the specified host
+		--current application's NSLog("theHMGetHostStatusCommand: %@", theHMGetHostStatusCommand)
+		set theHMGetHostStatusJSON to do shell script theHMGetHostStatusCommand --get the initial JSON dump from nagios
+		set theHMGetHostStatusJSON to current application's NSString's stringWithString:theHMGetHostStatusJSON --convert this to NSString
+		set theHMGetHostStatusJSONData to theHMGetHostStatusJSON's dataUsingEncoding:(current application's NSUTF8StringEncoding) --convert NSString to NSData
+		set {theHMGetHostStatusJSONDict, theError} to current application's NSJSONSerialization's JSONObjectWithData:theHMGetHostStatusJSONData options:0 |error|:(reference) --returns an NSData record of NSArrays
+		set theHMHostStatusRecord to hoststatus of theHMGetHostStatusJSONDict's hoststatuslist --we have to pull it from hostlist of the Dict because it buries everything in
+		--hoststatuslist.
+		--current application's NSLog("theHMHostStatusRecord: %@", theHMHostStatusRecord)
+		--fill in the fields in the HUD
+		set my theHMHostID to host_id of theHMHostStatusRecord
+		set my theHMHostLastStatus to status_text of theHMHostStatusRecord
+		set my theHMHostLastStatusUpdateTime to status_update_time of theHMHostStatusRecord
+		set my theHMHostLastTimeDown to last_time_down of theHMHostStatusRecord
+		set my theHMHostLastTimeUnreachable to last_time_unreachable of theHMHostStatusRecord
+		set my theHMHostLastCheck to last_check of theHMHostStatusRecord
+		set my theHMHostNextCheck to next_check of theHMHostStatusRecord
+		set my theHMHostFlapDetectionEnabled to flap_detection_enabled of theHMHostStatusRecord
+		set my theHMHostIsFLapping to is_flapping of theHMHostStatusRecord
+		set my theHMHostProblemAcknowledged to problem_acknowledged of theHMHostStatusRecord
 		my theHostStatusHUD's makeKeyAndOrderFront:(me)
 	end getHMHostStatus:
 	
