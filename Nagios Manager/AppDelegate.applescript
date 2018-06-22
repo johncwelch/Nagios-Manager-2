@@ -357,6 +357,40 @@ script AppDelegate
 			end if
 		end if
 	end tabView:didSelectTabViewItem:
+	
+	on tableViewSelectionDidChange:(sender) --this handles up/down arrow movement in the table views. Also handles clicks, but nothing happens specifically for those yet. At some
+		--point, we can merge the sent actions for the clicks into here since it all seems to happen here as well as those specific functions and just call them from here.
+		
+		if sender's object()'s isEqualTo:my theHostTable then --all three try blocks are here to sink the error 1700 that happens if a null selection in a table view
+			--is made
+			try
+				my displayHMHostInfo:(missing value)
+				on error errorMessage number errorNumber
+				if errorNumber is -1700 then
+					--we do nothing here, but we want to note the specific error we're trying to sink. Other errors, we want to know about so we can handle them
+					--differently, if needed.
+				end if
+			end try
+			else if sender's object()'s isEqualTo:my userTable then
+			try
+				my displayUserInfo:(missing value)
+				on error errorMessage number errorNumber
+				if errorNumber is -1700 then
+					--we do nothing here, but we want to note the specific error we're trying to sink. Other errors, we want to know about so we can handle them
+					--differently, if needed.
+				end if
+			end try
+			else if sender's object()'s isEqualTo:my theServerTable then
+			try
+				my getSMServerStatus:(missing value)
+				on error errorMessage number errorNumber
+				if errorNumber is -1700 then
+					--we do nothing here, but we want to note the specific error we're trying to sink. Other errors, we want to know about so we can handle them
+					--differently, if needed.
+				end if
+			end try
+		end if
+	end tableViewSelectionDidChange:
 
 
 	--SERVER MANAGER FUNCTIONS
@@ -916,38 +950,6 @@ script AppDelegate
 		set my theHMHostProblemAcknowledged to problem_acknowledged of theHMHostStatusRecord
 		my theHostStatusHUD's makeKeyAndOrderFront:(me)
 	end getHMHostStatus:
-	
-	on tableViewSelectionDidChange:(sender)
-		if sender's object()'s isEqualTo:my theHostTable then --all three try blocks are here to sink the error 1700 that happens if a null selection in a table view
-			--is made
-			try
-				my displayHMHostInfo:(missing value)
-			on error errorMessage number errorNumber
-				if errorNumber is -1700 then
-					--we do nothing here, but we want to note the specific error we're trying to sink. Other errors, we want to know about so we can handle them
-					--differently, if needed.
-				end if
-			end try
-		else if sender's object()'s isEqualTo:my userTable then
-			try
-				my displayUserInfo:(missing value)
-			on error errorMessage number errorNumber
-				if errorNumber is -1700 then
-					--we do nothing here, but we want to note the specific error we're trying to sink. Other errors, we want to know about so we can handle them
-					--differently, if needed.
-				end if
-			end try
-		else if sender's object()'s isEqualTo:my theServerTable then
-			try
-				my getSMServerStatus:(missing value)
-			on error errorMessage number errorNumber
-				if errorNumber is -1700 then
-					--we do nothing here, but we want to note the specific error we're trying to sink. Other errors, we want to know about so we can handle them
-					--differently, if needed.
-				end if
-			end try
-		end if
-	end tableViewSelectionDidChange:
      
      (*on clearTable:sender --test function to see why we aren't clearing table data correctly.
           userSelection's removeObjects:(userSelection's arrangedObjects()) --clear the table
