@@ -951,6 +951,7 @@
                                                         </tableColumns>
                                                         <connections>
                                                             <action selector="getSMServerStatus:" target="Voe-Tx-rLC" id="YCC-V1-dzU"/>
+                                                            <outlet property="delegate" destination="Voe-Tx-rLC" id="gdS-CK-7Uy"/>
                                                         </connections>
                                                     </tableView>
                                                 </subviews>
@@ -1067,6 +1068,7 @@
                                                         </tableColumns>
                                                         <connections>
                                                             <action selector="displayUserInfo:" target="Voe-Tx-rLC" id="NG4-pv-YYX"/>
+                                                            <outlet property="delegate" destination="Voe-Tx-rLC" id="2m1-Gj-fqr"/>
                                                         </connections>
                                                     </tableView>
                                                 </subviews>
@@ -1732,7 +1734,7 @@ DQ
                         </textFieldCell>
                     </textField>
                     <textField verticalHuggingPriority="750" misplaced="YES" id="Jve-2V-5KA">
-                        <rect key="frame" x="182" y="195" width="233" height="22"/>
+                        <rect key="frame" x="180" y="195" width="237" height="22"/>
                         <autoresizingMask key="autoresizingMask" flexibleMinY="YES"/>
                         <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" sendsActionOnEndEditing="YES" title="last status update time" id="bEM-LH-nt4">
                             <font key="font" metaFont="system"/>
@@ -1750,7 +1752,7 @@ DQ
                         </textFieldCell>
                     </textField>
                     <textField verticalHuggingPriority="750" misplaced="YES" id="FTm-7e-Qak">
-                        <rect key="frame" x="182" y="120" width="233" height="22"/>
+                        <rect key="frame" x="180" y="120" width="237" height="22"/>
                         <autoresizingMask key="autoresizingMask" flexibleMinY="YES"/>
                         <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" sendsActionOnEndEditing="YES" title="last check" id="F6q-XU-DyF">
                             <font key="font" metaFont="system"/>
@@ -1759,7 +1761,7 @@ DQ
                         </textFieldCell>
                     </textField>
                     <textField verticalHuggingPriority="750" misplaced="YES" id="fgQ-Jw-Qcr">
-                        <rect key="frame" x="182" y="170" width="233" height="22"/>
+                        <rect key="frame" x="180" y="170" width="237" height="22"/>
                         <autoresizingMask key="autoresizingMask" flexibleMinY="YES"/>
                         <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" sendsActionOnEndEditing="YES" title="last time down" id="FYr-OK-qVn">
                             <font key="font" metaFont="system"/>
@@ -1768,7 +1770,7 @@ DQ
                         </textFieldCell>
                     </textField>
                     <textField verticalHuggingPriority="750" misplaced="YES" id="7i6-sj-dEC">
-                        <rect key="frame" x="182" y="95" width="233" height="22"/>
+                        <rect key="frame" x="180" y="95" width="237" height="22"/>
                         <autoresizingMask key="autoresizingMask" flexibleMinY="YES"/>
                         <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" sendsActionOnEndEditing="YES" title="next check" id="0X6-gO-GlD">
                             <font key="font" metaFont="system"/>
@@ -1777,7 +1779,7 @@ DQ
                         </textFieldCell>
                     </textField>
                     <textField verticalHuggingPriority="750" misplaced="YES" id="Lgq-9U-X91">
-                        <rect key="frame" x="182" y="70" width="233" height="22"/>
+                        <rect key="frame" x="180" y="70" width="237" height="22"/>
                         <autoresizingMask key="autoresizingMask" flexibleMinY="YES"/>
                         <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" sendsActionOnEndEditing="YES" title="flapping detection enabled" id="jCb-UZ-AQ9">
                             <font key="font" metaFont="system"/>
@@ -1786,7 +1788,7 @@ DQ
                         </textFieldCell>
                     </textField>
                     <textField verticalHuggingPriority="750" misplaced="YES" id="AiB-Yl-Sua">
-                        <rect key="frame" x="182" y="45" width="233" height="22"/>
+                        <rect key="frame" x="180" y="45" width="237" height="22"/>
                         <autoresizingMask key="autoresizingMask" flexibleMinY="YES"/>
                         <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" sendsActionOnEndEditing="YES" title="is it flapping" id="0Lz-TZ-bLu">
                             <font key="font" metaFont="system"/>
@@ -1795,7 +1797,7 @@ DQ
                         </textFieldCell>
                     </textField>
                     <textField verticalHuggingPriority="750" misplaced="YES" id="JYh-Nq-PBd">
-                        <rect key="frame" x="182" y="245" width="233" height="22"/>
+                        <rect key="frame" x="180" y="245" width="237" height="22"/>
                         <autoresizingMask key="autoresizingMask" flexibleMinY="YES"/>
                         <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" sendsActionOnEndEditing="YES" title="Host ID" id="cEI-aA-v5B">
                             <font key="font" metaFont="system"/>
@@ -1804,7 +1806,7 @@ DQ
                         </textFieldCell>
                     </textField>
                     <textField verticalHuggingPriority="750" misplaced="YES" id="Gl6-47-WAo">
-                        <rect key="frame" x="182" y="220" width="233" height="22"/>
+                        <rect key="frame" x="180" y="220" width="237" height="22"/>
                         <autoresizingMask key="autoresizingMask" flexibleMinY="YES"/>
                         <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" sendsActionOnEndEditing="YES" title="last status" id="qvZ-xR-y3l">
                             <font key="font" metaFont="system"/>
@@ -1813,7 +1815,7 @@ DQ
                         </textFieldCell>
                     </textField>
                     <textField verticalHuggingPriority="750" misplaced="YES" id="5Sl-Iv-wZe">
-                        <rect key="frame" x="182" y="20" width="233" height="22"/>
+                        <rect key="frame" x="180" y="20" width="237" height="22"/>
                         <autoresizingMask key="autoresizingMask" flexibleMinY="YES"/>
                         <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" sendsActionOnEndEditing="YES" title="is there a problem ack" id="QzE-3m-mnx">
                             <font key="font" metaFont="system"/>

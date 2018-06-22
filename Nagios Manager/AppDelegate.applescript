@@ -254,11 +254,11 @@ script AppDelegate
 		--HOST MANAGER SETUP
      end applicationWillFinishLaunching:
 	
-	on applicationDidFinishLaunching:aNotification
-		my theTabView's selectTabViewItemAtIndex:0 --this ensures the server manager tab is always the active tab on launch.
+	--on applicationDidFinishLaunching:aNotification
+	--	my theTabView's selectTabViewItemAtIndex:0 --this ensures the server manager tab is always the active tab on launch.
 		--well, it's an attempt to do that
-		set my theSelectedTabIsCorrect to true
-	end applicationDidFinishLaunching:
+	--	set my theSelectedTabIsCorrect to true
+	--end applicationDidFinishLaunching:
 	
      on applicationShouldTerminate:sender
 		-- Insert code here to do any housekeeping before your application quits
@@ -302,7 +302,7 @@ script AppDelegate
 							--when it's open to a different tab won't load this for no good reason. Speeds things up a bit. Maybe.
 							my loadUserManagerPopup:(missing value) --initial popup load, moved to a function here.
 							set my theUMInitialUserLoadDone to true
-							my userSelection's setSelectionIndex:0
+							--my userSelection's setSelectionIndex:0
 						end if
 					end if
 				else if my theSelectedTabViewItemIndex is "2" then --we won't do anything here until this is actually doing something
@@ -314,7 +314,7 @@ script AppDelegate
 							my loadHostManagerFromPopup:(missing value) --initial load of window.
 							set my theHMStatusDisplay to "Because of how dependencies work within Nagios, this app doesn't delete hosts. Barring a way to handle dependencies via the API, it won't."
 							set my theHMInitialUserLoadDone to true --load is done, set flag correctly
-							my theHostTableController's setSelectionIndex:0
+							--my theHostTableController's setSelectionIndex:0
 						end if
 					end if
 					--log "host"
@@ -830,9 +830,12 @@ script AppDelegate
 	end getHMHostStatus:
 	
 	on tableViewSelectionDidChange:(sender)
-		log sender's object
-		if (sender's object) = (my theHostTable) then
+		if sender's object()'s isEqualTo:my theHostTable then
 			log "host table"
+		else if sender's object()'s isEqualTo:my userTable then
+			log "user table"
+		else if sender's object()'s isEqualTo:my theServerTable then
+			log "server table"
 		end if
 	end tableViewSelectionDidChange:
      
