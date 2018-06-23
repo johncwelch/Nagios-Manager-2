@@ -950,7 +950,41 @@ script AppDelegate
 		set my theHMHostProblemAcknowledged to problem_acknowledged of theHMHostStatusRecord
 		my theHostStatusHUD's makeKeyAndOrderFront:(me)
 	end getHMHostStatus:
-     
+
+	on addHMHost:sender --add a host to the selected nagios instance
+		--sanity checking for blanks.
+		if (my theHMNewHostName is missing value) or (my theHMNewHostName is "") then --did they enter a name for the host?
+			set my theHMStatusDisplay to "The Host Name field cannot be blank"
+			return
+		end if
+
+		if (my theHMNewHostAddress is missing value) or (my theHMNewHostAddress is "") then --did they enter a name for the host?
+			set my theHMStatusDisplay to "The Address field cannot be blank"
+			return
+		end if
+
+		if (my theHMNewHostCheckInterval is missing value) or (my theHMNewHostCheckInterval is "") then --did they enter a name for the host?
+			set my theHMStatusDisplay to "The Check Interval field cannot be blank"
+			return
+		end if
+
+		if (my theHMNewHostRetryInterval is missing value) or (my theHMNewHostRetryInterval is "") then --did they enter a name for the host?
+			set my theHMStatusDisplay to "The Retry Interval field cannot be blank"
+			return
+		end if
+
+		if (my theHMNewHostMaxCheckAttempts is missing value) or (my theHMNewHostMaxCheckAttempts is "") then --did they enter a name for the host?
+			set my theHMStatusDisplay to "The Max Checks Attempt field cannot be blank"
+			return
+		end if
+
+		--so there are cases where you don't want to have the notifications enabled or even filled in. I have defaults, but "blank" is actually perfectly acceptable
+		--for notifications
+
+		
+
+	end addHMHost:
+
      (*on clearTable:sender --test function to see why we aren't clearing table data correctly.
           userSelection's removeObjects:(userSelection's arrangedObjects()) --clear the table
           set my theUserNameList to {} --not doing this was causing our problems
