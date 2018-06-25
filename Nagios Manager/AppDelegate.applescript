@@ -167,6 +167,7 @@ script AppDelegate
 	property theHMHostTableControllerArray : {} --bound to content of the host manager array controller, probably not used.
 	property theHMHostSearchPattern : "system/user"
 	property theHMHostReplacementPattern : "objects/host"
+	property theHMNewHostReplacementPattern : "config/host"
 	property theHMHostStatusReplacementPattern: "objects/hoststatus"
 	property theHMHostListJSON : "" --the initial storage for the result of the get all hosts curl command
 	property theHMHostListJSONData : {} --the NSData version of theHMHostListJSON
@@ -638,7 +639,7 @@ script AppDelegate
 	
 	on displayUserInfo:sender --this is a VERY inelegant way of displaying basic info on the selected user in the user manager table
 		try
-			set theTempID to theUserID of my userSelection's selectedObjects() as text --grab the user id
+			set theTempID to theUserID of my userSelection's selectedObjects() --grab the user id
 			set theTempPredicate to current application's NSPredicate's predicateWithFormat:("user_id = \"" & theTempID & "\"") --build a predicate which ends up
 			--looking like: user_id == "234" or whatever the user_id is
 			set theTempRecord to my theOtherUserInfoList's filteredArrayUsingPredicate:theTempPredicate --get an array with a single NSDictionary containing what we want
@@ -915,14 +916,12 @@ script AppDelegate
 	end displayHMHostInfo:
 	
 	on getHMHostStatus:sender
-		set theHostStatusName to host_name of my theHostTableController's selectedObjects() as text
+		set theHostStatusName to host_name of my theHostTableController's selectedObjects()
 		set theRegEx to current application's NSRegularExpression's regularExpressionWithPattern:(theHMHostSearchPattern) options:1 |error|:(missing value) --create the RegEx object
 		set theHMServerURL to current application's NSString's stringWithString:my theHMServerURL --for whatever reason, this function required this so that we could get the length
 		--beats the heck outta me
 		set theURLLength to my theHMServerURL's |length|() --get the length of the URL, we need that to get the range for
 		--rangeOfFirstMatchInString
-		set theMatches to theRegEx's rangeOfFirstMatchInString:(my theHMServerURL) options:0 range:[0, theURLLength] --this gets the starting
-		--point for the match and how long it is. In this case, it's one character, and it starts and ends in the same place.
 		set theMatches to theRegEx's rangeOfFirstMatchInString:(my theHMServerURL) options:0 range:[0, theURLLength] --this gets the starting
 		--point for the match and how long it is. In this case, it's one character, and it starts and ends in the same place.
 		set theHMHostStatusURL to theRegEx's stringByReplacingMatchesInString:my theHMServerURL options:0 range:theMatches withTemplate:(my theHMHostStatusReplacementPattern)
@@ -980,6 +979,19 @@ script AppDelegate
 
 		--so there are cases where you don't want to have the notifications enabled or even filled in. I have defaults, but "blank" is actually perfectly acceptable
 		--for notifications
+		
+		set theHostStatusName to host_name of my theHostTableController's selectedObjects() --we're abusing "host" here. In this case, we mean the nagios server name.
+		set theRegEx to current application's NSRegularExpression's regularExpressionWithPattern:(theHMHostSearchPattern) options:1 |error|:(missing value) --create the RegEx object
+		set theHMServerURL to current application's NSString's stringWithString:my theHMServerURL --for whatever reason, this function required this so that we could get the length
+		--beats the heck outta me
+		set theURLLength to my theHMServerURL's |length|() --get the length of the URL, we need that to get the range for
+		--rangeOfFirstMatchInString
+		set theMatches to theRegEx's rangeOfFirstMatchInString:(my theHMServerURL) options:0 range:[0, theURLLength] --this gets the starting
+		--point for the match and how long it is. In this case, it's one character, and it starts and ends in the same place.
+		set theHMHostStatusURL to theRegEx's stringByReplacingMatchesInString:my theHMServerURL options:0 range:theMatches withTemplate:(my theHMNewHostReplacementPattern)
+		--replace the characters in range theMatches. This is literally a "replace "system/user" with "objects/hoststatus" operation" which is what we need for a url to get a
+		--list of hosts.
+		log theHMHostStatusURL
 
 		
 
