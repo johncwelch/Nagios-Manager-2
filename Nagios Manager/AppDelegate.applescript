@@ -21,9 +21,9 @@
      --sans the NSMatrix object, point all "related" radio buttons at the same thing to get them to work "together" properly.
 	--BONUS, figured out autoincrementing builds (see the build phases for details)
 --step 2: cut pumpkin into wedges about 4" wide and remove pulp
---1.2 goals : build tabbed interface so we can add a server manager (add/remove) tab that's separate from user manager (and other features eventually
---1.3 move from hardcoded server list to user-entered list. This will be fun
---1.4 Get a proper icon and make the menus in the menubar actually do something
+--1.2 goals : build tabbed interface so we can add a server manager (add/remove) tab that's separate from user manager (and other features eventually DONE
+--1.3 move from hardcoded server list to user-entered list. This will be fun DONE
+--1.4 Get a proper icon and make the menus in the menubar actually do something. also add hosts. DONE
 --1.5 convert time periods and contacts in new host to pulldowns/popups and see about duplicate code, like grep & json code
 
 --changed from _() to : syntax in function calls
@@ -232,9 +232,9 @@ script AppDelegate
           --initialize our properties to the default value in the popup
 		
 		set theTest to my theTabView's numberOfTabViewItems()
-		--log "Number of Tab View Items: " & theTest as text
-		--set theTest to my theTabView's tabViewItems()
-		--current application's NSLog("tabViewItems: %@", theTest)
+		
+		--current application's NSLog("tabViewItems: %@", theTest) --this is just here for when I need it elsewhere, I can
+		--copy/paste easier
 		
 		--SERVER MANAGER SETUP
 		set my theDefaults to current application's NSUserDefaults's standardUserDefaults() --make theDefaults the container
@@ -246,8 +246,7 @@ script AppDelegate
 		--folding the NSMutableArray initialization and keeps it mutable even after copying the contents of serverSettingsList into it.
 		
 		set my theSMDefaultsExist to theDefaults's boolForKey:"hasDefaults"
-		--current application's NSLog("theDefaultsExist: %@", my theDefaultsExist) --this is just here for when I need it elsewhere, I can
-		--copy/paste easier
+
 		
 		if not my theSMDefaultsExist then --if there are not defaults, let the user know this so they can fix that issue.
 			display dialog "there are no default settings existing at launch" --my version of a first run warning. Slick, ain't it.
@@ -256,8 +255,9 @@ script AppDelegate
 			my loadServerTable:(missing value) -- initial load of existing data into the server table.
 		end if
 		
-		tell my theServerTable to setDoubleAction:"deleteServerFromPrefs:" --this ties a doubleclick in the server to deleting that server.
-		--current application's NSLog("theServerTableController's first object: %@", theTest)
+		--tell my theServerTable to setDoubleAction:"deleteServerFromPrefs:" --this ties a doubleclick in the server to deleting that server. We do this with bindings to the
+		--table view now
+		
 		
 		
 		
@@ -267,8 +267,8 @@ script AppDelegate
 		--we moved the initial load of user data from here so that it only does the initial load when the user manager tab is selected.
 		--speeds up app launch. It's now in tabView:tabView didSelectTabViewItem:sender
 		
-		tell my userTable to setDoubleAction:"deleteSelectedUsers:" --this lets a doubleclick work as well as clicking the delete button. We may remove this
-		--because it could be dangerous
+		--tell my userTable to setDoubleAction:"deleteSelectedUsers:" --this lets a doubleclick work as well as clicking the delete button. We may remove this
+		--because it could be dangerous. done in bindings to the table view now
           
           --set the initial state and enabled of the checkboxes
           my canSeeAllObjects's setEnabled:true
@@ -288,6 +288,7 @@ script AppDelegate
 		set my theSelectedTabIsCorrect to true
 		
 		--HOST MANAGER SETUP
+		--tell my theHostTable to setDoubleAction: --done in bindings in the table view.
      end applicationWillFinishLaunching:
 	
 	--on applicationDidFinishLaunching:aNotification
@@ -328,7 +329,7 @@ script AppDelegate
 				if my theSelectedTabViewItemIndex is "0" then --clicked on Server Manager tab. Honestly, this may never do much of anything
 					--the initial server tab operations are handled in applicationWillFinishLaunching and other places. But just in case
 					--it's here
-					--log "server"
+					
 				else if my theSelectedTabViewItemIndex is "1" then --this moves the initial user load to a more lazy system, where it doesn't
 				--kick in until the user tab is selected at least once.
 					if not my theUMInitialUserLoadDone then --the user manager hasn't loaded at least once. This prevents us from continually
@@ -353,7 +354,7 @@ script AppDelegate
 							--my theHostTableController's setSelectionIndex:0
 						end if
 					end if
-					--log "host"
+					
 				end if
 			end if
 		end if
@@ -412,7 +413,7 @@ script AppDelegate
 			set theSMServerStatusReplacementPattern to "/status" --the replacement pattern we're using for the regex
 
 			set theSelectedServer to my theServerTableController's selectedObjects()
-			--current application's NSLog("theSelectedServer: %@", theSelectedServer)
+			
 
 			set theSMSelectedURL to theSelectedServer's theSMTableServerURL as text --get the URL for the server that was clicked on in the Server
 			--manager table. Note, the conversion to text is necessary, or you get as a single item array or dictionary. Either way, it makes
@@ -684,7 +685,7 @@ script AppDelegate
 			set theDeleteReplacement to "/" & theUserIDToBeDeleted & "\\?" --this sets the replacement string to be "/<the user_id>?"
 			--replacing "?"
 			set theRegEx to current application's NSRegularExpression's regularExpressionWithPattern:(my theDeletePattern) options:1 |error|:(missing value)
-			--current application's NSLog("theRegEx: %@", theRegEx)
+			
 			set theURLLength to my theServerURL's |length| --get the length of the URL, we need that to get the range for
 			--rangeOfFirstMatchInString
 			set theMatches to theRegEx's rangeOfFirstMatchInString:(my theServerURL) options:0 range:[0, theURLLength] --this gets the starting
@@ -806,7 +807,6 @@ script AppDelegate
 		 it's not a problem to fix later if we need, the variables are already declared, just unused.*)
 		set theAddCommand to "/usr/bin/curl -XPOST \"" & (my theServerURL as text) & (my theServerAPIKey as text) & "&pretty=1\"" & " -d \"username=" & my theNagiosNewUserName & "&password=" & my theNagiosNewUserPassword & "&name=" & my theNagiosNewUserRealName & "&email=" & my theNagiosNewUserEmailAddress & "&force_pw_change=1&email_info=1&monitoring_contact=1&enable_notifications=1&language=xi default&date_format=1&number_format=1&auth_level=" & theAuthLevel & "&can_see_all_hs=" & my canSeeAllObjects's intValue() & "&can_control_all_hs=" & my canControlAllObjects's intValue() & "&can_reconfigure_hs=" & my canReconfigureAllObjects's intValue() & "&can_control_engine=" & my canSeeOrConfigureMonitoringEngine's intValue() & "&can_use_advanced=" & my canAccessAdvancedFeatures's intValue() & "&read_only=" & my readOnly's intValue() & "\""
 		
-		current application's NSLog("Add User Return: %@", my theRESTresults) --log the results of the command
 		set my theRESTresults to do shell script theAddCommand --add the user
 		my getServerUsers:(missing value) --reload the list
 		
@@ -848,7 +848,9 @@ script AppDelegate
 		--point for the match and how long it is. In this case, it's one character, and it starts and ends in the same place.
 		set theHMHostStatusURL to theRegEx's stringByReplacingMatchesInString:my theHMServerURL options:0 range:theMatches withTemplate:(my theHMHostReplacementPattern) --replace the characters in range theMatches. This is literally a "replace "system/user" with "objects/host" operation" which is what we need for a url to get a list of hosts.
 		set theHMGetHostListCommand to "/usr/bin/curl -XGET \"" & theHMHostStatusURL & my theHMServerAPIKey & "&pretty=1\"" --build the curl command to get the hosts
+		
 		set my theHMHostListJSON to do shell script theHMGetHostListCommand --get the initial JSON dump from nagios
+		
 		set my theHMHostListJSON to current application's NSString's stringWithString:my theHMHostListJSON --convert this to NSString
 		set my theHMHostListJSONData to my theHMHostListJSON's dataUsingEncoding:(current application's NSUTF8StringEncoding) --convert NSString to NSData
 		set {my theHMHostListJSONDict, theError} to current application's NSJSONSerialization's JSONObjectWithData:theHMHostListJSONData options:0 |error|:(reference) --returns an NSData record of NSArrays
@@ -857,6 +859,7 @@ script AppDelegate
 		--note that if we want to pull the numerical ID of the host, that's buried in attributes of a given host. So that'll suck.
 		--attributes we initially want: host_name,address,display_name,alias,is_active,active_checks_enabled,passive_checks_enabled,notifications_enabled,notification_interval,
 			--first_notification_delay,check_interval,retry_interval,max_checks_attempt
+		
 		my theHostTableController's removeObjects:(my theHostTableController's arrangedObjects()) --clear out the host array controller
 		my theHostTableController's addObjects:my theHMHostListRecord
 		
@@ -988,13 +991,14 @@ script AppDelegate
 		--rangeOfFirstMatchInString
 		set theMatches to theRegEx's rangeOfFirstMatchInString:(my theHMServerURL) options:0 range:[0, theURLLength] --this gets the starting
 		--point for the match and how long it is. In this case, it's one character, and it starts and ends in the same place.
-		set theHMHostStatusURL to theRegEx's stringByReplacingMatchesInString:my theHMServerURL options:0 range:theMatches withTemplate:(my theHMNewHostReplacementPattern)
+		set theHMNewHostURL to theRegEx's stringByReplacingMatchesInString:my theHMServerURL options:0 range:theMatches withTemplate:(my theHMNewHostReplacementPattern)
 		--replace the characters in range theMatches. This is literally a "replace "system/user" with "objects/hoststatus" operation" which is what we need for a url to get a
 		--list of hosts.
-		log theHMHostStatusURL
-
+		set theHMNewHostCommand to "/usr/bin/curl -XPOST \"" & theHMNewHostURL & my theHMServerAPIKey & "&pretty=1\" -d \"host_name=" & theHMNewHostName & "&address=" & theHMNewHostAddress & "&" & theHMNewHostCheckCommand & "&check_interval=" & theHMNewHostCheckInterval & "&retry_interval=" & theHMNewHostRetryInterval & "&max_check_attempts=" & theHMNewHostMaxCheckAttempts & "&" & theHMNewHostActiveChecksEnabled & "&" & theHMNewHostPassiveChecksEnabled & "&" & theHMNewHostCheckPeriod & "&" & theHMNewHostProcessPerfData &"&notifications_enabled=" & theHMNewHostNotificationsEnabled & "&notification_options=" & theHMNewHostNotificationOptions & "&first_notification_delay=" & theHMNewHostFirstNotificationDelay & "&notification_interval=" & theHMNewHostNotificationInterval & "&contacts=" & theHMNewHostContacts & "&notification_period=" & theHMNewHostNotificationPeriod & "&applyconfig=1\"" --build a long-assed REST POST URL
 		
-
+		set my theHMStatusDisplay to (do shell script theHMNewHostCommand) & "\rThere is a six-second delay prior to refreshing the host list because of how nagios works when adding a new host." --run the rest command, with explanatory text about why the delay
+		my performSelector:"getHostList:" withObject:(missing value) afterDelay:6 --delay so the nagios server has time to actually insert the new host and refresh itself.
+		--this delay doesn't spike CPU usage to 100%, so we like this.
 	end addHMHost:
 
      (*on clearTable:sender --test function to see why we aren't clearing table data correctly.
