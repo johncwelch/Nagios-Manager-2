@@ -23,7 +23,7 @@
 --step 2: cut pumpkin into wedges about 4" wide and remove pulp
 --1.2 goals : build tabbed interface so we can add a server manager (add/remove) tab that's separate from user manager (and other features eventually DONE
 --1.3 move from hardcoded server list to user-entered list. This will be fun DONE
---1.4 Get a proper icon and make the menus in the menubar actually do something. also add hosts. DONE
+--1.4 Get a proper icon and make the menus in the menubar actually do something. also add hosts. DONE  
 --1.5 convert time periods and contacts in new host to pulldowns/popups and see about duplicate code, like grep & json code
 
 --changed from _() to : syntax in function calls
