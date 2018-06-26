@@ -231,7 +231,7 @@ script AppDelegate
 		-- Insert code here to initialize your application before any files are opened
           --initialize our properties to the default value in the popup
 		
-		set theTest to my theTabView's numberOfTabViewItems()
+		--set theTest to my theTabView's numberOfTabViewItems()
 		
 		--current application's NSLog("tabViewItems: %@", theTest) --this is just here for when I need it elsewhere, I can
 		--copy/paste easier
@@ -245,7 +245,7 @@ script AppDelegate
 		set my theSMSettingsList to (my theDefaults's arrayForKey:"serverSettingsList")'s mutableCopy() --this removes a bit of code by
 		--folding the NSMutableArray initialization and keeps it mutable even after copying the contents of serverSettingsList into it.
 		
-		set my theSMDefaultsExist to theDefaults's boolForKey:"hasDefaults"
+		set my theSMDefaultsExist to theDefaults's boolForKey:"hasDefaults" --get the boolean value for the hasDefaults key
 
 		
 		if not my theSMDefaultsExist then --if there are not defaults, let the user know this so they can fix that issue.
