@@ -157,7 +157,10 @@ script AppDelegate
 	property theSMSettingsList : {} --settings list array
 	property theSMSDeletingLastServerFlag : false --if you're about to manually delete the last server, we set this to true so you don't get two alerts
 	property theSMStatusFieldText : "" --binding for the text field at the bottom of the Server Manager. Allows it and User Manager to have different statuses
-	
+
+	property theSMServerStatusSearchPattern : "/user"
+	property theSMServerStatusReplacementPattern : "/status"
+
 	--Host Manager IB Outlets
 	property theHostTableController : missing value --referencing outlet for host array controller
 	property theHostTable : missing value --referencing outlet for host table
@@ -393,6 +396,12 @@ script AppDelegate
 			end try
 		end if
 	end tableViewSelectionDidChange:
+
+	--COMMON CODE FUNCTION
+	on buildNewURL:theCallingTab --the important thing we need passed here is what's calling it - server/host/user/other tabs.
+		--so the call should look like "buildNewURL:("host")
+
+	end buildNewURL:
 
 
 	--SERVER MANAGER FUNCTIONS
@@ -640,7 +649,7 @@ script AppDelegate
 	
 	on displayUserInfo:sender --this is a VERY inelegant way of displaying basic info on the selected user in the user manager table
 		try
-			set theTempID to theUserID of my userSelection's selectedObjects() --grab the user id
+			set theTempID to theUserID of my userSelection's selectedObjects() --grab the user id. DON'T USE "my" WITH theUserID
 			set theTempPredicate to current application's NSPredicate's predicateWithFormat:("user_id = \"" & theTempID & "\"") --build a predicate which ends up
 			--looking like: user_id == "234" or whatever the user_id is
 			set theTempRecord to my theOtherUserInfoList's filteredArrayUsingPredicate:theTempPredicate --get an array with a single NSDictionary containing what we want
@@ -901,7 +910,7 @@ script AppDelegate
 	
 	on displayHMHostInfo:sender
 		try
-			set theTempHostName to host_name of my theHostTableController's selectedObjects() as text
+			set theTempHostName to host_name of my theHostTableController's selectedObjects()
 			
 			set theTempHMPredicate to current application's NSPredicate's predicateWithFormat:("host_name = \"" & theTempHostName & "\"") --build a predicate which ends up
 			set theTempHMArray to current application's NSArray's arrayWithArray:(my theHostTableController's arrangedObjects())
