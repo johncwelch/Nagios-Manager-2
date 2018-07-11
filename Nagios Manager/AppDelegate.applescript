@@ -400,6 +400,13 @@ script AppDelegate
 	--COMMON CODE FUNCTION
 	on buildNewURL:theCallingTab --the important thing we need passed here is what's calling it - server/host/user/other tabs.
 		--so the call should look like "buildNewURL:("host")
+		if theCallingTab is "server" then
+			log "server"
+		else if theCallingTab is "user" then
+			log "user"
+		else if theCallingTab is "host" then
+			log "host"
+		end if
 
 	end buildNewURL:
 
@@ -418,6 +425,7 @@ script AppDelegate
 
 	on getSMServerStatus:sender
 		try
+			my buildNewURL:("server")
 			set theSMServerStatusSearchPattern to "/user" --the pattern we're using for the regex
 			set theSMServerStatusReplacementPattern to "/status" --the replacement pattern we're using for the regex
 
@@ -686,7 +694,8 @@ script AppDelegate
      
      on deleteSelectedUsers:sender --this activates for either the "delete user" button or a double click in the table
           try
-               set theSelection to userSelection's selectedObjects() as record --this gets the selection in the table row
+			my buildNewURL:("user")
+			set theSelection to userSelection's selectedObjects() as record --this gets the selection in the table row
                --and converts the NSArray to an AS record. Is it strictly needed? No, but it's not a big deal either.
                set theUserIDToBeDeleted to |theUserID| of theSelection  --set user id to local var
                set theUserNameToBeDeleted to |theUserName| of theSelection --set user name to local var
@@ -695,7 +704,8 @@ script AppDelegate
 			--replacing "?"
 			set theRegEx to current application's NSRegularExpression's regularExpressionWithPattern:(my theDeletePattern) options:1 |error|:(missing value)
 			
-			set theURLLength to my theServerURL's |length| --get the length of the URL, we need that to get the range for
+			set my theServerURL to current application's NSString's stringWithString:my theServerURL
+			set theURLLength to my theServerURL's |length|() --get the length of the URL, we need that to get the range for
 			--rangeOfFirstMatchInString
 			set theMatches to theRegEx's rangeOfFirstMatchInString:(my theServerURL) options:0 range:[0, theURLLength] --this gets the starting
 			--point for the match and how long it is. In this case, it's one character, and it starts and ends in the same place.
@@ -847,6 +857,7 @@ script AppDelegate
 	--HOST MANAGER FUNCTIONS
 	
 	on getHostList:sender --pull down the initial list of hosts
+		my buildNewURL:("host")
 		set theRegEx to current application's NSRegularExpression's regularExpressionWithPattern:(theHMHostSearchPattern) options:1 |error|:(missing value) --create the RegEx object
 		
 		set theHMServerURL to current application's NSString's stringWithString:my theHMServerURL --for whatever reason, this function required this so that we could get the length
@@ -928,6 +939,7 @@ script AppDelegate
 	end displayHMHostInfo:
 	
 	on getHMHostStatus:sender
+		my buildNewURL:("host")
 		set theHostStatusName to host_name of my theHostTableController's selectedObjects()
 		set theRegEx to current application's NSRegularExpression's regularExpressionWithPattern:(theHMHostSearchPattern) options:1 |error|:(missing value) --create the RegEx object
 		set theHMServerURL to current application's NSString's stringWithString:my theHMServerURL --for whatever reason, this function required this so that we could get the length
@@ -964,6 +976,7 @@ script AppDelegate
 
 	on addHMHost:sender --add a host to the selected nagios instance
 		--sanity checking for blanks.
+		my buildNewURL:("host")
 		if (my theHMNewHostName is missing value) or (my theHMNewHostName is "") then --did they enter a name for the host?
 			set my theHMStatusDisplay to "The Host Name field cannot be blank"
 			return
