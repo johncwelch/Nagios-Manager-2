@@ -106,7 +106,6 @@ script AppDelegate
 	property theOtherUserInfoList : {} -- alist of records we'll need to do something cool without a gob of recoding
 	
 	property theUserNameList:{} --a list of records we convert from NSDicts
-	--property theDeletePattern : "^.*\\?" --the pattern we use to find where the question mark is. There's only one, so for our needs this works. this allows us to split the string at the ? so we can build a proper delete URL
 	property theDeletePattern : "\\?" --figured out how to do NSRegularExpressions SO much better. This is the new pattern
 --step 9: put all the ingredients in a blender (blenders are your friend) and run until everything is liquid AF
 	
@@ -402,12 +401,31 @@ script AppDelegate
 		--so the call should look like "buildNewURL:("host")
 		if theCallingTab is "server" then
 			log "server"
+			set theSearchPattern to my theSMServerStatusSearchPattern --create local search string
+			set theReplacePattern to my theSMServerStatusReplacementPattern --create local replace string
+			set theSelectedServer to my theServerTableController's selectedObjects() --get the selected server so we can get the URL. This is really only needed for
+			--getting the status of the nagios server itself.
+			set theURL to theSelectedServer's theSMTableServerURL as text --get the URL for the server that was clicked on in the Server
+			--manager table. Note, the conversion to text is necessary, or you get as a single item array or dictionary. Either way, it makes
+			--rangeOfFirstMatchInString REALLY UNHAPPY
+			set theURL to current application's NSString's stringWithString:theURL --for whatever reason, this function required this so that we could get the length
+			--beats the heck outta me
+			--set theAPIKey to theSelectedServer's theSMTableServerAPIKey as text
 		else if theCallingTab is "user" then
 			log "user"
 		else if theCallingTab is "host" then
 			log "host"
 		end if
-
+		
+		set theRegEx to current application's NSRegularExpression's regularExpressionWithPattern:(theSearchPattern) options:1 |error|:(missing value)
+		--create regex object with the the search pattern as what it's looking for
+		set theURLLength to theURL's |length|() --get the length of the URL, we need that to get the range for
+		--rangeOfFirstMatchInString. Doing it this way is more reliable than the straight AS version of "length"
+		set theRegExMatch to theRegEx's rangeOfFirstMatchInString:(theURL) options:0 range:[0, theURLLength] --get the start
+		--of the match and how long it is, aka the range
+		set theNewURL to theRegEx's stringByReplacingMatchesInString:theURL options:0 range:theRegExMatch withTemplate:(theReplacePattern)
+		--builds the status URL by replacing the the match range with the replacement pattern
+		return theNewURL
 	end buildNewURL:
 
 
