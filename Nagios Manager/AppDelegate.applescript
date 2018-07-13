@@ -425,6 +425,7 @@ script AppDelegate
 		--of the match and how long it is, aka the range
 		set theNewURL to theRegEx's stringByReplacingMatchesInString:theURL options:0 range:theRegExMatch withTemplate:(theReplacePattern)
 		--builds the status URL by replacing the the match range with the replacement pattern
+		
 		return theNewURL
 	end buildNewURL:
 
@@ -443,26 +444,13 @@ script AppDelegate
 
 	on getSMServerStatus:sender
 		try
-			my buildNewURL:("server")
-			set theSMServerStatusSearchPattern to "/user" --the pattern we're using for the regex
-			set theSMServerStatusReplacementPattern to "/status" --the replacement pattern we're using for the regex
-
-			set theSelectedServer to my theServerTableController's selectedObjects()
+			set theSelectedServer to my theServerTableController's selectedObjects() --so we can pull data from the selection
+			set theSMStatusURL to my buildNewURL:("server")
 			
-
-			set theSMSelectedURL to theSelectedServer's theSMTableServerURL as text --get the URL for the server that was clicked on in the Server
-			--manager table. Note, the conversion to text is necessary, or you get as a single item array or dictionary. Either way, it makes
-			--rangeOfFirstMatchInString REALLY UNHAPPY
 			set theSMSelectedAPIKey to theSelectedServer's theSMTableServerAPIKey as text --pull the selected server's API key as text
-			set theRegEx to current application's NSRegularExpression's regularExpressionWithPattern:(theSMServerStatusSearchPattern) options:1 |error|:(missing value)
-			--create regex object with the the search pattern as what it's looking for
-			set theSMSelectedURLLength to theSMSelectedURL's length --get the length in characters of the selected server's URL
-			set theSMMatches to theRegEx's rangeOfFirstMatchInString:(theSMSelectedURL) options:0 range:[0, theSMSelectedURLLength] --get the start
-			--of /user and how long it is.
-			set theSMStatusURL to theRegEx's stringByReplacingMatchesInString:theSMSelectedURL options:0 range:theSMMatches withTemplate:(theSMServerStatusReplacementPattern)
-			--builds the status URL by replacing the /user in the URL with /status
 			set theSMServerStatusCommand to "/usr/bin/curl -XGET \"" & theSMStatusURL & theSMSelectedAPIKey & "&pretty=1\"" --build the server
 			--status command
+			
 			set theSMServerStatusJSON to do shell script theSMServerStatusCommand --run the command to pull the JSON from the server
 			set theSMServerStatusJSON to current application's NSString's stringWithString:theSMServerStatusJSON --convert this to NSString
 			set theSMServerStatusJSONData to theSMServerStatusJSON's dataUsingEncoding:(current application's NSUTF8StringEncoding) --convert
