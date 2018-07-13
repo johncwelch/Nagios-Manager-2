@@ -106,7 +106,7 @@ script AppDelegate
 	property theOtherUserInfoList : {} -- alist of records we'll need to do something cool without a gob of recoding
 	
 	property theUserNameList:{} --a list of records we convert from NSDicts
-	property theDeletePattern : "\\?" --figured out how to do NSRegularExpressions SO much better. This is the new pattern
+	property theUMUserDeletePattern : "\\?" --figured out how to do NSRegularExpressions SO much better. This is the new pattern
 --step 9: put all the ingredients in a blender (blenders are your friend) and run until everything is liquid AF
 	
 	
@@ -410,9 +410,14 @@ script AppDelegate
 			--rangeOfFirstMatchInString REALLY UNHAPPY
 			set theURL to current application's NSString's stringWithString:theURL --for whatever reason, this function required this so that we could get the length
 			--beats the heck outta me
-			--set theAPIKey to theSelectedServer's theSMTableServerAPIKey as text
 		else if theCallingTab is "user" then
 			log "user"
+			set theSelection to userSelection's selectedObjects() as record --this gets the selection in the table row
+			--and converts the NSArray to an AS record. Is it strictly needed? No, but it's not a big deal either.
+			set theUserIDToBeDeleted to |theUserID| of theSelection  --set user id to local var
+			set theReplacePattern to "/" & theUserIDToBeDeleted & "\\?" --this sets the replacement string to be "/<the user_id>?"
+			set theSearchPattern to my theUMUserDeletePattern
+			set theURL to current application's NSString's stringWithString:my theServerURL
 		else if theCallingTab is "host" then
 			log "host"
 		end if
@@ -425,7 +430,7 @@ script AppDelegate
 		--of the match and how long it is, aka the range
 		set theNewURL to theRegEx's stringByReplacingMatchesInString:theURL options:0 range:theRegExMatch withTemplate:(theReplacePattern)
 		--builds the status URL by replacing the the match range with the replacement pattern
-		
+		--log "New user delete URL: " & theNewURL
 		return theNewURL
 	end buildNewURL:
 
@@ -700,24 +705,12 @@ script AppDelegate
      
      on deleteSelectedUsers:sender --this activates for either the "delete user" button or a double click in the table
           try
-			my buildNewURL:("user")
+			set theUMUserDeleteURL to my buildNewURL:("user") --get the URL to delete a user
 			set theSelection to userSelection's selectedObjects() as record --this gets the selection in the table row
                --and converts the NSArray to an AS record. Is it strictly needed? No, but it's not a big deal either.
-               set theUserIDToBeDeleted to |theUserID| of theSelection  --set user id to local var
                set theUserNameToBeDeleted to |theUserName| of theSelection --set user name to local var
-
-			set theDeleteReplacement to "/" & theUserIDToBeDeleted & "\\?" --this sets the replacement string to be "/<the user_id>?"
-			--replacing "?"
-			set theRegEx to current application's NSRegularExpression's regularExpressionWithPattern:(my theDeletePattern) options:1 |error|:(missing value)
 			
-			set my theServerURL to current application's NSString's stringWithString:my theServerURL
-			set theURLLength to my theServerURL's |length|() --get the length of the URL, we need that to get the range for
-			--rangeOfFirstMatchInString
-			set theMatches to theRegEx's rangeOfFirstMatchInString:(my theServerURL) options:0 range:[0, theURLLength] --this gets the starting
-			--point for the match and how long it is. In this case, it's one character, and it starts and ends in the same place.
-			set theDeleteURL to theRegEx's stringByReplacingMatchesInString:my theServerURL options:0 range:theMatches withTemplate:(theDeleteReplacement) --replace the characters in range theMatches. This is literally a "replace "?" with "/<user_id>?
-			--which is what we need for a delete string. Does it all in one blush, saves a bunch of "build it the hard way code
-			set theDeleteUIDCommand to "/usr/bin/curl -XDELETE \"" & theDeleteURL & my theServerAPIKey & "&pretty=1\"" --builds the full
+			set theDeleteUIDCommand to "/usr/bin/curl -XDELETE \"" & theUMUserDeleteURL & my theServerAPIKey & "&pretty=1\"" --builds the full
 			--command for the do shell script step. Yes, there may be a more cocoa-y way, but I'm pretty sure it's not more efficient in terms
 			--of coding, (two lines) and I doubt it runs significantly faster.
 
