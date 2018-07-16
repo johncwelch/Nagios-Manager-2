@@ -666,9 +666,6 @@ script AppDelegate
 		--in case we want to do so at a future date
 		set theServerJSONCommand to "/usr/bin/curl -XGET \"" & my theServerURL & my theServerAPIKey & "&pretty=1\"" --gets the JSON dump as text
 		set my theUMJSONDict to my getJSONData:(theServerJSONCommand)
-		--set my theServerJSON to current application's NSString's stringWithString:my theServerJSON --convert text to NSSTring
-		--set my theJSONData to my theServerJSON's dataUsingEncoding:(current application's NSUTF8StringEncoding) --convert NSString to NSData
-		--set {my theUMJSONDict, theError} to current application's NSJSONSerialization's JSONObjectWithData:theJSONData options:0 |error|:(reference) --returns an NSData record of NSArrays
 		set my theServerUsers to users of my theUMJSONDict --yank out just the "users" section of the JSON return, that's
 		--all we care about
 		
@@ -881,11 +878,8 @@ script AppDelegate
 		
 		set theHMGetHostListCommand to "/usr/bin/curl -XGET \"" & theHMHostStatusURL & my theHMServerAPIKey & "&pretty=1\"" --build the curl command to get the hosts
 		
-		set my theHMHostListJSON to do shell script theHMGetHostListCommand --get the initial JSON dump from nagios
+		set my theHMHostListJSONDict to my getJSONData:(theHMGetHostListCommand)
 		
-		set my theHMHostListJSON to current application's NSString's stringWithString:my theHMHostListJSON --convert this to NSString
-		set my theHMHostListJSONData to my theHMHostListJSON's dataUsingEncoding:(current application's NSUTF8StringEncoding) --convert NSString to NSData
-		set {my theHMHostListJSONDict, theError} to current application's NSJSONSerialization's JSONObjectWithData:theHMHostListJSONData options:0 |error|:(reference) --returns an NSData record of NSArrays
 		set my theHMHostCount to recordcount of my theHMHostListJSONDict's hostlist --get the host count for that server. May use it some day
 		set my theHMHostListRecord to |host| of my theHMHostListJSONDict's hostlist --we have to pull it from hostlist of the Dict because it buries everything in hostlist.
 		--note that if we want to pull the numerical ID of the host, that's buried in attributes of a given host. So that'll suck.
