@@ -423,11 +423,15 @@ script AppDelegate
 			set theSearchPattern to my theHMHostSearchPattern --set the local search pattern
 			set theReplacePattern to my theHMHostReplacementPattern --set local replace string
 			set theURL to current application's NSString's stringWithString:my theHMServerURL --get the URL
-		else if theCallingTab is "gethoststatus" then
+		else if theCallingTab is "gethoststatus" then --this is needed because the replacement pattern/string is different than the one for getting a list of hosts
 			log "get host status"
 			set theSearchPattern to my theHMHostSearchPattern --set the local search pattern
-			log theSearchPattern
 			set theReplacePattern to my theHMHostStatusReplacementPattern --set local replace string
+			set theURL to current application's NSString's stringWithString:my theHMServerURL --get the URL
+		else if theCallingTab is "addnewhost" then
+			log "add new host"
+			set theSearchPattern to my theHMHostSearchPattern --set the local search pattern
+			set theReplacePattern to my theHMNewHostReplacementPattern --set local replace string
 			set theURL to current application's NSString's stringWithString:my theHMServerURL --get the URL
 			--return
 		end if
@@ -969,7 +973,7 @@ script AppDelegate
 
 	on addHMHost:sender --add a host to the selected nagios instance
 		--sanity checking for blanks.
-		my buildNewURL:("host")
+		set theHMNewHostURL to my buildNewURL:("addnewhost") --build the URL to add a host
 		if (my theHMNewHostName is missing value) or (my theHMNewHostName is "") then --did they enter a name for the host?
 			set my theHMStatusDisplay to "The Host Name field cannot be blank"
 			return
@@ -994,24 +998,20 @@ script AppDelegate
 			set my theHMStatusDisplay to "The Max Checks Attempt field cannot be blank"
 			return
 		end if
+		
+		if (my theHMNewHostContacts is missing value) or (my theHMNewHostContacts is "") then --did they enter a name for the host?
+			set my theHMStatusDisplay to "The Contacts field cannot be blank"
+			return
+		end if
 
 		--so there are cases where you don't want to have the notifications enabled or even filled in. I have defaults, but "blank" is actually perfectly acceptable
 		--for notifications
 		
 		set theHostStatusName to host_name of my theHostTableController's selectedObjects() --we're abusing "host" here. In this case, we mean the nagios server name.
-		set theRegEx to current application's NSRegularExpression's regularExpressionWithPattern:(theHMHostSearchPattern) options:1 |error|:(missing value) --create the RegEx object
-		set theHMServerURL to current application's NSString's stringWithString:my theHMServerURL --for whatever reason, this function required this so that we could get the length
-		--beats the heck outta me
-		set theURLLength to my theHMServerURL's |length|() --get the length of the URL, we need that to get the range for
-		--rangeOfFirstMatchInString
-		set theMatches to theRegEx's rangeOfFirstMatchInString:(my theHMServerURL) options:0 range:[0, theURLLength] --this gets the starting
-		--point for the match and how long it is. In this case, it's one character, and it starts and ends in the same place.
-		set theHMNewHostURL to theRegEx's stringByReplacingMatchesInString:my theHMServerURL options:0 range:theMatches withTemplate:(my theHMNewHostReplacementPattern)
-		--replace the characters in range theMatches. This is literally a "replace "system/user" with "objects/hoststatus" operation" which is what we need for a url to get a
-		--list of hosts.
+		
 		set theHMNewHostCommand to "/usr/bin/curl -XPOST \"" & theHMNewHostURL & my theHMServerAPIKey & "&pretty=1\" -d \"host_name=" & theHMNewHostName & "&address=" & theHMNewHostAddress & "&" & theHMNewHostCheckCommand & "&check_interval=" & theHMNewHostCheckInterval & "&retry_interval=" & theHMNewHostRetryInterval & "&max_check_attempts=" & theHMNewHostMaxCheckAttempts & "&" & theHMNewHostActiveChecksEnabled & "&" & theHMNewHostPassiveChecksEnabled & "&" & theHMNewHostCheckPeriod & "&" & theHMNewHostProcessPerfData &"&notifications_enabled=" & theHMNewHostNotificationsEnabled & "&notification_options=" & theHMNewHostNotificationOptions & "&first_notification_delay=" & theHMNewHostFirstNotificationDelay & "&notification_interval=" & theHMNewHostNotificationInterval & "&contacts=" & theHMNewHostContacts & "&notification_period=" & theHMNewHostNotificationPeriod & "&applyconfig=1\"" --build a long-assed REST POST URL
 		
-		set my theHMStatusDisplay to (do shell script theHMNewHostCommand) & "\rThere is a six-second delay prior to refreshing the host list because of how nagios works when adding a new host." --run the rest command, with explanatory text about why the delay
+		set my theHMStatusDisplay to (do shell script theHMNewHostCommand) & "\rThere is a six-second delay prior to refreshing the host list because of how nagios works when adding a new host. Also, VERIFY   \"Apply Configuration\" actually worked. It can silently fail via the API." --run the rest command, with explanatory text about why the delay
 		my performSelector:"getHostList:" withObject:(missing value) afterDelay:6 --delay so the nagios server has time to actually insert the new host and refresh itself.
 		--this delay doesn't spike CPU usage to 100%, so we like this.
 	end addHMHost:
