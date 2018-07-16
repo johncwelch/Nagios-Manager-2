@@ -25,6 +25,7 @@
 --1.3 move from hardcoded server list to user-entered list. This will be fun DONE
 --1.4 Get a proper icon and make the menus in the menubar actually do something. also add hosts. DONE  
 --1.5 convert time periods and contacts in new host to pulldowns/popups and see about duplicate code, like grep & json code
+--1.6 add hostgroup option to build new host
 
 --changed from _() to : syntax in function calls
 --table columns are not editable. Table size atrib's are all solid bars
@@ -400,7 +401,6 @@ script AppDelegate
 	on buildNewURL:theCallingTab --the important thing we need passed here is what's calling it - server/host/user/other tabs.
 		--so the call should look like "buildNewURL:("host")
 		if theCallingTab is "server" then
-			log "server"
 			set theSearchPattern to my theSMServerStatusSearchPattern --create local search string
 			set theReplacePattern to my theSMServerStatusReplacementPattern --create local replace string
 			set theSelectedServer to my theServerTableController's selectedObjects() --get the selected server so we can get the URL. This is really only needed for
@@ -411,7 +411,6 @@ script AppDelegate
 			set theURL to current application's NSString's stringWithString:theURL --for whatever reason, this function required this so that we could get the length
 			--beats the heck outta me
 		else if theCallingTab is "user" then
-			log "user"
 			set theSelection to userSelection's selectedObjects() as record --this gets the selection in the table row
 			--and converts the NSArray to an AS record. Is it strictly needed? No, but it's not a big deal either.
 			set theUserIDToBeDeleted to |theUserID| of theSelection  --set user id to local var
@@ -419,17 +418,14 @@ script AppDelegate
 			set theSearchPattern to my theUMUserDeletePattern --set the local search pattern
 			set theURL to current application's NSString's stringWithString:my theServerURL ----get the URL
 		else if theCallingTab is "gethosts" then
-			log "get host list"
 			set theSearchPattern to my theHMHostSearchPattern --set the local search pattern
 			set theReplacePattern to my theHMHostReplacementPattern --set local replace string
 			set theURL to current application's NSString's stringWithString:my theHMServerURL --get the URL
 		else if theCallingTab is "gethoststatus" then --this is needed because the replacement pattern/string is different than the one for getting a list of hosts
-			log "get host status"
 			set theSearchPattern to my theHMHostSearchPattern --set the local search pattern
 			set theReplacePattern to my theHMHostStatusReplacementPattern --set local replace string
 			set theURL to current application's NSString's stringWithString:my theHMServerURL --get the URL
 		else if theCallingTab is "addnewhost" then
-			log "add new host"
 			set theSearchPattern to my theHMHostSearchPattern --set the local search pattern
 			set theReplacePattern to my theHMNewHostReplacementPattern --set local replace string
 			set theURL to current application's NSString's stringWithString:my theHMServerURL --get the URL
@@ -444,10 +440,25 @@ script AppDelegate
 		--of the match and how long it is, aka the range
 		set theNewURL to theRegEx's stringByReplacingMatchesInString:theURL options:0 range:theRegExMatch withTemplate:(theReplacePattern)
 		--builds the status URL by replacing the the match range with the replacement pattern
-		--log "New user delete URL: " & theNewURL
-		log theNewURL
+		
 		return theNewURL
 	end buildNewURL:
+	
+	on getJSONData:theCurlCommand --this does the basic JSON processing, which is the same four lines over and over, unchanged
+		--it shoves the results of the do shell script into a text variable, then makes that into an NSString
+		--then it converts it to NSData, encoding is UTF-8
+		--Finally, it turns the whole thing into a dict (record) where it is then used by the calling function.
+		
+		set theReturnedJSON to do shell script theCurlCommand --run the command to pull the JSON from the server
+		set theReturnedJSON to current application's NSString's stringWithString:theReturnedJSON --convert this to NSString
+		set theReturnedJSONData to theReturnedJSON's dataUsingEncoding:(current application's NSUTF8StringEncoding) --convert
+		--NSString to NSData, needed for NSJSONSerialization
+		set {theReturnedJSONDict, theError} to current application's NSJSONSerialization's JSONObjectWithData:theReturnedJSONData options:0 |error|:(reference)
+		--returns an NSData record of NSArrays, technically an NSJSON object. It looks a LOT like an AS
+		--record. You can even reference elements the way you would a record. W00T!!!
+		return theReturnedJSONDict --send the dictionary back to the calling function
+		
+	end getJSONData:
 
 
 	--SERVER MANAGER FUNCTIONS
@@ -470,14 +481,8 @@ script AppDelegate
 			set theSMSelectedAPIKey to theSelectedServer's theSMTableServerAPIKey as text --pull the selected server's API key as text
 			set theSMServerStatusCommand to "/usr/bin/curl -XGET \"" & theSMStatusURL & theSMSelectedAPIKey & "&pretty=1\"" --build the server
 			--status command
+			set theSMSServerStatusJSONDict to my getJSONData:(theSMServerStatusCommand)
 			
-			set theSMServerStatusJSON to do shell script theSMServerStatusCommand --run the command to pull the JSON from the server
-			set theSMServerStatusJSON to current application's NSString's stringWithString:theSMServerStatusJSON --convert this to NSString
-			set theSMServerStatusJSONData to theSMServerStatusJSON's dataUsingEncoding:(current application's NSUTF8StringEncoding) --convert
-			--NSString to NSData, needed for NSJSONSerialization
-			set {theSMSServerStatusJSONDict, theError} to current application's NSJSONSerialization's JSONObjectWithData:theSMServerStatusJSONData options:0 |error|:(reference)
-			--returns an NSData record of NSArrays, technically an NSJSON object. It looks a LOT like an AS
-			--record. You can even reference elements the way you would a record. W00T!!!
 			set my theSMStatusFieldText to "active host checks enabled: " & theSMSServerStatusJSONDict's active_host_checks_enabled & "\ractive service checks enabled: " & theSMSServerStatusJSONDict's active_service_checks_enabled & "\rNagios in daemon mode: " & theSMSServerStatusJSONDict's daemon_mode & "\revent handlers enabled: " & theSMSServerStatusJSONDict's event_handlers_enabled & "\rflap detection enabled: " & theSMSServerStatusJSONDict's flap_detection_enabled & "\rlast log rotation: " & theSMSServerStatusJSONDict's last_log_rotation & "\rnotifications enabled: " & theSMSServerStatusJSONDict's notifications_enabled & "\rpassive host checks enabled: " & theSMSServerStatusJSONDict's passive_host_checks_enabled & "\rpassive service checks enabled: " & theSMSServerStatusJSONDict's passive_service_checks_enabled & "\rprocess id: " & theSMSServerStatusJSONDict's process_id
 		on error errorMessage number errorNumber
 			if errorNumber is -1700 then
