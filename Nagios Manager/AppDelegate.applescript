@@ -950,10 +950,8 @@ script AppDelegate
 		
 		set theHMGetHostStatusCommand to "/usr/bin/curl -XGET \"" & theHMHostStatusURL & my theHMServerAPIKey & "&host_name=" & theHostStatusName & "&pretty=1\""
 			--build the curl command to get the host status for the specified host
-		set theHMGetHostStatusJSON to do shell script theHMGetHostStatusCommand --get the initial JSON dump from nagios
-		set theHMGetHostStatusJSON to current application's NSString's stringWithString:theHMGetHostStatusJSON --convert this to NSString
-		set theHMGetHostStatusJSONData to theHMGetHostStatusJSON's dataUsingEncoding:(current application's NSUTF8StringEncoding) --convert NSString to NSData
-		set {theHMGetHostStatusJSONDict, theError} to current application's NSJSONSerialization's JSONObjectWithData:theHMGetHostStatusJSONData options:0 |error|:(reference) --returns an NSData record of NSArrays
+		set theHMGetHostStatusJSONDict to my getJSONData:(theHMGetHostStatusCommand) --get the JSON info
+		
 		set theHMHostStatusRecord to hoststatus of theHMGetHostStatusJSONDict's hoststatuslist --we have to pull it from hostlist of the Dict because it buries everything in
 		--hoststatuslist.
 		
