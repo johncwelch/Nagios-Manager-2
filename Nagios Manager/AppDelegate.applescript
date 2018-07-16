@@ -97,10 +97,8 @@ script AppDelegate
 	--just buy them, this pie takes long enough as it is
 	
 	--User Manager Other properties
-	property theServerJSON:"" --the list of stuff from the server as JSON
-	property theJSONData:"" --used to hold the converted theServerJSON text data as an NSData object
 	property theUMJSONDict:"" --this holds the result of NSJSONSerialization as an NSArray of NSDicts
-	property theServerUsers:"" --grabs just the users out of theJSONDict as a NSArray of NSDicts
+	property theServerUsers:"" --grabs just the users out of theUMJSONDict as a NSArray of NSDicts
 	property theUserName:"" --user full name from the nagios server
 	property theUserID:"" --user id from the nagios server
 	
@@ -172,8 +170,6 @@ script AppDelegate
 	property theHMHostReplacementPattern : "objects/host"
 	property theHMNewHostReplacementPattern : "config/host"
 	property theHMHostStatusReplacementPattern: "objects/hoststatus"
-	property theHMHostListJSON : "" --the initial storage for the result of the get all hosts curl command
-	property theHMHostListJSONData : {} --the NSData version of theHMHostListJSON
 	property theHMHostListJSONDict : {} --the NSDictionary version of theHMHostListJSONData
 	property theHMHostCount : "" --holds a count of hosts
 	property theHMHostListRecord : {} --the array we use to load all the host info into the host array controller
