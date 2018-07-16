@@ -99,7 +99,7 @@ script AppDelegate
 	--User Manager Other properties
 	property theServerJSON:"" --the list of stuff from the server as JSON
 	property theJSONData:"" --used to hold the converted theServerJSON text data as an NSData object
-	property theJSONDict:"" --this holds the result of NSJSONSerialization as an NSArray of NSDicts
+	property theUMJSONDict:"" --this holds the result of NSJSONSerialization as an NSArray of NSDicts
 	property theServerUsers:"" --grabs just the users out of theJSONDict as a NSArray of NSDicts
 	property theUserName:"" --user full name from the nagios server
 	property theUserID:"" --user id from the nagios server
@@ -448,7 +448,7 @@ script AppDelegate
 		--it shoves the results of the do shell script into a text variable, then makes that into an NSString
 		--then it converts it to NSData, encoding is UTF-8
 		--Finally, it turns the whole thing into a dict (record) where it is then used by the calling function.
-		
+		--log theCurlCommand
 		set theReturnedJSON to do shell script theCurlCommand --run the command to pull the JSON from the server
 		set theReturnedJSON to current application's NSString's stringWithString:theReturnedJSON --convert this to NSString
 		set theReturnedJSONData to theReturnedJSON's dataUsingEncoding:(current application's NSUTF8StringEncoding) --convert
@@ -456,8 +456,8 @@ script AppDelegate
 		set {theReturnedJSONDict, theError} to current application's NSJSONSerialization's JSONObjectWithData:theReturnedJSONData options:0 |error|:(reference)
 		--returns an NSData record of NSArrays, technically an NSJSON object. It looks a LOT like an AS
 		--record. You can even reference elements the way you would a record. W00T!!!
-		return theReturnedJSONDict --send the dictionary back to the calling function
 		
+		return theReturnedJSONDict --send the dictionary back to the calling function
 	end getJSONData:
 
 
@@ -664,11 +664,12 @@ script AppDelegate
 	
 	on getServerUsers:sender --this isn't attached to a specific button, but we'll leave the sender
 		--in case we want to do so at a future date
-		set my theServerJSON to do shell script "/usr/bin/curl -XGET \"" & my theServerURL & my theServerAPIKey & "&pretty=1\"" --gets the JSON dump as text
-		set my theServerJSON to current application's NSString's stringWithString:my theServerJSON --convert text to NSSTring
-		set my theJSONData to my theServerJSON's dataUsingEncoding:(current application's NSUTF8StringEncoding) --convert NSString to NSData
-		set {my theJSONDict, theError} to current application's NSJSONSerialization's JSONObjectWithData:theJSONData options:0 |error|:(reference) --returns an NSData record of NSArrays
-		set my theServerUsers to users of my theJSONDict --yank out just the "users" section of the JSON return, that's
+		set theServerJSONCommand to "/usr/bin/curl -XGET \"" & my theServerURL & my theServerAPIKey & "&pretty=1\"" --gets the JSON dump as text
+		set my theUMJSONDict to my getJSONData:(theServerJSONCommand)
+		--set my theServerJSON to current application's NSString's stringWithString:my theServerJSON --convert text to NSSTring
+		--set my theJSONData to my theServerJSON's dataUsingEncoding:(current application's NSUTF8StringEncoding) --convert NSString to NSData
+		--set {my theUMJSONDict, theError} to current application's NSJSONSerialization's JSONObjectWithData:theJSONData options:0 |error|:(reference) --returns an NSData record of NSArrays
+		set my theServerUsers to users of my theUMJSONDict --yank out just the "users" section of the JSON return, that's
 		--all we care about
 		
 		set my theOtherUserInfoList to current application's NSMutableArray's array --init this as an NSMutableArray
