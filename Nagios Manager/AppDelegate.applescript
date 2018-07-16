@@ -416,13 +416,20 @@ script AppDelegate
 			--and converts the NSArray to an AS record. Is it strictly needed? No, but it's not a big deal either.
 			set theUserIDToBeDeleted to |theUserID| of theSelection  --set user id to local var
 			set theReplacePattern to "/" & theUserIDToBeDeleted & "\\?" --this sets the replacement string to be "/<the user_id>?"
-			set theSearchPattern to my theUMUserDeletePattern
-			set theURL to current application's NSString's stringWithString:my theServerURL
+			set theSearchPattern to my theUMUserDeletePattern --set the local search pattern
+			set theURL to current application's NSString's stringWithString:my theServerURL ----get the URL
 		else if theCallingTab is "gethosts" then
 			log "get host list"
-			set theSearchPattern to my theHMHostSearchPattern
-			set theReplacePattern to my theHMHostReplacementPattern
-			set theURL to current application's NSString's stringWithString:my theHMServerURL
+			set theSearchPattern to my theHMHostSearchPattern --set the local search pattern
+			set theReplacePattern to my theHMHostReplacementPattern --set local replace string
+			set theURL to current application's NSString's stringWithString:my theHMServerURL --get the URL
+		else if theCallingTab is "gethoststatus" then
+			log "get host status"
+			set theSearchPattern to my theHMHostSearchPattern --set the local search pattern
+			log theSearchPattern
+			set theReplacePattern to my theHMHostStatusReplacementPattern --set local replace string
+			set theURL to current application's NSString's stringWithString:my theHMServerURL --get the URL
+			--return
 		end if
 		
 		set theRegEx to current application's NSRegularExpression's regularExpressionWithPattern:(theSearchPattern) options:1 |error|:(missing value)
@@ -934,18 +941,9 @@ script AppDelegate
 	end displayHMHostInfo:
 	
 	on getHMHostStatus:sender
-		my buildNewURL:("host")
-		set theHostStatusName to host_name of my theHostTableController's selectedObjects()
-		set theRegEx to current application's NSRegularExpression's regularExpressionWithPattern:(theHMHostSearchPattern) options:1 |error|:(missing value) --create the RegEx object
-		set theHMServerURL to current application's NSString's stringWithString:my theHMServerURL --for whatever reason, this function required this so that we could get the length
-		--beats the heck outta me
-		set theURLLength to my theHMServerURL's |length|() --get the length of the URL, we need that to get the range for
-		--rangeOfFirstMatchInString
-		set theMatches to theRegEx's rangeOfFirstMatchInString:(my theHMServerURL) options:0 range:[0, theURLLength] --this gets the starting
-		--point for the match and how long it is. In this case, it's one character, and it starts and ends in the same place.
-		set theHMHostStatusURL to theRegEx's stringByReplacingMatchesInString:my theHMServerURL options:0 range:theMatches withTemplate:(my theHMHostStatusReplacementPattern)
-			--replace the characters in range theMatches. This is literally a "replace "system/user" with "objects/hoststatus" operation" which is what we need for a url to get a
-			--list of hosts.
+		set theHMHostStatusURL to my buildNewURL:("gethoststatus")
+		set theHostStatusName to host_name of my theHostTableController's selectedObjects() --get the name of the host we want to get the status for
+		
 		set theHMGetHostStatusCommand to "/usr/bin/curl -XGET \"" & theHMHostStatusURL & my theHMServerAPIKey & "&host_name=" & theHostStatusName & "&pretty=1\""
 			--build the curl command to get the host status for the specified host
 		set theHMGetHostStatusJSON to do shell script theHMGetHostStatusCommand --get the initial JSON dump from nagios
