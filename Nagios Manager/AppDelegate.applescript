@@ -418,8 +418,11 @@ script AppDelegate
 			set theReplacePattern to "/" & theUserIDToBeDeleted & "\\?" --this sets the replacement string to be "/<the user_id>?"
 			set theSearchPattern to my theUMUserDeletePattern
 			set theURL to current application's NSString's stringWithString:my theServerURL
-		else if theCallingTab is "host" then
-			log "host"
+		else if theCallingTab is "gethosts" then
+			log "get host list"
+			set theSearchPattern to my theHMHostSearchPattern
+			set theReplacePattern to my theHMHostReplacementPattern
+			set theURL to current application's NSString's stringWithString:my theHMServerURL
 		end if
 		
 		set theRegEx to current application's NSRegularExpression's regularExpressionWithPattern:(theSearchPattern) options:1 |error|:(missing value)
@@ -431,6 +434,7 @@ script AppDelegate
 		set theNewURL to theRegEx's stringByReplacingMatchesInString:theURL options:0 range:theRegExMatch withTemplate:(theReplacePattern)
 		--builds the status URL by replacing the the match range with the replacement pattern
 		--log "New user delete URL: " & theNewURL
+		log theNewURL
 		return theNewURL
 	end buildNewURL:
 
@@ -856,16 +860,8 @@ script AppDelegate
 	--HOST MANAGER FUNCTIONS
 	
 	on getHostList:sender --pull down the initial list of hosts
-		my buildNewURL:("host")
-		set theRegEx to current application's NSRegularExpression's regularExpressionWithPattern:(theHMHostSearchPattern) options:1 |error|:(missing value) --create the RegEx object
+		set theHMHostStatusURL to my buildNewURL:("gethosts") --call buildNewURL: to get a list of hosts on a nagios server
 		
-		set theHMServerURL to current application's NSString's stringWithString:my theHMServerURL --for whatever reason, this function required this so that we could get the length
-		--beats the heck outta me
-		set theURLLength to my theHMServerURL's |length|() --get the length of the URL, we need that to get the range for
-		--rangeOfFirstMatchInString
-		set theMatches to theRegEx's rangeOfFirstMatchInString:(my theHMServerURL) options:0 range:[0, theURLLength] --this gets the starting
-		--point for the match and how long it is. In this case, it's one character, and it starts and ends in the same place.
-		set theHMHostStatusURL to theRegEx's stringByReplacingMatchesInString:my theHMServerURL options:0 range:theMatches withTemplate:(my theHMHostReplacementPattern) --replace the characters in range theMatches. This is literally a "replace "system/user" with "objects/host" operation" which is what we need for a url to get a list of hosts.
 		set theHMGetHostListCommand to "/usr/bin/curl -XGET \"" & theHMHostStatusURL & my theHMServerAPIKey & "&pretty=1\"" --build the curl command to get the hosts
 		
 		set my theHMHostListJSON to do shell script theHMGetHostListCommand --get the initial JSON dump from nagios
