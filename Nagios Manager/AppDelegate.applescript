@@ -24,7 +24,7 @@
 --1.2 goals : build tabbed interface so we can add a server manager (add/remove) tab that's separate from user manager (and other features eventually DONE
 --1.3 move from hardcoded server list to user-entered list. This will be fun DONE
 --1.4 Get a proper icon and make the menus in the menubar actually do something. also add hosts. DONE  
---1.5 convert time periods and contacts in new host to pulldowns/popups and see about duplicate code, like grep & json code
+--1.5 convert time periods (cannot be done with current API, would require MySQL queries) and contacts in new host to pulldowns/popups and see about duplicate code, like grep & json code 
 --1.6 add hostgroup option to build new host
 
 --changed from _() to : syntax in function calls
@@ -163,9 +163,12 @@ script AppDelegate
 	property theHostTableController : missing value --referencing outlet for host array controller
 	property theHostTable : missing value --referencing outlet for host table
 	property theHostStatusHUD : missing value --referencing outlet for host status info hud
+	property theHostContactController : missing value -- referenceing outlet for contact list array controller
+	property theHostContactTable : missing value --referencing outlet for contact list table
 	
 	--Host Manager Other properties
 	property theHMHostTableControllerArray : {} --bound to content of the host manager array controller, probably not used.
+	property theHMHostContactControllerArray : {} --bound to content of the host contacts array controller, probably not used.
 	property theHMHostSearchPattern : "system/user"
 	property theHMHostReplacementPattern : "objects/host"
 	property theHMNewHostReplacementPattern : "config/host"
