@@ -1564,7 +1564,7 @@ Gw
                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
                                         </box>
                                         <button verticalHuggingPriority="750" id="c07-aD-9L0">
-                                            <rect key="frame" x="11" y="547" width="137" height="32"/>
+                                            <rect key="frame" x="116" y="588" width="137" height="32"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                             <buttonCell key="cell" type="push" title="Get Host Status" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="mZY-k0-rrr">
                                                 <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
@@ -1574,10 +1574,6 @@ Gw
                                                 <action selector="getHMHostStatus:" target="Voe-Tx-rLC" id="Qn8-48-mDN"/>
                                             </connections>
                                         </button>
-                                        <box verticalHuggingPriority="750" boxType="separator" id="fRh-iD-rny">
-                                            <rect key="frame" x="17" y="531" width="231" height="5"/>
-                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                        </box>
                                         <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" id="v4h-yX-wQQ">
                                             <rect key="frame" x="15" y="508" width="76" height="17"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
@@ -1902,17 +1898,10 @@ Gw
 </string>
                                             </buttonCell>
                                         </button>
-                                        <button verticalHuggingPriority="750" id="QYP-QE-ic5">
-                                            <rect key="frame" x="155" y="588" width="81" height="32"/>
+                                        <box verticalHuggingPriority="750" boxType="separator" id="fRh-iD-rny">
+                                            <rect key="frame" x="16" y="584" width="231" height="5"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                            <buttonCell key="cell" type="push" title="Button" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="LZr-CN-wuM">
-                                                <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
-                                                <font key="font" metaFont="system"/>
-                                            </buttonCell>
-                                            <connections>
-                                                <action selector="createHMContactList:" target="Voe-Tx-rLC" id="uPl-se-cTz"/>
-                                            </connections>
-                                        </button>
+                                        </box>
                                     </subviews>
                                 </view>
                             </tabViewItem>

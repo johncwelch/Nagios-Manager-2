@@ -894,7 +894,8 @@ script AppDelegate
 			--first_notification_delay,check_interval,retry_interval,max_checks_attempt
 		
 		my theHostTableController's removeObjects:(my theHostTableController's arrangedObjects()) --clear out the host array controller
-		my theHostTableController's addObjects:my theHMHostListRecord
+		my theHostTableController's addObjects:my theHMHostListRecord --load the list of hosts on the nagios server into the array controller
+		my theHostTableController's setSelectionIndex:0 --set the default selection to the first host in the list (it makes sense for the host tab)
 		my loadHMHostContactTable:(missing value)
 		
 	end getHostList:
