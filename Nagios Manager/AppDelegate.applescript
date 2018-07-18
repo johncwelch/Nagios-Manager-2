@@ -929,18 +929,19 @@ script AppDelegate
 	on createHMContactList:sender --this is where we create a comma-delimited list of contacts for a new host
 		set theHMContactSelectedRows to my theHostContactController's selectedObjects()--get all the information for the selection
 		
-		set theHMContactNames to "" --sometimes you have to initialize before using, sometimes you don't.
+		set theHMContactNames to "" --sometimes you have to initialize before using, sometimes you don't. this will be the comma-delimited list of names we return
 		
 		repeat with x in theHMContactSelectedRows --iterate through the selection
 			set theName to contact_name of x as text --convert from NSString to text
-			set theHMContactNames to theName & "," & theHMContactNames --this builds a comma-delimited list of names with a comma at the end.
+			set theHMContactNames to theName & "," & theHMContactNames --this builds a comma-delimited list of names with a comma at the end, instead of a list or an NSArray of NSStrings
+			--ultimately, it's a bit kludgy, but it makes life so much easier
 		end repeat
 		
-		set theHMContactNames to current application's NSMutableString's stringWithString:theHMContactNames --convert to mutable string, it makes certain operations more reliable
-		set theLength to theHMContactNames's |length|() --get the length of the string
+		set theHMContactNames to current application's NSMutableString's stringWithString:theHMContactNames --convert text to NSMutableString, it makes certain operations more reliable
+		set theLength to theHMContactNames's |length|() --get the length of the NSMutableString
 		set theDeleteRange to current application's NSRange's NSMakeRange((theLength -1),1) --create the range for the last character. AppleScript starts at 1, Cocoa starts at 0, hence -1
 		theHMContactNames's deleteCharactersInRange:(theDeleteRange) --delete the last character. RESIST the temptation to "set varname to.." here, it won't work.
-		return theHMContactNames
+		return theHMContactNames --return the comma-delimited list of names back to the calling function
 	end createHMContactList
 	
 	on selectedHMServerName:sender -- This runs when you select a server in the popup list. we could just share everything with the user manager server, but, letting host functionality not determine what's in the user manager ultimately makes things more flexible.
@@ -1030,16 +1031,18 @@ script AppDelegate
 			set my theHMStatusDisplay to "The Max Checks Attempt field cannot be blank"
 			return
 		end if
+
+		--so there are cases where you don't want to have the notifications enabled or even filled in. I have defaults, but "blank" is actually perfectly acceptable
+		--for notifications. However, this is inconsistent, so better off to have contacts even if you don't need them. Nagios is not good about consistency with the
+		--behavior of the API here.
+		
+		set theHostStatusName to host_name of my theHostTableController's selectedObjects() --we're abusing "host" here. In this case, we mean the nagios server name.
+		set my theHMNewHostContacts to my createHMContactList:(missing value)
 		
 		if (my theHMNewHostContacts is missing value) or (my theHMNewHostContacts is "") then --did they enter a name for the host?
 			set my theHMStatusDisplay to "The Contacts field cannot be blank"
 			return
 		end if
-
-		--so there are cases where you don't want to have the notifications enabled or even filled in. I have defaults, but "blank" is actually perfectly acceptable
-		--for notifications
-		
-		set theHostStatusName to host_name of my theHostTableController's selectedObjects() --we're abusing "host" here. In this case, we mean the nagios server name.
 		
 		set theHMNewHostCommand to "/usr/bin/curl -XPOST \"" & theHMNewHostURL & my theHMServerAPIKey & "&pretty=1\" -d \"host_name=" & theHMNewHostName & "&address=" & theHMNewHostAddress & "&" & theHMNewHostCheckCommand & "&check_interval=" & theHMNewHostCheckInterval & "&retry_interval=" & theHMNewHostRetryInterval & "&max_check_attempts=" & theHMNewHostMaxCheckAttempts & "&" & theHMNewHostActiveChecksEnabled & "&" & theHMNewHostPassiveChecksEnabled & "&" & theHMNewHostCheckPeriod & "&" & theHMNewHostProcessPerfData &"&notifications_enabled=" & theHMNewHostNotificationsEnabled & "&notification_options=" & theHMNewHostNotificationOptions & "&first_notification_delay=" & theHMNewHostFirstNotificationDelay & "&notification_interval=" & theHMNewHostNotificationInterval & "&contacts=" & theHMNewHostContacts & "&notification_period=" & theHMNewHostNotificationPeriod & "&applyconfig=1\"" --build a long-assed REST POST URL
 		
