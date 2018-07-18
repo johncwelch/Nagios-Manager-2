@@ -173,9 +173,12 @@ script AppDelegate
 	property theHMHostReplacementPattern : "objects/host"
 	property theHMNewHostReplacementPattern : "config/host"
 	property theHMHostStatusReplacementPattern: "objects/hoststatus"
+	property theHMHostContactListReplacementPattern: "objects/contact"
 	property theHMHostListJSONDict : {} --the NSDictionary version of theHMHostListJSONData
+	property theHMContactListJSONDict : {} --NSDictionary of contact list JSON data
 	property theHMHostCount : "" --holds a count of hosts
 	property theHMHostListRecord : {} --the array we use to load all the host info into the host array controller
+	property theHMHostContactRecord : {} --the array we use to load all the contact info into the contact array controller
 	property theHMStatusDisplay : "" --for status messages in the host tab
 	property theHMServerName : "" -- current host manager server name, used to populate the host manager server popup
 	property theHMServerAPIKey : "" --current host manager server API key
@@ -427,6 +430,10 @@ script AppDelegate
 		else if theCallingTab is "addnewhost" then
 			set theSearchPattern to my theHMHostSearchPattern --set the local search pattern
 			set theReplacePattern to my theHMNewHostReplacementPattern --set local replace string
+			set theURL to current application's NSString's stringWithString:my theHMServerURL --get the URL
+		else if theCallingTab is "getcontactlist" then
+			set theSearchPattern to my theHMHostSearchPattern --set the local search pattern
+			set theReplacePattern to my theHMHostContactListReplacementPattern --set local replace string
 			set theURL to current application's NSString's stringWithString:my theHMServerURL --get the URL
 			--return
 		end if
@@ -888,7 +895,6 @@ script AppDelegate
 		my theHostTableController's removeObjects:(my theHostTableController's arrangedObjects()) --clear out the host array controller
 		my theHostTableController's addObjects:my theHMHostListRecord
 		
-		--set theTest to my theHostTableController's arrangedObjects()'s firstObject()
 	end getHostList:
 	
 	on loadHostManagerFromPopup:sender --runs when the host manager tab is clicked. we may flag this so it only runs once, but it's all local data, so it's pretty fast
@@ -907,6 +913,15 @@ script AppDelegate
 		my getHostList:(missing value)
 		
 	end loadHostManagerFromPopup:
+	
+	on loadHMHostContactTable:sender --this runs whenever a nagios server is selected in the host manager. There's no difference between how it runs for initial tab selection or changing the value in the popup
+		set theHMContactListURL to my buildNewURL:("getcontactlist") --create the URL to get the contact list
+		set theHMGetContactListCommand to "/usr/bin/curl -XGET \"" & theHMContactListURL & my theHMServerAPIKey & "&pretty=1\"" --build the curl command to get the contacts
+		set my theHMContactListJSONDict to my getJSONData:(theHMGetContactListCommand)
+		set my theHMHostContactRecord to |contact| of my theHMContactListJSONDict's contactlist --the hierarchy of data here is contactlist -> contact -> data in record
+		my theHostContactController's removeObjects:(my theHostContactController's arrangedObjects()) --clear out the host contact controller
+		my theHostContactController's addObjects:my theHMHostContactRecord
+	end loadHMHostContactTable:
 	
 	on selectedHMServerName:sender -- This runs when you select a server in the popup list. we could just share everything with the user manager server, but, letting host functionality not determine what's in the user manager ultimately makes things more flexible.
 		if not theSMDefaultsExist then --so if there are no servers in server manager, even if someone clicks on the list, we don't want things to happen here. This should prevent that
