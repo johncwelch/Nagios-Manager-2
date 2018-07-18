@@ -894,6 +894,7 @@ script AppDelegate
 		
 		my theHostTableController's removeObjects:(my theHostTableController's arrangedObjects()) --clear out the host array controller
 		my theHostTableController's addObjects:my theHMHostListRecord
+		my loadHMHostContactTable:(missing value)
 		
 	end getHostList:
 	
@@ -922,6 +923,10 @@ script AppDelegate
 		my theHostContactController's removeObjects:(my theHostContactController's arrangedObjects()) --clear out the host contact controller
 		my theHostContactController's addObjects:my theHMHostContactRecord
 	end loadHMHostContactTable:
+	
+	on createHMContactList:sender --this is where we create a comma-delimited list of contacts for a new host
+		
+	end createHMContactList
 	
 	on selectedHMServerName:sender -- This runs when you select a server in the popup list. we could just share everything with the user manager server, but, letting host functionality not determine what's in the user manager ultimately makes things more flexible.
 		if not theSMDefaultsExist then --so if there are no servers in server manager, even if someone clicks on the list, we don't want things to happen here. This should prevent that
