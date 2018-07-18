@@ -196,6 +196,7 @@ script AppDelegate
 	property theHMHostProblemAcknowledged : "" --binding for the "Problem Acknowledged?"
 	
 	
+	
 	--hardcoded values for adding new hosts
 	property theHMNewHostCheckCommand : "check_command=check-host-alive"
 	property theHMNewHostActiveChecksEnabled : "active_checks_enabled=1"
@@ -922,10 +923,24 @@ script AppDelegate
 		set my theHMHostContactRecord to |contact| of my theHMContactListJSONDict's contactlist --the hierarchy of data here is contactlist -> contact -> data in record
 		my theHostContactController's removeObjects:(my theHostContactController's arrangedObjects()) --clear out the host contact controller
 		my theHostContactController's addObjects:my theHMHostContactRecord
+		my theHostContactController's setSelectionIndex:0
 	end loadHMHostContactTable:
 	
 	on createHMContactList:sender --this is where we create a comma-delimited list of contacts for a new host
+		set theHMContactSelectedRows to my theHostContactController's selectedObjects()--get all the information for the selection
 		
+		set theHMContactNames to "" --sometimes you have to initialize before using, sometimes you don't.
+		
+		repeat with x in theHMContactSelectedRows --iterate through the selection
+			set theName to contact_name of x as text --convert from NSString to text
+			set theHMContactNames to theName & "," & theHMContactNames --this builds a comma-delimited list of names with a comma at the end.
+		end repeat
+		
+		set theHMContactNames to current application's NSMutableString's stringWithString:theHMContactNames --convert to mutable string, it makes certain operations more reliable
+		set theLength to theHMContactNames's |length|() --get the length of the string
+		set theDeleteRange to current application's NSRange's NSMakeRange((theLength -1),1) --create the range for the last character. AppleScript starts at 1, Cocoa starts at 0, hence -1
+		theHMContactNames's deleteCharactersInRange:(theDeleteRange) --delete the last character. RESIST the temptation to "set varname to.." here, it won't work.
+		return theHMContactNames
 	end createHMContactList
 	
 	on selectedHMServerName:sender -- This runs when you select a server in the popup list. we could just share everything with the user manager server, but, letting host functionality not determine what's in the user manager ultimately makes things more flexible.
