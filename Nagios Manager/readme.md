@@ -6,8 +6,12 @@ currently, it can manage its own list of servers and users. To answer a question
 What I want to do in 1.4: 
 add in host management. DONE
 
-1.5 will be code cleanup to remove redundant code and move some things into popuplists as they should be.
+1.5 will be code cleanup to remove redundant code and move some things into popuplists as they should be. DONE
+
+1.6 will be adding hostgroups and services. Not sure of the order. May play with NSURL a bit to see if there's an advantage to using that over do shell script curl blah blah. Then again, I may not.
 
 
 yes, it's written in AppleScriptObjective C. No, I don't particularly care if you like that language, it does what *I* need it to do and that's its only
 requirement.
+
+Too many thanks to Mark Aldritt, Sal Soghoian, Andy Bachorski (RIP), Chris Nebel, Chris Espinosa (other chris) Chris Page (other, other chris), Todd Fernandez, Shane Stanely, and a host of people at Apple and other companies who realize what gems AppleScript and AppleScript Objective C are.

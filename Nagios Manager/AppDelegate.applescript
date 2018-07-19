@@ -1048,7 +1048,7 @@ script AppDelegate
 			set my theHMStatusDisplay to "The Contacts field cannot be blank"
 			return
 		end if
-		
+		  
 		set theHMNewHostCommand to "/usr/bin/curl -XPOST \"" & theHMNewHostURL & my theHMServerAPIKey & "&pretty=1\" -d \"host_name=" & my theHMNewHostName & "&address=" & my theHMNewHostAddress & "&" & my theHMNewHostCheckCommand & "&check_interval=" & my theHMNewHostCheckInterval & "&retry_interval=" & my theHMNewHostRetryInterval & "&max_check_attempts=" & my theHMNewHostMaxCheckAttempts & "&" & my theHMNewHostActiveChecksEnabled & "&" & my theHMNewHostPassiveChecksEnabled & "&" & my theHMNewHostCheckPeriod & "&" & my theHMNewHostProcessPerfData &"&notifications_enabled=" & my theHMNewHostNotificationsEnabled & "&notification_options=" & my theHMNewHostNotificationOptions & "&first_notification_delay=" & my theHMNewHostFirstNotificationDelay & "&notification_interval=" & my theHMNewHostNotificationInterval & "&contacts=" & my theHMNewHostContacts & "&notification_period=" & my theHMNewHostNotificationPeriod & "&applyconfig=1\"" --build a long-assed REST POST URL
 		
 		set my theHMStatusDisplay to (do shell script theHMNewHostCommand) & "\rThere is a six-second delay prior to refreshing the host list because of how nagios works when adding a new host. Also, VERIFY   \"Apply Configuration\" actually worked. It can silently fail via the API." --run the rest command, with explanatory text about why the delay
