@@ -24,8 +24,9 @@
 --1.2 goals : build tabbed interface so we can add a server manager (add/remove) tab that's separate from user manager (and other features eventually DONE
 --1.3 move from hardcoded server list to user-entered list. This will be fun DONE
 --1.4 Get a proper icon and make the menus in the menubar actually do something. also add hosts. DONE  
---1.5 convert time periods (cannot be done with current API, would require MySQL queries) and contacts in new host to pulldowns/popups and see about duplicate code, like grep & json code 
---1.6 add hostgroup option to build new host
+--1.5 convert time periods (cannot be done with current API, would require MySQL queries) and contacts in new host to pulldowns/popups and see about duplicate code, like grep & json code. Workaround
+	--for time periods in 1.5 - combo box with most common timeperiods listed, and the ability to manually type a different one in. Contacts is done, but it's a table, not a popup/pulldown.
+--1.6 add hostgroup option to build new host. Add in hostgroup view option and service tab.
 
 --changed from _() to : syntax in function calls
 --table columns are not editable. Table size atrib's are all solid bars
@@ -70,8 +71,6 @@ script AppDelegate
 	--Application - level IBOutlets
 	property theWindow : missing value --outlet for theWindow
 	property theTabView : missing value --outlet for the tab view. not any individual tab, but all the tabs
-	
-	
 	
 	-- User Manager IBOutlets
      property popupSelection:missing value --this is attached to the array controller's referencing outlet
@@ -165,6 +164,7 @@ script AppDelegate
 	property theHostStatusHUD : missing value --referencing outlet for host status info hud
 	property theHostContactController : missing value -- referenceing outlet for contact list array controller
 	property theHostContactTable : missing value --referencing outlet for contact list table
+	property theHMTimePeriodComboBox : missing value --referencing outlet for the time period combo box.
 	
 	--Host Manager Other properties
 	property theHMHostTableControllerArray : {} --bound to content of the host manager array controller, probably not used.
@@ -195,7 +195,9 @@ script AppDelegate
 	property theHMHostIsFLapping : "" --binding for the "Is Flapping?" field in the host status HUD
 	property theHMHostProblemAcknowledged : "" --binding for the "Problem Acknowledged?"
 	
-	
+	property theHMTimePeriodComboBoxSelection : "" --what is selected or typed in the theHMTimePeriodComboBox combo box
+	property theHMTimePeriodComboBoxEnteredText : "" --this is what's typed into the combo box manually, bound to the value of the combo box cell, not the combo box itself
+	--property theHMTimePeriodComboBoxContents : "xi_timeperiod_24x7" --this is what we actually use for the results of the combo box action(s). This default is the most common option
 	
 	--hardcoded values for adding new hosts
 	property theHMNewHostCheckCommand : "check_command=check-host-alive"
@@ -230,7 +232,8 @@ script AppDelegate
 	property theSelectedTabIsCorrect:false --flag for making sure the initial tab on launch is correct
 	property theUMInitialUserLoadDone : false --flag to check if the initial user table load was done. false by default so that the first tab click/selection does the load
 	property theHMInitialUserLoadDone : false --flag to check if the initial host table load was done. false by default so that the first tab click/selection does the load
-	
+	property theTimePeriodList : {"24x7","24x7_sans_holidays","none","us-holidays","workhours","xi_timeperiod_24x7"} --content of time period combo boxes. Because of how this works, any time
+	--period combo box in the app has this same source. (these are the default Nagios time periods. Others can be added.)
 
 	
      on applicationWillFinishLaunching:aNotification
@@ -897,6 +900,7 @@ script AppDelegate
 		my theHostTableController's addObjects:my theHMHostListRecord --load the list of hosts on the nagios server into the array controller
 		my theHostTableController's setSelectionIndex:0 --set the default selection to the first host in the list (it makes sense for the host tab)
 		my loadHMHostContactTable:(missing value)
+		my theHMTimePeriodComboBox's addItemsWithObjectValues:theTimePeriodList
 		
 	end getHostList:
 	
@@ -1045,13 +1049,26 @@ script AppDelegate
 			return
 		end if
 		
-		set theHMNewHostCommand to "/usr/bin/curl -XPOST \"" & theHMNewHostURL & my theHMServerAPIKey & "&pretty=1\" -d \"host_name=" & theHMNewHostName & "&address=" & theHMNewHostAddress & "&" & theHMNewHostCheckCommand & "&check_interval=" & theHMNewHostCheckInterval & "&retry_interval=" & theHMNewHostRetryInterval & "&max_check_attempts=" & theHMNewHostMaxCheckAttempts & "&" & theHMNewHostActiveChecksEnabled & "&" & theHMNewHostPassiveChecksEnabled & "&" & theHMNewHostCheckPeriod & "&" & theHMNewHostProcessPerfData &"&notifications_enabled=" & theHMNewHostNotificationsEnabled & "&notification_options=" & theHMNewHostNotificationOptions & "&first_notification_delay=" & theHMNewHostFirstNotificationDelay & "&notification_interval=" & theHMNewHostNotificationInterval & "&contacts=" & theHMNewHostContacts & "&notification_period=" & theHMNewHostNotificationPeriod & "&applyconfig=1\"" --build a long-assed REST POST URL
+		set theHMNewHostCommand to "/usr/bin/curl -XPOST \"" & theHMNewHostURL & my theHMServerAPIKey & "&pretty=1\" -d \"host_name=" & my theHMNewHostName & "&address=" & my theHMNewHostAddress & "&" & my theHMNewHostCheckCommand & "&check_interval=" & my theHMNewHostCheckInterval & "&retry_interval=" & my theHMNewHostRetryInterval & "&max_check_attempts=" & my theHMNewHostMaxCheckAttempts & "&" & my theHMNewHostActiveChecksEnabled & "&" & my theHMNewHostPassiveChecksEnabled & "&" & my theHMNewHostCheckPeriod & "&" & my theHMNewHostProcessPerfData &"&notifications_enabled=" & my theHMNewHostNotificationsEnabled & "&notification_options=" & my theHMNewHostNotificationOptions & "&first_notification_delay=" & my theHMNewHostFirstNotificationDelay & "&notification_interval=" & my theHMNewHostNotificationInterval & "&contacts=" & my theHMNewHostContacts & "&notification_period=" & my theHMNewHostNotificationPeriod & "&applyconfig=1\"" --build a long-assed REST POST URL
 		
 		set my theHMStatusDisplay to (do shell script theHMNewHostCommand) & "\rThere is a six-second delay prior to refreshing the host list because of how nagios works when adding a new host. Also, VERIFY   \"Apply Configuration\" actually worked. It can silently fail via the API." --run the rest command, with explanatory text about why the delay
 		my performSelector:"getHostList:" withObject:(missing value) afterDelay:6 --delay so the nagios server has time to actually insert the new host and refresh itself.
 		--this delay doesn't spike CPU usage to 100%, so we like this.
 	end addHMHost:
-
+	
+	on getHMTimePeriodComboBoxChoice:sender --(very) short function where we get the user's choice in this combo box
+		set my theHMTimePeriodComboBoxSelection to theHMTimePeriodComboBox's objectValueOfSelectedItem() --if someone selects and item from the list but doesn't type or just hit tab, this gets that value
+		if (my theHMTimePeriodComboBoxSelection is "") or (my theHMTimePeriodComboBoxSelection is missing value) then --so with how combo boxes work, there's two parts, clicking and typing. if you type, that
+			--goes into the property bound to the combo box cell, not the selection value. However, if you have typed and then click, the combo box cell value isn't null'd out. So if you use that to see which
+			--one to use, you're going to always pick that, even if the user later clicks on something in the list. But, even if they've selected something from the list, if they type something and hit enter
+			--or tab, the selection value is null, so the selection value is what you want to use for your discriminator here.
+			set my theHMNewHostNotificationPeriod to my theHMTimePeriodComboBoxEnteredText --the user typed in a value
+		else
+			set my theHMNewHostNotificationPeriod to my theHMTimePeriodComboBoxSelection --they clicked something in the list
+		end if
+		--log my theHMTimePeriodComboBoxContents
+	end getHMTimePeriodComboBoxChoice:
+	
      (*on clearTable:sender --test function to see why we aren't clearing table data correctly.
           userSelection's removeObjects:(userSelection's arrangedObjects()) --clear the table
           set my theUserNameList to {} --not doing this was causing our problems
