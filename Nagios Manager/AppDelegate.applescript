@@ -1096,7 +1096,32 @@ script AppDelegate
 	
 	on getHMHostGroupNameFromPopup:sender
 		set my theHMHostGroupSelectedName to my theHMHostGroupPopup's titleOfSelectedItem() --get the title of the selected item
-		log theHMHostGroupSelectedName
+		set theSearchPattern to "\\s" --so there's spaces in host group names, which means we have to do some regex ledgerdemain to handle that. Since we only do that
+		--once, instead of trying to funk up the exsiting regex function, we'll do this all here. This sets theSearchPattern to look for white space. This also handles
+		--more than one space in a row
+		set theReplacePattern to "%20"
+		set theRegex to current application's NSRegularExpression's regularExpressionWithPattern:(theSearchPattern) options:1 |error|:(missing value) --build the regex
+		set my theHMHostGroupSelectedName to current application's NSMutableString's stringWithString:my theHMHostGroupSelectedName --this is a bit different. We use
+		--NSMutableString here because we may have multiple matches in the string, so using NSMutableString saves us a lot of work. For single matches, NSString works well.
+		set theHMHostGroupSelectedNameLength to my theHMHostGroupSelectedName's |length|() --get the length of the hostgroup name
+		set theMatchCount to theRegex's numberOfMatchesInString:(my theHMHostGroupSelectedName) options:0 range:[0, theHMHostGroupSelectedNameLength] --count the number
+		--of spaces in the string
+		if theMatchCOunt < 1 then --if there aren't any, we don't need to do anything more, jet.
+			return
+		end if
+		set theMatches to (theRegex's matchesInString:(my theHMHostGroupSelectedName) options:0 range:[0, theHMHostGroupSelectedNameLength]) as list --get all the matches
+		--in the string, and convert that NSArray to a list
+		set theMatches to reverse of theMatches --sometimes AppleScript is easier. Here's the thing. If you start replacing from the front, since we're replacing a single
+		--char with multiples, replacing the first one invalidates the ranges of all the other matches, because we "push down" the other chars in the string. If we go
+		--from the last match to the first though, then the ranges aren't invalidated. Nice. By converting theMatches to a list from NSArray, we can reverse the order
+		--FAR more simply than with NS(mutable)Array
+		repeat with x in theMatches --unfortunately, we have to interate through the array/list to do the actual replacing. Le sigh.
+			set theRange to x's range() --okay, so what matchesInString: returns isn't an array/list of ranges, but an array/list of NSTextCheckingResults. These contain
+			--more than just the range of the match. However, since range is a component of NSTextCheckingResult, at least in our case, we can get that from the
+			--NSTextCheckingResult and use it to replace things.
+			theRegex's replaceMatchesInString:my theHMHostGroupSelectedName options:0 range:theRange withTemplate:(theReplacePattern) --replace each space with %20
+			--one at a time from back to front.
+		end repeat
 	end getHMHostGroupNameFromPopup:
 	
      (*on clearTable:sender --test function to see why we aren't clearing table data correctly.
