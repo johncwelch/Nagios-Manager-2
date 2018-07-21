@@ -1825,6 +1825,9 @@ Gw
                                                 <font key="font" metaFont="menu"/>
                                                 <menu key="menu" id="No5-Jd-OOG"/>
                                             </popUpButtonCell>
+                                            <connections>
+                                                <action selector="getHMHostGroupNameFromPopup:" target="Voe-Tx-rLC" id="utd-pR-tLH"/>
+                                            </connections>
                                         </popUpButton>
                                         <scrollView autohidesScrollers="YES" horizontalLineScroll="19" horizontalPageScroll="10" verticalLineScroll="19" verticalPageScroll="10" usesPredominantAxisScrolling="NO" id="76V-4o-m0R">
                                             <rect key="frame" x="16" y="159" width="231" height="102"/>

@@ -201,6 +201,8 @@ script AppDelegate
 	property theHMTimePeriodComboBoxEnteredText : "" --this is what's typed into the combo box manually, bound to the value of the combo box cell, not the combo box itself
 	--property theHMTimePeriodComboBoxContents : "xi_timeperiod_24x7" --this is what we actually use for the results of the combo box action(s). This default is the most common option
 	
+	property theHMHostGroupSelectedName : "" --what the user selects in the popup
+	
 	--hardcoded values for adding new hosts
 	property theHMNewHostCheckCommand : "check_command=check-host-alive"
 	property theHMNewHostActiveChecksEnabled : "active_checks_enabled=1"
@@ -1083,12 +1085,19 @@ script AppDelegate
 		set theHMHostGroupRecord to theHMHostGroupListJSONDict's hostgrouplist's hostgroup --get the individual hostgroup records. Hierarchy here is NSDictionary -> hostgrouplist -> hostgroup
 		set theHostGroupNameList to {} --intiialize the list we'll use to load the popup
 		repeat with x in theHMHostGroupRecord
-			set the end of theHostGroupNameList to (hostgroup_name of x)
+			set the end of theHostGroupNameList to (hostgroup_name of x) --fill the list of hostgroup names
 		end repeat
 		
-		my theHMHostGroupPopup's removeAllItems()
-		my theHMHostGroupPopup's addItemsWithTitles:theHostGroupNameList
+		my theHMHostGroupPopup's removeAllItems() --clear the list
+		my theHMHostGroupPopup's addItemsWithTitles:theHostGroupNameList --fill the list
+		my theHMHostGroupPopup's selectItemAtIndex:0 --select the first item in the list automatically since this is the initial load
+		my getHMHostGroupNameFromPopup:missing value --setting the selection this way makes the space-parsing code easier, and we'll have to do that.
 	end loadHMHostGroupPopup:
+	
+	on getHMHostGroupNameFromPopup:sender
+		set my theHMHostGroupSelectedName to my theHMHostGroupPopup's titleOfSelectedItem() --get the title of the selected item
+		log theHMHostGroupSelectedName
+	end getHMHostGroupNameFromPopup:
 	
      (*on clearTable:sender --test function to see why we aren't clearing table data correctly.
           userSelection's removeObjects:(userSelection's arrangedObjects()) --clear the table
