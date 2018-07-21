@@ -56,7 +56,7 @@
      (*get users button: sent action binds to getServerUsers:*)
      -- THIS HAS BEEN DELETED, BUT KEEPING COMMENT BECAUSE
      --WE MAY NEED TO PUT THIS BACK IN ONE DAY
---Step 6: let pumpkin cool, then cut it out of the skin. I mean, you can do it right away, but it's kind of hot
+--step 6: let pumpkin cool, then cut it out of the skin. I mean, you can do it right away, but it's kind of hot
      (*delete users button: sent action binds to deleteSelectedUsers:*)
 
      (*the user name/id table: (user table table view) has userTable as its referencing outlet*, user name column binds to theUserName in the user selection array controller. user id column binds to theUserID in the user selection array controller.*)
@@ -165,6 +165,7 @@ script AppDelegate
 	property theHostContactController : missing value -- referenceing outlet for contact list array controller
 	property theHostContactTable : missing value --referencing outlet for contact list table
 	property theHMTimePeriodComboBox : missing value --referencing outlet for the time period combo box.
+	property theHMHostGroupPopup : missing value --referencing outlet for the host group popup
 	
 	--Host Manager Other properties
 	property theHMHostTableControllerArray : {} --bound to content of the host manager array controller, probably not used.
@@ -174,6 +175,7 @@ script AppDelegate
 	property theHMNewHostReplacementPattern : "config/host"
 	property theHMHostStatusReplacementPattern: "objects/hoststatus"
 	property theHMHostContactListReplacementPattern: "objects/contact"
+	property theHMHostGroupReplacementPattern: "objects/hostgroup"
 	property theHMHostListJSONDict : {} --the NSDictionary version of theHMHostListJSONData
 	property theHMContactListJSONDict : {} --NSDictionary of contact list JSON data
 	property theHMHostCount : "" --holds a count of hosts
@@ -438,6 +440,11 @@ script AppDelegate
 		else if theCallingTab is "getcontactlist" then
 			set theSearchPattern to my theHMHostSearchPattern --set the local search pattern
 			set theReplacePattern to my theHMHostContactListReplacementPattern --set local replace string
+			set theURL to current application's NSString's stringWithString:my theHMServerURL --get the URL
+			--return
+		else if theCallingTab is "gethostgrouplist" then
+			set theSearchPattern to my theHMHostSearchPattern --set the local search pattern
+			set theREplacePattern to my theHMHostGroupReplacementPattern --set the local replace pattern
 			set theURL to current application's NSString's stringWithString:my theHMServerURL --get the URL
 			--return
 		end if
@@ -901,7 +908,7 @@ script AppDelegate
 		my theHostTableController's setSelectionIndex:0 --set the default selection to the first host in the list (it makes sense for the host tab)
 		my loadHMHostContactTable:(missing value)
 		my theHMTimePeriodComboBox's addItemsWithObjectValues:theTimePeriodList
-		
+		my loadHMHostGroupPopup:(missing value)
 	end getHostList:
 	
 	on loadHostManagerFromPopup:sender --runs when the host manager tab is clicked. we may flag this so it only runs once, but it's all local data, so it's pretty fast
@@ -1068,6 +1075,20 @@ script AppDelegate
 		end if
 		--log my theHMTimePeriodComboBoxContents
 	end getHMTimePeriodComboBoxChoice:
+	
+	on loadHMHostGroupPopup:sender
+		set theHMHostGroupListURL to my buildNewURL:("gethostgrouplist") --create the URL to get the hostgroup list
+		set theHMGetHostGroupListCommand to "/usr/bin/curl -XGET \"" & theHMHostGroupListURL & my theHMServerAPIKey & "&pretty=1\"" --build the curl command to get the hostgroups
+		set theHMHostGroupListJSONDict to my getJSONData:(theHMGetHostGroupListCommand) --get the JSON dict of hostgroups
+		set theHMHostGroupRecord to theHMHostGroupListJSONDict's hostgrouplist's hostgroup --get the individual hostgroup records. Hierarchy here is NSDictionary -> hostgrouplist -> hostgroup
+		set theHostGroupNameList to {} --intiialize the list we'll use to load the popup
+		repeat with x in theHMHostGroupRecord
+			set the end of theHostGroupNameList to (hostgroup_name of x)
+		end repeat
+		
+		my theHMHostGroupPopup's removeAllItems()
+		my theHMHostGroupPopup's addItemsWithTitles:theHostGroupNameList
+	end loadHMHostGroupPopup:
 	
      (*on clearTable:sender --test function to see why we aren't clearing table data correctly.
           userSelection's removeObjects:(userSelection's arrangedObjects()) --clear the table
