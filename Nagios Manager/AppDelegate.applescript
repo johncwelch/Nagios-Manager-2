@@ -27,6 +27,7 @@
 --1.5 convert time periods (cannot be done with current API, would require MySQL queries) and contacts in new host to pulldowns/popups and see about duplicate code, like grep & json code. Workaround
 	--for time periods in 1.5 - combo box with most common timeperiods listed, and the ability to manually type a different one in. Contacts is done, but it's a table, not a popup/pulldown.
 --1.6 add hostgroup option to build new host. Add in hostgroup view option and service tab.
+--1.7 add service tabe (due to hostgroup being more complicated than we thought, and Nagios changing things, this is now 1.7)
 
 --changed from _() to : syntax in function calls
 --table columns are not editable. Table size atrib's are all solid bars
@@ -467,7 +468,7 @@ script AppDelegate
 		--it shoves the results of the do shell script into a text variable, then makes that into an NSString
 		--then it converts it to NSData, encoding is UTF-8
 		--Finally, it turns the whole thing into a dict (record) where it is then used by the calling function.
-		--log theCurlCommand
+		
 		set theReturnedJSON to do shell script theCurlCommand --run the command to pull the JSON from the server
 		set theReturnedJSON to current application's NSString's stringWithString:theReturnedJSON --convert this to NSString
 		set theReturnedJSONData to theReturnedJSON's dataUsingEncoding:(current application's NSUTF8StringEncoding) --convert
@@ -894,17 +895,16 @@ script AppDelegate
 	
 	on getHostList:sender --pull down the initial list of hosts
 		set theHMHostStatusURL to my buildNewURL:("gethosts") --call buildNewURL: to get a list of hosts on a nagios server
-		--log theHMHostStatusURL
+		
 		set theHMGetHostListCommand to "/usr/bin/curl -XGET \"" & theHMHostStatusURL & my theHMServerAPIKey & "&pretty=1\"" --build the curl command to get the hosts
-		--log theHMGetHostListCommand
+		
 		set my theHMHostListJSONDict to my getJSONData:(theHMGetHostListCommand)
-		--log theHMHostListJSONDict
+		
 		try --nagios decided to change the JSON output for host lists in 5.5.x. Assholes
 			set my theHMHostCount to recordcount of my theHMHostListJSONDict's hostlist --get the host count for that server. May use it some day
 		on error errorMessage number errorNumber
 			if errorNumber is -1728 then
 				set my theHMHostCount to recordcount of my theHMHostListJSONDict
-				log my theHMHostCount
 			end if
 		end try
 		try
@@ -1080,12 +1080,12 @@ script AppDelegate
 			set theHMNewHostCommand to "/usr/bin/curl -XPOST \"" & theHMNewHostURL & my theHMServerAPIKey & "&pretty=1\" -d \"host_name=" & my theHMNewHostName & "&address=" & my theHMNewHostAddress & "&" & my theHMNewHostCheckCommand & "&check_interval=" & my theHMNewHostCheckInterval & "&retry_interval=" & my theHMNewHostRetryInterval & "&max_check_attempts=" & my theHMNewHostMaxCheckAttempts & "&" & my theHMNewHostActiveChecksEnabled & "&" & my theHMNewHostPassiveChecksEnabled & "&" & my theHMNewHostCheckPeriod & "&" & my theHMNewHostProcessPerfData &"&notifications_enabled=" & my theHMNewHostNotificationsEnabled & "&notification_options=" & my theHMNewHostNotificationOptions & "&first_notification_delay=" & my theHMNewHostFirstNotificationDelay & "&notification_interval=" & my theHMNewHostNotificationInterval & "&contacts=" & my theHMNewHostContacts & "&notification_period=" & my theHMNewHostNotificationPeriod & "&applyconfig=1\""
 			--build a long-assed REST POST URL without hostgroups
 		else
-			set theHMNewHostCommand to "/usr/bin/curl -XPOST \"" & theHMNewHostURL & my theHMServerAPIKey & "&pretty=1\" -d \"host_name=" & my theHMNewHostName & "&address=" & my theHMNewHostAddress & "&" & my theHMNewHostCheckCommand & "&check_interval=" & my theHMNewHostCheckInterval & "&retry_interval=" & my theHMNewHostRetryInterval & "&max_check_attempts=" & my theHMNewHostMaxCheckAttempts & "&" & my theHMNewHostActiveChecksEnabled & "&" & my theHMNewHostPassiveChecksEnabled & "&" & my theHMNewHostCheckPeriod & "&" & my theHMNewHostProcessPerfData &"&notifications_enabled=" & my theHMNewHostNotificationsEnabled & "&notification_options=" & my theHMNewHostNotificationOptions & "&first_notification_delay=" & my theHMNewHostFirstNotificationDelay & "&notification_interval=" & my theHMNewHostNotificationInterval & "&contacts=" & my theHMNewHostContacts & "&notification_period=" & my theHMNewHostNotificationPeriod & "hostgroups=" & my theHMHostGroupSelectedName & "&applyconfig=1\""
+			set theHMNewHostCommand to "/usr/bin/curl -XPOST \"" & theHMNewHostURL & my theHMServerAPIKey & "&pretty=1\" -d \"host_name=" & my theHMNewHostName & "&address=" & my theHMNewHostAddress & "&" & my theHMNewHostCheckCommand & "&check_interval=" & my theHMNewHostCheckInterval & "&retry_interval=" & my theHMNewHostRetryInterval & "&max_check_attempts=" & my theHMNewHostMaxCheckAttempts & "&" & my theHMNewHostActiveChecksEnabled & "&" & my theHMNewHostPassiveChecksEnabled & "&" & my theHMNewHostCheckPeriod & "&" & my theHMNewHostProcessPerfData &"&notifications_enabled=" & my theHMNewHostNotificationsEnabled & "&notification_options=" & my theHMNewHostNotificationOptions & "&first_notification_delay=" & my theHMNewHostFirstNotificationDelay & "&notification_interval=" & my theHMNewHostNotificationInterval & "&contacts=" & my theHMNewHostContacts & "&notification_period=" & my theHMNewHostNotificationPeriod & "&hostgroups=" & my theHMHostGroupSelectedName & "&applyconfig=1\""
 		--build a long-assed REST POST URL with hostgroups
 		end if
-		log theHMNewHostCommand
-		--set my theHMStatusDisplay to (do shell script theHMNewHostCommand) & "\rThere is a six-second delay prior to refreshing the host list because of how nagios works when adding a new host. Also, VERIFY   \"Apply Configuration\" actually worked. It can silently fail via the API." --run the rest command, with explanatory text about why the delay
-		--my performSelector:"getHostList:" withObject:(missing value) afterDelay:6 --delay so the nagios server has time to actually insert the new host and refresh itself.
+		
+		set my theHMStatusDisplay to (do shell script theHMNewHostCommand) & "\rThere is a six-second delay prior to refreshing the host list because of how nagios works when adding a new host. Also, VERIFY   \"Apply Configuration\" actually worked. It can silently fail via the API." --run the rest command, with explanatory text about why the delay
+		my performSelector:"getHostList:" withObject:(missing value) afterDelay:6 --delay so the nagios server has time to actually insert the new host and refresh itself.
 		--this delay doesn't spike CPU usage to 100%, so we like this.
 	end addHMHost:
 	
@@ -1099,7 +1099,7 @@ script AppDelegate
 		else
 			set my theHMNewHostNotificationPeriod to my theHMTimePeriodComboBoxSelection --they clicked something in the list
 		end if
-		--log my theHMTimePeriodComboBoxContents
+		
 	end getHMTimePeriodComboBoxChoice:
 	
 	on loadHMHostGroupPopup:sender
