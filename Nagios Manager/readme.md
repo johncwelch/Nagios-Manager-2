@@ -10,6 +10,8 @@ add in host management. DONE
 
 1.6 will be adding hostgroups and services. Not sure of the order. May play with NSURL a bit to see if there's an advantage to using that over do shell script curl blah blah. Then again, I may not.
 
+1.7 will be adding services. Hostgroups will be a pita. 1.6 didn't get services thanks to some serious assholery on Nagios' part (UNDOCUMENTED CHANGES TO JSON RETURNS ARE NOT OKAY Y'ALL)
+
 
 yes, it's written in AppleScriptObjective C. No, I don't particularly care if you like that language, it does what *I* need it to do and that's its only
 requirement.
