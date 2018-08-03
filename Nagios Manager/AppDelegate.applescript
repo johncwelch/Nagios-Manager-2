@@ -27,7 +27,7 @@
 --1.5 convert time periods (cannot be done with current API, would require MySQL queries) and contacts in new host to pulldowns/popups and see about duplicate code, like grep & json code. Workaround
 	--for time periods in 1.5 - combo box with most common timeperiods listed, and the ability to manually type a different one in. Contacts is done, but it's a table, not a popup/pulldown.
 --1.6 add hostgroup option to build new host. Add in hostgroup view option and service tab.
---1.7 add service tabe (due to hostgroup being more complicated than we thought, and Nagios changing things, this is now 1.7)
+--1.7 add hostgroup tab (due to services being WAY more complicated than we thought, and Nagios changing things, this is now 1.7)
 
 --changed from _() to : syntax in function calls
 --table columns are not editable. Table size atrib's are all solid bars
@@ -224,7 +224,16 @@ script AppDelegate
 	property theHMNewHostContacts : "" --this will eventually be a selectable popup/dropdown
 	property theHMNewHostNotificationPeriod : "xi_timeperiod_24x7" --this will eventually be a selectable popup/dropdown
 	
+	--HostGroup Manager IB Outlets
+	property theHostGroupTableController : missing value --referencing outlet for host group array controller
+	property theHostGroupTable : missing value --referencing outlet for host table
 	
+	--HostGroup manager other properties
+	property theHGMHostGroupTableControllerArray : {} --bound to content of the hostgroup manager array controller, probably not used.
+	property theHGMServerName : "" -- current host manager server name, used to populate the host manager server popup
+	property theHGMServerAPIKey : "" --current host manager server API key
+	property theHGMServerURL : "" --current host manager server URL
+	property theHGMHostGroupReplacementPattern : "objects/hostgroup"
 	
      --General Other Properties
      property theServerName:"" --name of the server for curl ops
@@ -237,6 +246,7 @@ script AppDelegate
 	property theSelectedTabIsCorrect:false --flag for making sure the initial tab on launch is correct
 	property theUMInitialUserLoadDone : false --flag to check if the initial user table load was done. false by default so that the first tab click/selection does the load
 	property theHMInitialUserLoadDone : false --flag to check if the initial host table load was done. false by default so that the first tab click/selection does the load
+	property theHGMInitialUserLoadDone : false ----flag to check if the initial hostgroup table load was done. false by default so that the first tab click/selection does the load
 	property theTimePeriodList : {"24x7","24x7_sans_holidays","none","us-holidays","workhours","xi_timeperiod_24x7"} --content of time period combo boxes. Because of how this works, any time
 	--period combo box in the app has this same source. (these are the default Nagios time periods. Others can be added.)
 
@@ -334,6 +344,10 @@ script AppDelegate
 	on selectedHostManagerTab:sender --select host manager tab with Window Menu item or key equivalent (cmd-3)
 		my theTabView's selectTabViewItemAtIndex:2 --sets the tab with the specified index to be frontmost/current
 	end selectedHostManagerTab:
+	
+	on selectedHostGroupManagerTab:sender --select host manager tab with Window Menu item or key equivalent (cmd-4)
+		my theTabView's selectTabViewItemAtIndex:3 --sets the tab with the specified index to be frontmost/current
+	end selectedHostGroupManagerTab:
 
 	on tabView:tabView didSelectTabViewItem:sender --this runs any time a tab is selected via click, menu item or programmatically.
 		if theSelectedTabIsCorrect then
@@ -353,7 +367,6 @@ script AppDelegate
 							--when it's open to a different tab won't load this for no good reason. Speeds things up a bit. Maybe.
 							my loadUserManagerPopup:(missing value) --initial popup load, moved to a function here.
 							set my theUMInitialUserLoadDone to true
-							--my userSelection's setSelectionIndex:0
 						end if
 					end if
 				else if my theSelectedTabViewItemIndex is "2" then --we won't do anything here until this is actually doing something
@@ -365,10 +378,16 @@ script AppDelegate
 							my loadHostManagerFromPopup:(missing value) --initial load of window.
 							set my theHMStatusDisplay to "Because of how dependencies work within Nagios, this app doesn't delete hosts. Barring a way to handle dependencies via the API, it won't."
 							set my theHMInitialUserLoadDone to true --load is done, set flag correctly
-							--my theHostTableController's setSelectionIndex:0
 						end if
 					end if
-					
+				else if my theSelectedTabViewItemIndex is "3" then --hostgroup manager
+					if not theHGMInitialUserLoadDone then
+						if my theSMDefaultsExist then
+							my loadHostGroupManagerFromPopup:(missing value)
+							set my theHGMInitialUserLoadDone to true
+							log "HostGroup Manager"
+						end if
+					end if
 				end if
 			end if
 		end if
@@ -447,9 +466,13 @@ script AppDelegate
 			--return
 		else if theCallingTab is "gethostgrouplist" then
 			set theSearchPattern to my theHMHostSearchPattern --set the local search pattern
-			set theREplacePattern to my theHMHostGroupReplacementPattern --set the local replace pattern
+			set theReplacePattern to my theHMHostGroupReplacementPattern --set the local replace pattern
 			set theURL to current application's NSString's stringWithString:my theHMServerURL --get the URL
 			--return
+		else if theCallingTab is "gethostgroupmanagerlist" then
+			set theSearchPattern to my theHMHostSearchPattern --set the local search pattern
+			set theReplacePattern to my theHGMHostGroupReplacementPattern --set the local replace pattern
+			set theURL to current application's NSString's stringWithString:my theHGMServerURL --get the URL
 		end if
 		
 		set theRegEx to current application's NSRegularExpression's regularExpressionWithPattern:(theSearchPattern) options:1 |error|:(missing value)
@@ -1159,6 +1182,47 @@ script AppDelegate
 			--one at a time from back to front.
 		end repeat
 	end getHMHostGroupNameFromPopup:
+	
+	on selectedHGMServerName:sender
+		
+	end selectedHGMServerName:
+	
+	on loadHostGroupManagerFromPopup:sender --runs when the host manager tab is clicked. we may flag this so it only runs once, but it's all local data, so it's pretty fast
+		--and, if something changes in the server manager, we want this running anyway.
+		if not theSMDefaultsExist then --if we have no defaults, there's no point in running this code
+			return --back to main loop
+		end if
+		set x to my theServerTableController's arrangedObjects()'s firstObject() --get the first object in the array controller. the way this runs, this is the initial load of things. So we want it to be the first thing in the list. When someone manually changes that, it would handled in selectedHMServerName
+		if x is missing value then --if there's nothing in x, stop the function
+			return --back to the main loop
+		end if
+		
+		set my theHGMServerName to x's theSMTableServerName --grab the server name
+		set my theHGMServerAPIKey to x's theSMTableServerAPIKey --grab the server key
+		set my theHGMServerURL to x's theSMTableServerURL --grab the server URL
+		my getHostGroupList:(missing value)
+	end loadHostGroupManagerFromPopup:
+	
+	on getHostGroupList:sender --pull down the list of hostgroups
+		set theHGMHostGroupListURL to my buildNewURL:("gethostgroupmanagerlist") --create the URL to get the hostgroup list
+		
+		set theHGMGetHostGroupListCommand to "/usr/bin/curl -XGET \"" & theHGMHostGroupListURL & my theHGMServerAPIKey & "&pretty=1\"" --build the curl command to get the hostgroups
+		
+		set theHMGHostGroupListJSONDict to my getJSONData:(theHGMGetHostGroupListCommand) --get the JSON dict of hostgroups
+		
+		try
+			set theHGMHostGroupRecord to theHMGHostGroupListJSONDict's hostgrouplist's hostgroup --get the individual hostgroup records. Hierarchy here is NSDictionary -> hostgrouplist -> hostgroup
+			--current application's NSLog("theHGMHostGroupRecord: %@", theHGMHostGroupRecord)
+			on error errorMessage number errorNumber --nagios decided to change the JSON output for host lists in 5.5.x. Assholes
+			if errorNumber is -1728 then
+				set theHGMHostGroupRecord to theHMHostGroupListJSONDict's hostgroup --5.5.x version
+			end if
+		end try
+		
+		my theHostGroupTableController's removeObjects:(my theHostGroupTableController's arrangedObjects())
+		my theHostGroupTableController's addObjects:theHGMHostGroupRecord
+		my theHostGroupTableController's setSelectionIndex:0
+	end getHostGroupList
 	
      (*on clearTable:sender --test function to see why we aren't clearing table data correctly.
           userSelection's removeObjects:(userSelection's arrangedObjects()) --clear the table
