@@ -226,7 +226,7 @@ script AppDelegate
 	
 	--HostGroup Manager IB Outlets
 	property theHostGroupTableController : missing value --referencing outlet for host group array controller
-	property theHostGroupTable : missing value --referencing outlet for host table
+	property theHostGroupTable : missing value --referencing outlet for host group table view
 	
 	--HostGroup manager other properties
 	property theHGMHostGroupTableControllerArray : {} --bound to content of the hostgroup manager array controller, probably not used.
@@ -234,6 +234,8 @@ script AppDelegate
 	property theHGMServerAPIKey : "" --current host manager server API key
 	property theHGMServerURL : "" --current host manager server URL
 	property theHGMHostGroupReplacementPattern : "objects/hostgroup"
+	property theHGMHostGroupMembersReplacementPattern : "objects/hostgroupmembers"
+	property theHGMHostGroupMemberListDisplay : ""
 	
      --General Other Properties
      property theServerName:"" --name of the server for curl ops
@@ -396,28 +398,38 @@ script AppDelegate
 	on tableViewSelectionDidChange:(sender) --this handles up/down arrow movement in the table views. Also handles clicks, but nothing happens specifically for those yet. At some
 		--point, we can merge the sent actions for the clicks into here since it all seems to happen here as well as those specific functions and just call them from here.
 		
-		if sender's object()'s isEqualTo:my theHostTable then --all three try blocks are here to sink the error 1700 that happens if a null selection in a table view
+		if sender's object()'s isEqualTo:my theHostTable then --host table
+			--all try blocks are here to sink the error 1700 that happens if a null selection in a table view
 			--is made
 			try
 				my displayHMHostInfo:(missing value)
 				on error errorMessage number errorNumber
-				if errorNumber is -1700 then
-					--we do nothing here, but we want to note the specific error we're trying to sink. Other errors, we want to know about so we can handle them
-					--differently, if needed.
-				end if
+					if errorNumber is -1700 then
+						--we do nothing here, but we want to note the specific error we're trying to sink. Other errors, we want to know about so we can handle them
+						--differently, if needed.
+					end if
 			end try
-			else if sender's object()'s isEqualTo:my userTable then
+		else if sender's object()'s isEqualTo:my userTable then --user table
 			try
 				my displayUserInfo:(missing value)
 				on error errorMessage number errorNumber
-				if errorNumber is -1700 then
-					--we do nothing here, but we want to note the specific error we're trying to sink. Other errors, we want to know about so we can handle them
-					--differently, if needed.
-				end if
+					if errorNumber is -1700 then
+						--we do nothing here, but we want to note the specific error we're trying to sink. Other errors, we want to know about so we can handle them
+						--differently, if needed.
+					end if
 			end try
-			else if sender's object()'s isEqualTo:my theServerTable then
+		else if sender's object()'s isEqualTo:my theServerTable then --server table
 			try
 				my getSMServerStatus:(missing value)
+				on error errorMessage number errorNumber
+					if errorNumber is -1700 then
+						--we do nothing here, but we want to note the specific error we're trying to sink. Other errors, we want to know about so we can handle them
+						--differently, if needed.
+					end if
+			end try
+		else if sender's object()'s isEqualTo:my theHostGroupTable then --hostgroup table
+			try
+				my getHostGroupMembers:(missing value)
 				on error errorMessage number errorNumber
 				if errorNumber is -1700 then
 					--we do nothing here, but we want to note the specific error we're trying to sink. Other errors, we want to know about so we can handle them
@@ -472,6 +484,10 @@ script AppDelegate
 		else if theCallingTab is "gethostgroupmanagerlist" then
 			set theSearchPattern to my theHMHostSearchPattern --set the local search pattern
 			set theReplacePattern to my theHGMHostGroupReplacementPattern --set the local replace pattern
+			set theURL to current application's NSString's stringWithString:my theHGMServerURL --get the URL
+		else if theCallingTab is "gethostgroupmembers" then
+			set theSearchPattern to my theHMHostSearchPattern --set the local search pattern
+			set theReplacePattern to my theHGMHostGroupMembersReplacementPattern --set the local replace pattern
 			set theURL to current application's NSString's stringWithString:my theHGMServerURL --get the URL
 		end if
 		
@@ -1233,7 +1249,38 @@ script AppDelegate
 		my theHostGroupTableController's removeObjects:(my theHostGroupTableController's arrangedObjects())
 		my theHostGroupTableController's addObjects:theHGMHostGroupRecord
 		my theHostGroupTableController's setSelectionIndex:0
-	end getHostGroupList
+	end getHostGroupList:
+	
+	on getHostGroupMembers:sender
+		set my theHGMHostGroupMemberListDisplay to ""
+		set theHGMHostGroupMemberListURL to my buildNewURL:("gethostgroupmembers") --build url for hostgroup member list
+		set theHGMHostGroupMembersListCommand to "/usr/bin/curl -XGET \"" & theHGMHostGroupMemberListURL & my theHGMServerAPIKey & "&pretty=1\"" --build the curl command to get the hostgroup members
+		set theHGMHostGroupMemberListJSONDict to my getJSONData:(theHGMHostGroupMembersListCommand) --get the JSON dict of hostgroup members
+		try
+			set theHGMHostGroupMembersRecord to theHGMHostGroupMemberListJSONDict's hostgrouplist's hostgroup --get the individual hostgroup records. Hierarchy here is NSDictionary -> hostgrouplist -> hostgroup
+			on error errorMessage number errorNumber --nagios decided to change the JSON output for host lists in 5.5.x. Assholes
+			if errorNumber is -1728 then
+				set theHGMHostGroupMembersRecord to theHGMHostGroupMemberListJSONDict's hostgroup -- 5.5.x version. This simplifies the hierarchy, but on release, was a major change that was undocumented
+				--i am a tad salty about that.
+			end if
+		end try
+		
+		set theHGMHostGroupName to hostgroup_name of my theHostGroupTableController's selectedObjects()
+		
+		set theHGMHostGroupPredicate to current application's NSPredicate's predicateWithFormat:("hostgroup_name = \"" & theHGMHostGroupName & "\"")
+		set theHGMHostGroupMemberList to the first item of ((theHGMHostGroupMembersRecord's filteredArrayUsingPredicate:theHGMHostGroupPredicate)'s members's |host|)
+		
+		try
+			repeat with x in theHGMHostGroupMemberList
+				set my theHGMHostGroupMemberListDisplay to theHGMHostGroupMemberListDisplay & x's host_name & "     "
+			end repeat
+		on error errorMessage number errorNumber
+			if errorNumber is -1700
+				set my theHGMHostGroupMemberListDisplay to "Host Group " & theHGMHostGroupName & " appears to have no member hosts."
+			end if
+		end try
+	
+	end getHostGroupMembers:
 	
      (*on clearTable:sender --test function to see why we aren't clearing table data correctly.
           userSelection's removeObjects:(userSelection's arrangedObjects()) --clear the table

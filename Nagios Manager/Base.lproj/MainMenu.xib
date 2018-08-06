@@ -26,6 +26,7 @@
                 <outlet property="theHMTimePeriodComboBox" destination="1uv-eS-Alg" id="CI7-8k-oKn"/>
                 <outlet property="theHostContactController" destination="E0z-cH-mpT" id="s28-dS-mSn"/>
                 <outlet property="theHostContactTable" destination="0RI-NN-yR2" id="hJX-QX-dFO"/>
+                <outlet property="theHostGroupTable" destination="F3g-fs-Or1" id="S2N-i4-g4U"/>
                 <outlet property="theHostGroupTableController" destination="KYw-eJ-hrA" id="EMu-aB-YZ3"/>
                 <outlet property="theHostStatusHUD" destination="ld8-96-Rom" id="SIu-tl-F8A"/>
                 <outlet property="theHostTable" destination="edc-nj-R3v" id="NSj-tF-9Xw"/>
@@ -2025,6 +2026,11 @@ Gw
                                                                 </connections>
                                                             </tableColumn>
                                                         </tableColumns>
+                                                        <connections>
+                                                            <action trigger="doubleAction" selector="getHostGroupMembers:" target="Voe-Tx-rLC" id="FFN-wb-cOu"/>
+                                                            <action selector="getHostGroupMembers:" target="Voe-Tx-rLC" id="Fxf-t8-5zy"/>
+                                                            <outlet property="delegate" destination="Voe-Tx-rLC" id="ihE-AC-7vq"/>
+                                                        </connections>
                                                     </tableView>
                                                 </subviews>
                                             </clipView>
@@ -2108,13 +2114,20 @@ DQ
                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
                                         </box>
                                         <textField verticalHuggingPriority="750" id="4D5-q1-cxQ">
-                                            <rect key="frame" x="17" y="17" width="626" height="197"/>
+                                            <rect key="frame" x="15" y="17" width="630" height="197"/>
                                             <autoresizingMask key="autoresizingMask" widthSizable="YES"/>
-                                            <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" borderStyle="bezel" drawsBackground="YES" id="TLB-eR-NlN">
+                                            <textFieldCell key="cell" selectable="YES" sendsActionOnEndEditing="YES" alignment="left" allowsEditingTextAttributes="YES" id="TLB-eR-NlN">
                                                 <font key="font" metaFont="system"/>
                                                 <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
-                                                <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                                <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                                             </textFieldCell>
+                                            <connections>
+                                                <binding destination="Voe-Tx-rLC" name="value" keyPath="theHGMHostGroupMemberListDisplay" id="gtx-qZ-agg">
+                                                    <dictionary key="options">
+                                                        <bool key="NSContinuouslyUpdatesValue" value="YES"/>
+                                                    </dictionary>
+                                                </binding>
+                                            </connections>
                                         </textField>
                                     </subviews>
                                 </view>
