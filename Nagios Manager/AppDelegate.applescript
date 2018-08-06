@@ -1184,7 +1184,18 @@ script AppDelegate
 	end getHMHostGroupNameFromPopup:
 	
 	on selectedHGMServerName:sender
-		
+		if not theSMDefaultsExist then --so if there are no servers in server manager, even if someone clicks on the list, we don't want things to happen here. This should prevent that
+			return
+		end if
+		set thePopupIndex to sender's indexOfSelectedItem --get the index of the selected item, put it into thePopupIndex
+		set theResult to my theServerTableController's setSelectionIndex:thePopupIndex --set the current selection in theServerTableController to thePopupIndex. we don't actually care about the result,
+		--it's a bool, but if this stops working, we know what to log. This sets the "current selection" of the server array controller to thePopupIndex,
+		--so we can pull the right info for the curl commands
+		set x to my theServerTableController's selectedObjects() as record--grab the selected record
+		set my theHGMServerName to x's theSMTableServerName --grab the server name
+		set my theHGMServerAPIKey to x's theSMTableServerAPIKey --grab the server key
+		set my theHGMServerURL to x's theSMTableServerURL --grab the server URL
+		my getHostGroupList:(missing value)
 	end selectedHGMServerName:
 	
 	on loadHostGroupManagerFromPopup:sender --runs when the host manager tab is clicked. we may flag this so it only runs once, but it's all local data, so it's pretty fast
@@ -1208,14 +1219,14 @@ script AppDelegate
 		
 		set theHGMGetHostGroupListCommand to "/usr/bin/curl -XGET \"" & theHGMHostGroupListURL & my theHGMServerAPIKey & "&pretty=1\"" --build the curl command to get the hostgroups
 		
-		set theHMGHostGroupListJSONDict to my getJSONData:(theHGMGetHostGroupListCommand) --get the JSON dict of hostgroups
+		set theHGMHostGroupListJSONDict to my getJSONData:(theHGMGetHostGroupListCommand) --get the JSON dict of hostgroups
 		
 		try
-			set theHGMHostGroupRecord to theHMGHostGroupListJSONDict's hostgrouplist's hostgroup --get the individual hostgroup records. Hierarchy here is NSDictionary -> hostgrouplist -> hostgroup
+			set theHGMHostGroupRecord to theHGMHostGroupListJSONDict's hostgrouplist's hostgroup --get the individual hostgroup records. Hierarchy here is NSDictionary -> hostgrouplist -> hostgroup
 			--current application's NSLog("theHGMHostGroupRecord: %@", theHGMHostGroupRecord)
 			on error errorMessage number errorNumber --nagios decided to change the JSON output for host lists in 5.5.x. Assholes
 			if errorNumber is -1728 then
-				set theHGMHostGroupRecord to theHMHostGroupListJSONDict's hostgroup --5.5.x version
+				set theHGMHostGroupRecord to theHGMHostGroupListJSONDict's hostgroup --5.5.x version
 			end if
 		end try
 		
