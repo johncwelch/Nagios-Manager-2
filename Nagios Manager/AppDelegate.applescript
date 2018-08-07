@@ -28,6 +28,7 @@
 	--for time periods in 1.5 - combo box with most common timeperiods listed, and the ability to manually type a different one in. Contacts is done, but it's a table, not a popup/pulldown.
 --1.6 add hostgroup option to build new host. Add in hostgroup view option and service tab.
 --1.7 add hostgroup tab (due to services being WAY more complicated than we thought, and Nagios changing things, this is now 1.7)
+--1.8 will be the cleanup build.
 
 --changed from _() to : syntax in function calls
 --table columns are not editable. Table size atrib's are all solid bars
