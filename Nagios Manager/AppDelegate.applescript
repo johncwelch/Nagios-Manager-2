@@ -235,7 +235,10 @@ script AppDelegate
 	property theHGMServerURL : "" --current host manager server URL
 	property theHGMHostGroupReplacementPattern : "objects/hostgroup"
 	property theHGMHostGroupMembersReplacementPattern : "objects/hostgroupmembers"
+	property theHGMHostGroupAddNewHostGroupReplacementPattern : "config/hostgroup"
 	property theHGMHostGroupMemberListDisplay : ""
+	property theHGMHostGroupNewHostGroupName: ""
+	property theHGMHostGroupNewHostGroupAlias: ""
 	
      --General Other Properties
      property theServerName:"" --name of the server for curl ops
@@ -488,6 +491,10 @@ script AppDelegate
 			set theSearchPattern to my theHMHostSearchPattern --set the local search pattern
 			set theReplacePattern to my theHGMHostGroupMembersReplacementPattern --set the local replace pattern
 			set theURL to current application's NSString's stringWithString:my theHGMServerURL --get the URL
+		else if theCallingTab is "addnewhostgroup" then
+			set theSearchPattern to my theHMHostSearchPattern --set the local search pattern
+			set theReplacePattern to my theHGMHostGroupAddNewHostGroupReplacementPattern --set the local replace pattern
+			set theURL to current application's NSString's stringWithString:my theHGMServerURL --get the URL
 		end if
 		
 		set theRegEx to current application's NSRegularExpression's regularExpressionWithPattern:(theSearchPattern) options:1 |error|:(missing value)
@@ -517,6 +524,45 @@ script AppDelegate
 		
 		return theReturnedJSONDict --send the dictionary back to the calling function
 	end getJSONData:
+	
+	on deSpaceify:theThingToBeDespacified
+		--log theThingToBeDespacified
+		set theSearchPattern to "\\s" --so there's spaces in host group names, which means we have to do some regex ledgerdemain to handle that. Since we only do that
+		--once, instead of trying to funk up the exsiting regex function, we'll do this all here. This sets theSearchPattern to look for white space. This also handles
+		--more than one space in a row
+		
+		set theReplacePattern to "%20" --proper URL encoding for spaces
+		
+		set theRegex to current application's NSRegularExpression's regularExpressionWithPattern:(theSearchPattern) options:1 |error|:(missing value) --build the regex
+		set theThingToBeDespacified to current application's NSMutableString's stringWithString:theThingToBeDespacified --this is a bit different. We use
+		--NSMutableString here because we may have multiple matches in the string, so using NSMutableString saves us a lot of work. For single matches, NSString works well.
+		--log theThingToBeDespacified
+		set theDespacifyStringLength to theThingToBeDespacified's |length|() --get the length of the string
+		--log theDespacifyStringLength
+		set theMatchCount to theRegex's numberOfMatchesInString:(theThingToBeDespacified) options:0 range:[0, theDespacifyStringLength] --count the number
+		--of spaces in the string
+		--log theMatchCount
+		if theMatchCOunt < 1 then --if there aren't any, we don't need to do anything more, jet.
+			return theThingToBeDespacified --we have to return this back, even though technically nothing is changing since this can't be a void function
+		end if
+		set theMatches to (theRegex's matchesInString:(theThingToBeDespacified) options:0 range:[0, theDespacifyStringLength]) as list --get all the matches
+		--in the string, and convert that NSArray to a list
+		--log theMatches
+		set theMatches to reverse of theMatches --sometimes AppleScript is easier. Here's the thing. If you start replacing from the front, since we're replacing a single
+		--char with multiples, replacing the first one invalidates the ranges of all the other matches, because we "push down" the other chars in the string. If we go
+		--from the last match to the first though, then the ranges aren't invalidated. Nice. By converting theMatches to a list from NSArray, we can reverse the order
+		--FAR more simply than with NS(mutable)Array within ASOC. we may fix this later to be more objective-c-y but for now, this works
+		--log theMatches
+		repeat with x in theMatches --unfortunately, we have to interate through the array/list to do the actual replacing. Le sigh.
+			set theRange to x's range() --okay, so what matchesInString: returns isn't an array/list of ranges, but an array/list of NSTextCheckingResults. These contain
+			--more than just the range of the match. However, since range is a component of NSTextCheckingResult, at least in our case, we can get that from the
+			--NSTextCheckingResult and use it to replace things.
+			theRegex's replaceMatchesInString:theThingToBeDespacified options:0 range:theRange withTemplate:(theReplacePattern) --replace each space with %20
+			--one at a time from back to front.
+		end repeat
+		return theThingToBeDespacified
+		--log theThingToBeDespacified
+	end deSpaceify:
 
 
 	--SERVER MANAGER FUNCTIONS
@@ -1287,7 +1333,27 @@ script AppDelegate
 	end getHostGroupMembers:
 
 	on addNewHostGroup:sender
-		log "click"
+		if (my theHGMHostGroupNewHostGroupName is missing value) or (my theHGMHostGroupNewHostGroupName is "") then
+			set my theHGMHostGroupMemberListDisplay to "The Hostgroup name cannot be blank"
+			return
+		end if
+		
+		if (my theHGMHostGroupNewHostGroupAlias is missing value) or (my theHGMHostGroupNewHostGroupAlias is "") then
+			set my theHGMHostGroupMemberListDisplay to "The Hostgroup alias cannot be blank"
+			return
+		end if
+		
+		set theHGMHostGroupAddNewHostGroupURL to my buildNewURL:("addnewhostgroup")
+		
+		--let's compensate for spaces in the name and alias
+		set my theHGMHostGroupNewHostGroupName to my deSpaceify:(my theHGMHostGroupNewHostGroupName) --despace the hostgroup name if it has spaces
+		set my theHGMHostGroupNewHostGroupAlias to my deSpaceify:(my theHGMHostGroupNewHostGroupAlias) --despace the hostgroup alias if it has space
+		
+		set theHGMHostGroupNewHostGroupCommand to  "/usr/bin/curl -XPOST \"" & theHGMHostGroupAddNewHostGroupURL & my theHGMServerAPIKey & "&pretty=1\" -d \"hostgroup_name=" & my theHGMHostGroupNewHostGroupName & "&alias=" & my theHGMHostGroupNewHostGroupAlias & "&applyconfig=1\"" --build the add new hostgroup url
+		
+		set my theHGMHostGroupMemberListDisplay to (do shell script theHGMHostGroupNewHostGroupCommand) & "\rThere is a six-second delay prior to refreshing the host list because of how nagios works when adding a new hostgroup. Also, VERIFY   \"Apply Configuration\" actually worked. It can silently fail via the API." --run the rest command, with explanatory text about why the delay
+		my performSelector:"getHostGroupList:" withObject:(missing value) afterDelay:6 --delay so the nagios server has time to actually insert the new host and refresh itself.
+		--this delay doesn't spike CPU usage to 100%, so we like this.
 	end addNewHostGroup:
 	
      (*on clearTable:sender --test function to see why we aren't clearing table data correctly.
@@ -1296,7 +1362,7 @@ script AppDelegate
      end clearTable:*)
 	
      on applicationShouldTerminateAfterLastWindowClosed:sender
-          return true
+		true
      end applicationShouldTerminateAfterLastWindowClosed:
 	
 end script
