@@ -1433,7 +1433,7 @@ Gw
                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                             <clipView key="contentView" id="LTo-sO-MEg">
                                                 <rect key="frame" x="1" y="0.0" width="385" height="464"/>
-                                                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                                <autoresizingMask key="autoresizingMask"/>
                                                 <subviews>
                                                     <tableView verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" columnSelection="YES" multipleSelection="NO" autosaveColumns="NO" rowSizeStyle="automatic" headerView="bbp-qv-gaf" viewBased="YES" id="edc-nj-R3v">
                                                         <rect key="frame" x="0.0" y="0.0" width="385" height="439"/>
@@ -1841,7 +1841,7 @@ Gw
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                             <clipView key="contentView" id="TOr-O2-qdh">
                                                 <rect key="frame" x="1" y="0.0" width="229" height="101"/>
-                                                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                                <autoresizingMask key="autoresizingMask"/>
                                                 <subviews>
                                                     <tableView verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" columnSelection="YES" autosaveColumns="NO" rowSizeStyle="automatic" headerView="sMV-sv-x4R" viewBased="YES" id="0RI-NN-yR2">
                                                         <rect key="frame" x="0.0" y="0.0" width="229" height="76"/>
@@ -2097,6 +2097,9 @@ Gw
 IA
 </string>
                                             </buttonCell>
+                                            <connections>
+                                                <action selector="addNewHostGroup:" target="Voe-Tx-rLC" id="xEV-MS-xb6"/>
+                                            </connections>
                                         </button>
                                         <button verticalHuggingPriority="750" id="qGz-0J-XL6">
                                             <rect key="frame" x="190" y="405" width="82" height="32"/>

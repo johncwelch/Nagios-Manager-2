@@ -387,7 +387,6 @@ script AppDelegate
 						if my theSMDefaultsExist then
 							my loadHostGroupManagerFromPopup:(missing value)
 							set my theHGMInitialUserLoadDone to true
-							log "HostGroup Manager"
 						end if
 					end if
 				end if
@@ -1058,9 +1057,14 @@ script AppDelegate
 		set theHMGetHostStatusCommand to "/usr/bin/curl -XGET \"" & theHMHostStatusURL & my theHMServerAPIKey & "&host_name=" & theHostStatusName & "&pretty=1\""
 			--build the curl command to get the host status for the specified host
 		set theHMGetHostStatusJSONDict to my getJSONData:(theHMGetHostStatusCommand) --get the JSON info
-		
-		set theHMHostStatusRecord to hoststatus of theHMGetHostStatusJSONDict's hoststatuslist --we have to pull it from hostlist of the Dict because it buries everything in
-		--hoststatuslist.
+		try
+			set theHMHostStatusRecord to hoststatus of theHMGetHostStatusJSONDict's hoststatuslist --we have to pull it from hostlist of the Dict because it buries everything
+			--in hoststatuslist prior to XI 5.5.X
+		on error errorMessage number errorNumber
+			if errorNumber is -1728 then
+				set theHMHostStatusRecord to theHMGetHostStatusJSONDict's hoststatus
+			end if
+		end try
 		
 		--fill in the fields in the HUD
 		set my theHMHostID to host_id of theHMHostStatusRecord
@@ -1281,6 +1285,10 @@ script AppDelegate
 		end try
 	
 	end getHostGroupMembers:
+
+	on addNewHostGroup:sender
+		log "click"
+	end addNewHostGroup:
 	
      (*on clearTable:sender --test function to see why we aren't clearing table data correctly.
           userSelection's removeObjects:(userSelection's arrangedObjects()) --clear the table
