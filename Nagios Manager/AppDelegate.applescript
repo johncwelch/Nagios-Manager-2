@@ -526,7 +526,7 @@ script AppDelegate
 	end getJSONData:
 	
 	on deSpaceify:theThingToBeDespacified
-		--log theThingToBeDespacified
+		
 		set theSearchPattern to "\\s" --so there's spaces in host group names, which means we have to do some regex ledgerdemain to handle that. Since we only do that
 		--once, instead of trying to funk up the exsiting regex function, we'll do this all here. This sets theSearchPattern to look for white space. This also handles
 		--more than one space in a row
@@ -536,23 +536,23 @@ script AppDelegate
 		set theRegex to current application's NSRegularExpression's regularExpressionWithPattern:(theSearchPattern) options:1 |error|:(missing value) --build the regex
 		set theThingToBeDespacified to current application's NSMutableString's stringWithString:theThingToBeDespacified --this is a bit different. We use
 		--NSMutableString here because we may have multiple matches in the string, so using NSMutableString saves us a lot of work. For single matches, NSString works well.
-		--log theThingToBeDespacified
+		
 		set theDespacifyStringLength to theThingToBeDespacified's |length|() --get the length of the string
-		--log theDespacifyStringLength
+		
 		set theMatchCount to theRegex's numberOfMatchesInString:(theThingToBeDespacified) options:0 range:[0, theDespacifyStringLength] --count the number
 		--of spaces in the string
-		--log theMatchCount
+		
 		if theMatchCOunt < 1 then --if there aren't any, we don't need to do anything more, jet.
 			return theThingToBeDespacified --we have to return this back, even though technically nothing is changing since this can't be a void function
 		end if
 		set theMatches to (theRegex's matchesInString:(theThingToBeDespacified) options:0 range:[0, theDespacifyStringLength]) as list --get all the matches
 		--in the string, and convert that NSArray to a list
-		--log theMatches
+		
 		set theMatches to reverse of theMatches --sometimes AppleScript is easier. Here's the thing. If you start replacing from the front, since we're replacing a single
 		--char with multiples, replacing the first one invalidates the ranges of all the other matches, because we "push down" the other chars in the string. If we go
 		--from the last match to the first though, then the ranges aren't invalidated. Nice. By converting theMatches to a list from NSArray, we can reverse the order
 		--FAR more simply than with NS(mutable)Array within ASOC. we may fix this later to be more objective-c-y but for now, this works
-		--log theMatches
+		
 		repeat with x in theMatches --unfortunately, we have to interate through the array/list to do the actual replacing. Le sigh.
 			set theRange to x's range() --okay, so what matchesInString: returns isn't an array/list of ranges, but an array/list of NSTextCheckingResults. These contain
 			--more than just the range of the match. However, since range is a component of NSTextCheckingResult, at least in our case, we can get that from the
@@ -561,7 +561,7 @@ script AppDelegate
 			--one at a time from back to front.
 		end repeat
 		return theThingToBeDespacified
-		--log theThingToBeDespacified
+		
 	end deSpaceify:
 
 
@@ -943,6 +943,8 @@ script AppDelegate
 			return
 		end if
 		
+		set my theNagiosNewUserRealName to my deSpaceify:(my theNagiosNewUserRealName) --despace the real name. The username will fail if it has spaces, and we want it to fail.
+		
 		(*this next line builds the actual command to add a user. There's a lot of things that are hardcoded as that's the norm.
 		 it's not a problem to fix later if we need, the variables are already declared, just unused.*)
 		set theAddCommand to "/usr/bin/curl -XPOST \"" & (my theServerURL as text) & (my theServerAPIKey as text) & "&pretty=1\"" & " -d \"username=" & my theNagiosNewUserName & "&password=" & my theNagiosNewUserPassword & "&name=" & my theNagiosNewUserRealName & "&email=" & my theNagiosNewUserEmailAddress & "&force_pw_change=1&email_info=1&monitoring_contact=1&enable_notifications=1&language=xi default&date_format=1&number_format=1&auth_level=" & theAuthLevel & "&can_see_all_hs=" & my canSeeAllObjects's intValue() & "&can_control_all_hs=" & my canControlAllObjects's intValue() & "&can_reconfigure_hs=" & my canReconfigureAllObjects's intValue() & "&can_control_engine=" & my canSeeOrConfigureMonitoringEngine's intValue() & "&can_use_advanced=" & my canAccessAdvancedFeatures's intValue() & "&read_only=" & my readOnly's intValue() & "\""
@@ -1133,7 +1135,7 @@ script AppDelegate
 			set my theHMStatusDisplay to "The Host Name field cannot be blank"
 			return
 		end if
-
+		
 		if (my theHMNewHostAddress is missing value) or (my theHMNewHostAddress is "") then --did they enter a name for the host?
 			set my theHMStatusDisplay to "The Address field cannot be blank"
 			return
@@ -1157,6 +1159,8 @@ script AppDelegate
 		--so there are cases where you don't want to have the notifications enabled or even filled in. I have defaults, but "blank" is actually perfectly acceptable
 		--for notifications. However, this is inconsistent, so better off to have contacts even if you don't need them. Nagios is not good about consistency with the
 		--behavior of the API here.
+		
+		set my theHMNewHostName to my deSpaceify:(my theHMNewHostName) --space check. This shouldn't happen often, but if it does, we're set.
 		
 		set theHostStatusName to host_name of my theHostTableController's selectedObjects() --we're abusing "host" here. In this case, we mean the nagios server name.
 		set my theHMNewHostContacts to my createHMContactList:(missing value)
@@ -1221,32 +1225,7 @@ script AppDelegate
 	
 	on getHMHostGroupNameFromPopup:sender
 		set my theHMHostGroupSelectedName to my theHMHostGroupPopup's titleOfSelectedItem() --get the title of the selected item
-		set theSearchPattern to "\\s" --so there's spaces in host group names, which means we have to do some regex ledgerdemain to handle that. Since we only do that
-		--once, instead of trying to funk up the exsiting regex function, we'll do this all here. This sets theSearchPattern to look for white space. This also handles
-		--more than one space in a row
-		set theReplacePattern to "%20"
-		set theRegex to current application's NSRegularExpression's regularExpressionWithPattern:(theSearchPattern) options:1 |error|:(missing value) --build the regex
-		set my theHMHostGroupSelectedName to current application's NSMutableString's stringWithString:my theHMHostGroupSelectedName --this is a bit different. We use
-		--NSMutableString here because we may have multiple matches in the string, so using NSMutableString saves us a lot of work. For single matches, NSString works well.
-		set theHMHostGroupSelectedNameLength to my theHMHostGroupSelectedName's |length|() --get the length of the hostgroup name
-		set theMatchCount to theRegex's numberOfMatchesInString:(my theHMHostGroupSelectedName) options:0 range:[0, theHMHostGroupSelectedNameLength] --count the number
-		--of spaces in the string
-		if theMatchCOunt < 1 then --if there aren't any, we don't need to do anything more, jet.
-			return
-		end if
-		set theMatches to (theRegex's matchesInString:(my theHMHostGroupSelectedName) options:0 range:[0, theHMHostGroupSelectedNameLength]) as list --get all the matches
-		--in the string, and convert that NSArray to a list
-		set theMatches to reverse of theMatches --sometimes AppleScript is easier. Here's the thing. If you start replacing from the front, since we're replacing a single
-		--char with multiples, replacing the first one invalidates the ranges of all the other matches, because we "push down" the other chars in the string. If we go
-		--from the last match to the first though, then the ranges aren't invalidated. Nice. By converting theMatches to a list from NSArray, we can reverse the order
-		--FAR more simply than with NS(mutable)Array
-		repeat with x in theMatches --unfortunately, we have to interate through the array/list to do the actual replacing. Le sigh.
-			set theRange to x's range() --okay, so what matchesInString: returns isn't an array/list of ranges, but an array/list of NSTextCheckingResults. These contain
-			--more than just the range of the match. However, since range is a component of NSTextCheckingResult, at least in our case, we can get that from the
-			--NSTextCheckingResult and use it to replace things.
-			theRegex's replaceMatchesInString:my theHMHostGroupSelectedName options:0 range:theRange withTemplate:(theReplacePattern) --replace each space with %20
-			--one at a time from back to front.
-		end repeat
+		set my theHMHostGroupSelectedName to my deSpaceify:(my theHMHostGroupSelectedName) --set the despacing to it's own function. This is now two lines of code
 	end getHMHostGroupNameFromPopup:
 	
 	on selectedHGMServerName:sender
