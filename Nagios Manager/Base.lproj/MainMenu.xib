@@ -869,7 +869,7 @@
                                                 <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                                             </textFieldCell>
                                         </textField>
-                                        <textField verticalHuggingPriority="750" id="E8B-xJ-HCG">
+                                        <textField toolTip="The human-readable server name here. This does not have to be a URL or DNS form." verticalHuggingPriority="750" id="E8B-xJ-HCG">
                                             <rect key="frame" x="118" y="586" width="96" height="22"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                             <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" borderStyle="bezel" drawsBackground="YES" id="yUh-Y2-ME1">
@@ -877,6 +877,7 @@
                                                 <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                                                 <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                                             </textFieldCell>
+                                            <accessibility description="Name of the Nagios Server Goes Here"/>
                                             <connections>
                                                 <binding destination="Voe-Tx-rLC" name="value" keyPath="theSMServerName" id="2dK-eF-Nua">
                                                     <dictionary key="options">
@@ -999,7 +1000,7 @@
                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                             <clipView key="contentView" drawsBackground="NO" id="rAa-PW-jfz">
                                                 <rect key="frame" x="1" y="0.0" width="350" height="489"/>
-                                                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                                <autoresizingMask key="autoresizingMask"/>
                                                 <subviews>
                                                     <tableView verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="firstColumnOnly" columnSelection="YES" multipleSelection="NO" autosaveColumns="NO" rowSizeStyle="automatic" headerView="es9-5J-ksV" viewBased="YES" id="fVd-64-b9e">
                                                         <rect key="frame" x="0.0" y="0.0" width="350" height="466"/>
@@ -1433,7 +1434,7 @@ Gw
                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                             <clipView key="contentView" id="LTo-sO-MEg">
                                                 <rect key="frame" x="1" y="0.0" width="385" height="464"/>
-                                                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                                <autoresizingMask key="autoresizingMask"/>
                                                 <subviews>
                                                     <tableView verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" columnSelection="YES" multipleSelection="NO" autosaveColumns="NO" rowSizeStyle="automatic" headerView="bbp-qv-gaf" viewBased="YES" id="edc-nj-R3v">
                                                         <rect key="frame" x="0.0" y="0.0" width="385" height="439"/>
@@ -1841,7 +1842,7 @@ Gw
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                             <clipView key="contentView" id="TOr-O2-qdh">
                                                 <rect key="frame" x="1" y="0.0" width="229" height="101"/>
-                                                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                                <autoresizingMask key="autoresizingMask"/>
                                                 <subviews>
                                                     <tableView verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" columnSelection="YES" autosaveColumns="NO" rowSizeStyle="automatic" headerView="sMV-sv-x4R" viewBased="YES" id="0RI-NN-yR2">
                                                         <rect key="frame" x="0.0" y="0.0" width="229" height="76"/>
@@ -1976,7 +1977,7 @@ Gw
                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                             <clipView key="contentView" id="auM-5z-ScC">
                                                 <rect key="frame" x="1" y="0.0" width="368" height="376"/>
-                                                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                                <autoresizingMask key="autoresizingMask"/>
                                                 <subviews>
                                                     <tableView verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" columnSelection="YES" multipleSelection="NO" autosaveColumns="NO" rowSizeStyle="automatic" headerView="uj4-f0-Vmk" viewBased="YES" id="F3g-fs-Or1">
                                                         <rect key="frame" x="0.0" y="0.0" width="368" height="351"/>
