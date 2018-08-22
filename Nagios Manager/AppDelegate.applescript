@@ -624,6 +624,7 @@ script AppDelegate
 		
 		set theLastChar to last character of theTempURL --get the last character of the URL
 		
+		set my theSMServerName to my deSpaceify:(my theSMServerName) --handle spaces in the server name
 		
 		if theLastChar is "/" then --if it's a trailing "/"
 			set theTempURL to text 1 thru -2 of theTempURL --trim the last character of the string
@@ -1184,7 +1185,7 @@ script AppDelegate
 	end addHMHost:
 	
 	on getHMTimePeriodComboBoxChoice:sender --(very) short function where we get the user's choice in this combo box
-		set my theHMTimePeriodComboBoxSelection to theHMTimePeriodComboBox's objectValueOfSelectedItem() --if someone selects and item from the list but doesn't type or just hit tab, this gets that value
+		set my theHMTimePeriodComboBoxSelection to my theHMTimePeriodComboBox's objectValueOfSelectedItem() --if someone selects and item from the list but doesn't type or just hit tab, this gets that value
 		if (my theHMTimePeriodComboBoxSelection is "") or (my theHMTimePeriodComboBoxSelection is missing value) then --so with how combo boxes work, there's two parts, clicking and typing. if you type, that
 			--goes into the property bound to the combo box cell, not the selection value. However, if you have typed and then click, the combo box cell value isn't null'd out. So if you use that to see which
 			--one to use, you're going to always pick that, even if the user later clicks on something in the list. But, even if they've selected something from the list, if they type something and hit enter

@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="14313.3.2" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" customObjectInstantitationMethod="direct">
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="14313.13.2" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" customObjectInstantitationMethod="direct">
     <dependencies>
         <deployment identifier="macosx"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="14313.3.2"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="14313.13.2"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
@@ -746,21 +746,21 @@
                                     <rect key="frame" x="10" y="33" width="660" height="611"/>
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                     <subviews>
-                                        <scrollView autohidesScrollers="YES" horizontalLineScroll="19" horizontalPageScroll="10" verticalLineScroll="19" verticalPageScroll="10" usesPredominantAxisScrolling="NO" id="vZD-xc-v3m">
+                                        <scrollView toolTip="Table with Nagios Server Information." autohidesScrollers="YES" horizontalLineScroll="19" horizontalPageScroll="10" verticalLineScroll="19" verticalPageScroll="10" usesPredominantAxisScrolling="NO" id="vZD-xc-v3m">
                                             <rect key="frame" x="280" y="238" width="363" height="370"/>
                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                             <clipView key="contentView" id="xUI-da-J3c">
                                                 <rect key="frame" x="1" y="0.0" width="361" height="369"/>
                                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                 <subviews>
-                                                    <tableView verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" columnSelection="YES" multipleSelection="NO" autosaveColumns="NO" rowSizeStyle="automatic" headerView="wLo-oJ-UO2" viewBased="YES" id="2mQ-JL-6Rl">
+                                                    <tableView toolTip="Nagios Servers" verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" columnSelection="YES" multipleSelection="NO" autosaveColumns="NO" rowSizeStyle="automatic" headerView="wLo-oJ-UO2" viewBased="YES" id="2mQ-JL-6Rl">
                                                         <rect key="frame" x="0.0" y="0.0" width="361" height="344"/>
                                                         <autoresizingMask key="autoresizingMask"/>
                                                         <size key="intercellSpacing" width="3" height="2"/>
                                                         <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
                                                         <color key="gridColor" name="gridColor" catalog="System" colorSpace="catalog"/>
                                                         <tableColumns>
-                                                            <tableColumn width="116" minWidth="40" maxWidth="1000" id="agT-dE-W1X">
+                                                            <tableColumn width="116" minWidth="40" maxWidth="1000" headerToolTip="Colum containing Server Name" id="agT-dE-W1X">
                                                                 <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border" title="Server Name">
                                                                     <font key="font" metaFont="smallSystem"/>
                                                                     <color key="textColor" name="headerTextColor" catalog="System" colorSpace="catalog"/>
@@ -770,6 +770,7 @@
                                                                     <font key="font" metaFont="system"/>
                                                                     <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                                                                     <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                                                    <accessibility description="Nagios Server Name" help="The Server Name of a Nagios Server. This is not the URL for the server."/>
                                                                 </textFieldCell>
                                                                 <tableColumnResizingMask key="resizingMask" resizeWithTable="YES" userResizable="YES"/>
                                                                 <connections>
@@ -780,7 +781,7 @@
                                                                     </binding>
                                                                 </connections>
                                                             </tableColumn>
-                                                            <tableColumn width="140" minWidth="40" maxWidth="1000" id="KYX-Xv-W5g">
+                                                            <tableColumn width="140" minWidth="40" maxWidth="1000" headerToolTip="Column Containing Server URL" id="KYX-Xv-W5g">
                                                                 <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border" title="Server URL">
                                                                     <font key="font" metaFont="smallSystem"/>
                                                                     <color key="textColor" name="headerTextColor" catalog="System" colorSpace="catalog"/>
@@ -790,6 +791,7 @@
                                                                     <font key="font" metaFont="system"/>
                                                                     <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                                                                     <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                                                    <accessibility description="Nagios Server URL" help="The full server URL as needed by the Nagios REST API. "/>
                                                                 </textFieldCell>
                                                                 <tableColumnResizingMask key="resizingMask" resizeWithTable="YES" userResizable="YES"/>
                                                                 <connections>
@@ -800,7 +802,7 @@
                                                                     </binding>
                                                                 </connections>
                                                             </tableColumn>
-                                                            <tableColumn width="96" minWidth="10" maxWidth="3.4028234663852886e+38" id="7Sf-DZ-B2t">
+                                                            <tableColumn width="96" minWidth="10" maxWidth="3.4028234663852886e+38" headerToolTip="Column containing Server API key" id="7Sf-DZ-B2t">
                                                                 <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border" alignment="left" title="Server API Key">
                                                                     <font key="font" metaFont="smallSystem"/>
                                                                     <color key="textColor" name="headerTextColor" catalog="System" colorSpace="catalog"/>
@@ -810,6 +812,7 @@
                                                                     <font key="font" metaFont="system"/>
                                                                     <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                                                                     <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                                                    <accessibility description="Nagios Server API Key" help="The API Key for the specific Nagios server in this row."/>
                                                                 </textFieldCell>
                                                                 <tableColumnResizingMask key="resizingMask" resizeWithTable="YES" userResizable="YES"/>
                                                                 <connections>
@@ -821,6 +824,7 @@
                                                                 </connections>
                                                             </tableColumn>
                                                         </tableColumns>
+                                                        <accessibility description="Nagios Servers" help="This table contains basic Nagios Server information such as URL, API Key and Name"/>
                                                         <connections>
                                                             <action trigger="doubleAction" selector="deleteServerFromPrefs:" target="Voe-Tx-rLC" id="eM7-R0-JbI"/>
                                                             <action selector="getSMServerStatus:" target="Voe-Tx-rLC" id="YCC-V1-dzU"/>
@@ -841,29 +845,12 @@
                                                 <rect key="frame" x="0.0" y="0.0" width="361" height="25"/>
                                                 <autoresizingMask key="autoresizingMask"/>
                                             </tableHeaderView>
+                                            <accessibility description="Nagios Server Information" help="This table contains the name, URL and API key of every server the app knows about, one row per server."/>
                                         </scrollView>
                                         <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" id="LTE-Z6-E6m">
                                             <rect key="frame" x="15" y="589" width="87" height="17"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                             <textFieldCell key="cell" lineBreakMode="clipping" title="Server Name:" id="o8l-q1-GsY">
-                                                <font key="font" usesAppearanceFont="YES"/>
-                                                <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
-                                                <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
-                                            </textFieldCell>
-                                        </textField>
-                                        <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" id="zQ9-MC-Y2L">
-                                            <rect key="frame" x="15" y="559" width="76" height="17"/>
-                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                            <textFieldCell key="cell" lineBreakMode="clipping" title="Server URL:" id="9RN-ya-Ggo">
-                                                <font key="font" usesAppearanceFont="YES"/>
-                                                <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
-                                                <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
-                                            </textFieldCell>
-                                        </textField>
-                                        <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" id="kPN-a3-Hxi">
-                                            <rect key="frame" x="15" y="529" width="97" height="17"/>
-                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                            <textFieldCell key="cell" lineBreakMode="clipping" title="Server API Key:" id="wGu-vQ-zlF">
                                                 <font key="font" usesAppearanceFont="YES"/>
                                                 <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
                                                 <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
@@ -877,7 +864,7 @@
                                                 <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                                                 <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                                             </textFieldCell>
-                                            <accessibility description="Name of the Nagios Server Goes Here"/>
+                                            <accessibility description="New Server Name" help="Enter the name of the Nagios server you are adding here. This does not have to be an IP address or DNS name."/>
                                             <connections>
                                                 <binding destination="Voe-Tx-rLC" name="value" keyPath="theSMServerName" id="2dK-eF-Nua">
                                                     <dictionary key="options">
@@ -886,14 +873,25 @@
                                                 </binding>
                                             </connections>
                                         </textField>
+                                        <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" id="zQ9-MC-Y2L">
+                                            <rect key="frame" x="15" y="559" width="76" height="17"/>
+                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                            <textFieldCell key="cell" lineBreakMode="clipping" title="Server URL:" id="9RN-ya-Ggo">
+                                                <font key="font" usesAppearanceFont="YES"/>
+                                                <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                                                <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                            </textFieldCell>
+                                        </textField>
                                         <textField verticalHuggingPriority="750" id="hbh-in-1nM">
                                             <rect key="frame" x="118" y="556" width="96" height="22"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                            <string key="toolTip">The URL of the server goes here. PLEASE just use http(s)://dns name or IP address. The rest of the URL is grafted on to that, so if you add things like /nagiosxi yourself, your server URL will be highly invalid.</string>
                                             <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" borderStyle="bezel" drawsBackground="YES" id="lhX-3J-dtW">
                                                 <font key="font" metaFont="system"/>
                                                 <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                                                 <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                                             </textFieldCell>
+                                            <accessibility description="New Server URL" help="The URL of the server goes here. PLEASE just use http(s)://dns name or http(s)://IP address. "/>
                                             <connections>
                                                 <binding destination="Voe-Tx-rLC" name="value" keyPath="theSMServerURL" id="Ofh-v4-AKY">
                                                     <dictionary key="options">
@@ -902,7 +900,16 @@
                                                 </binding>
                                             </connections>
                                         </textField>
-                                        <textField verticalHuggingPriority="750" id="d8S-OK-6zI">
+                                        <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" id="kPN-a3-Hxi">
+                                            <rect key="frame" x="15" y="529" width="97" height="17"/>
+                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                            <textFieldCell key="cell" lineBreakMode="clipping" title="Server API Key:" id="wGu-vQ-zlF">
+                                                <font key="font" usesAppearanceFont="YES"/>
+                                                <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                                                <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                            </textFieldCell>
+                                        </textField>
+                                        <textField toolTip="The Server API key goes here. Make sure that key is an admin key or parts of this app won't work." verticalHuggingPriority="750" id="d8S-OK-6zI">
                                             <rect key="frame" x="118" y="526" width="96" height="22"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                             <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" borderStyle="bezel" drawsBackground="YES" id="Thp-MT-i2n">
@@ -910,6 +917,7 @@
                                                 <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                                                 <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                                             </textFieldCell>
+                                            <accessibility description="New Server API Key" help="The Nagios XI Server API Key goes here. This key must be an admin key or parts of this application can't work correctly"/>
                                             <connections>
                                                 <binding destination="Voe-Tx-rLC" name="value" keyPath="theSMServerAPIKey" id="FVG-P6-fG8">
                                                     <dictionary key="options">
@@ -925,7 +933,7 @@
                                                 <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                                                 <font key="font" metaFont="system"/>
                                             </buttonCell>
-                                            <accessibility description="Add Server to Nagios manager button"/>
+                                            <accessibility description="Add Server" help="Add server to Nagios manager. All three fields must be filled out."/>
                                             <connections>
                                                 <action selector="addServerToPrefs:" target="Voe-Tx-rLC" id="jiV-Te-RaH"/>
                                             </connections>
@@ -937,7 +945,7 @@
                                                 <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                                                 <font key="font" metaFont="system"/>
                                             </buttonCell>
-                                            <accessibility description="Reload server list from prefs button"/>
+                                            <accessibility description="Reload server list from prefs" help="This button reloads the server list from the on-disk preferences"/>
                                             <connections>
                                                 <action selector="loadServersFromPrefs:" target="Voe-Tx-rLC" id="GW8-dh-yDS"/>
                                             </connections>
@@ -949,7 +957,7 @@
                                                 <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                                                 <font key="font" metaFont="system"/>
                                             </buttonCell>
-                                            <accessibility description="Delete Selected Server(s) button"/>
+                                            <accessibility description="Delete Selected Server(s)" help="This deletes the selected server or servers from the app and the on-disk preferences"/>
                                             <connections>
                                                 <action selector="deleteServerFromPrefs:" target="Voe-Tx-rLC" id="M1A-0E-COk"/>
                                             </connections>
@@ -961,12 +969,17 @@
                                                 <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                                                 <font key="font" metaFont="system"/>
                                             </buttonCell>
-                                            <accessibility description="Delete all servers from list and prefs button"/>
+                                            <accessibility description="Delete all servers " help="This deletes all servers from the preferences. If this is used, new servers have to be added for the app to work correctly."/>
                                             <connections>
                                                 <action selector="deleteAllServersFromPrefs:" target="Voe-Tx-rLC" id="THo-g9-3LB"/>
                                             </connections>
                                         </button>
-                                        <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" id="qJ3-fB-h2k">
+                                        <box verticalHuggingPriority="750" boxType="separator" id="lv9-nJ-Pq3">
+                                            <rect key="frame" x="17" y="214" width="634" height="5"/>
+                                            <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
+                                            <accessibility description="Horizontal line to separate the status text field at the bottom of the tab from the controls at the top."/>
+                                        </box>
+                                        <textField toolTip="This is the status field for command results, etc." verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" id="qJ3-fB-h2k">
                                             <rect key="frame" x="15" y="17" width="638" height="191"/>
                                             <autoresizingMask key="autoresizingMask" widthSizable="YES"/>
                                             <textFieldCell key="cell" selectable="YES" allowsUndo="NO" sendsActionOnEndEditing="YES" allowsEditingTextAttributes="YES" id="DBC-Xv-1CU">
@@ -974,6 +987,7 @@
                                                 <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                                                 <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                                             </textFieldCell>
+                                            <accessibility description="This is the status field for command results, etc."/>
                                             <connections>
                                                 <binding destination="Voe-Tx-rLC" name="value" keyPath="theSMStatusFieldText" id="cBb-mI-vbU">
                                                     <dictionary key="options">
@@ -982,10 +996,6 @@
                                                 </binding>
                                             </connections>
                                         </textField>
-                                        <box verticalHuggingPriority="750" boxType="separator" id="lv9-nJ-Pq3">
-                                            <rect key="frame" x="17" y="214" width="634" height="5"/>
-                                            <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
-                                        </box>
                                     </subviews>
                                     <accessibility description="Add Server to Nagios Manager button"/>
                                 </view>
@@ -995,12 +1005,12 @@
                                     <rect key="frame" x="10" y="33" width="660" height="611"/>
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                     <subviews>
-                                        <scrollView autohidesScrollers="YES" horizontalLineScroll="19" horizontalPageScroll="10" verticalLineScroll="19" verticalPageScroll="10" usesPredominantAxisScrolling="NO" id="z9W-1p-lVg">
+                                        <scrollView toolTip="Users Table" autohidesScrollers="YES" horizontalLineScroll="19" horizontalPageScroll="10" verticalLineScroll="19" verticalPageScroll="10" usesPredominantAxisScrolling="NO" id="z9W-1p-lVg">
                                             <rect key="frame" x="291" y="118" width="352" height="490"/>
                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                             <clipView key="contentView" drawsBackground="NO" id="rAa-PW-jfz">
                                                 <rect key="frame" x="1" y="0.0" width="350" height="489"/>
-                                                <autoresizingMask key="autoresizingMask"/>
+                                                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                 <subviews>
                                                     <tableView verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="firstColumnOnly" columnSelection="YES" multipleSelection="NO" autosaveColumns="NO" rowSizeStyle="automatic" headerView="es9-5J-ksV" viewBased="YES" id="fVd-64-b9e">
                                                         <rect key="frame" x="0.0" y="0.0" width="350" height="466"/>
@@ -1009,7 +1019,7 @@
                                                         <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
                                                         <color key="gridColor" name="gridColor" catalog="System" colorSpace="catalog"/>
                                                         <tableColumns>
-                                                            <tableColumn editable="NO" width="257" minWidth="40" maxWidth="1000" id="hDp-kf-vhI">
+                                                            <tableColumn editable="NO" width="257" minWidth="40" maxWidth="1000" headerToolTip="User Name Column" id="hDp-kf-vhI">
                                                                 <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border" alignment="left" title="User Name">
                                                                     <font key="font" metaFont="smallSystem"/>
                                                                     <color key="textColor" name="headerTextColor" catalog="System" colorSpace="catalog"/>
@@ -1019,6 +1029,7 @@
                                                                     <font key="font" metaFont="system"/>
                                                                     <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                                                                     <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                                                    <accessibility description="Username" help="Nagios Username used for login"/>
                                                                 </textFieldCell>
                                                                 <tableColumnResizingMask key="resizingMask" resizeWithTable="YES" userResizable="YES"/>
                                                                 <connections>
@@ -1030,7 +1041,7 @@
                                                                     </binding>
                                                                 </connections>
                                                             </tableColumn>
-                                                            <tableColumn editable="NO" width="87" minWidth="40" maxWidth="1000" id="bL0-TP-gyi">
+                                                            <tableColumn editable="NO" width="87" minWidth="40" maxWidth="1000" headerToolTip="User ID" id="bL0-TP-gyi">
                                                                 <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border" alignment="left" title="User ID">
                                                                     <font key="font" metaFont="smallSystem"/>
                                                                     <color key="textColor" name="headerTextColor" catalog="System" colorSpace="catalog"/>
@@ -1040,6 +1051,7 @@
                                                                     <font key="font" metaFont="system"/>
                                                                     <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                                                                     <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                                                    <accessibility description="User ID" help="Nagios numerical userid"/>
                                                                 </textFieldCell>
                                                                 <tableColumnResizingMask key="resizingMask" resizeWithTable="YES" userResizable="YES"/>
                                                                 <connections>
@@ -1051,6 +1063,9 @@
                                                                 </connections>
                                                             </tableColumn>
                                                         </tableColumns>
+                                                        <accessibility description="Users Table">
+                                                            <string key="help">This table contains the User Name and User ID number for every user on the server in the selected server popup, one row per user.</string>
+                                                        </accessibility>
                                                         <connections>
                                                             <action trigger="doubleAction" selector="deleteSelectedUsers:" target="Voe-Tx-rLC" id="8jm-sj-K66"/>
                                                             <action selector="displayUserInfo:" target="Voe-Tx-rLC" id="NG4-pv-YYX"/>
@@ -1072,6 +1087,9 @@
                                                 <rect key="frame" x="0.0" y="0.0" width="350" height="23"/>
                                                 <autoresizingMask key="autoresizingMask"/>
                                             </tableHeaderView>
+                                            <accessibility description="Users">
+                                                <string key="help">This table contains the User Name and User ID number for every user on the server in the selected server popup, one row per user.</string>
+                                            </accessibility>
                                         </scrollView>
                                         <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" id="n9u-nZ-Xpy">
                                             <rect key="frame" x="17" y="591" width="96" height="17"/>
@@ -1082,7 +1100,7 @@
                                                 <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                                             </textFieldCell>
                                         </textField>
-                                        <popUpButton verticalHuggingPriority="750" id="iih-5X-Xqd">
+                                        <popUpButton toolTip="Select the desired Nagios server here." verticalHuggingPriority="750" id="iih-5X-Xqd">
                                             <rect key="frame" x="15" y="559" width="113" height="26"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                             <popUpButtonCell key="cell" type="push" title="Item 1" bezelStyle="rounded" alignment="left" lineBreakMode="truncatingTail" state="on" borderStyle="borderAndBezel" imageScaling="proportionallyDown" inset="2" selectedItem="itf-oC-pr4" id="MaG-oY-8uF">
@@ -1096,18 +1114,20 @@
                                                     </items>
                                                 </menu>
                                             </popUpButtonCell>
+                                            <accessibility description="Select Server" help="Popup with server names of all servers Nagios Manager knows about. Select the server whose users you want to manage here."/>
                                             <connections>
                                                 <action selector="selectedServerName:" target="Voe-Tx-rLC" id="uCP-gZ-T5P"/>
                                                 <binding destination="Av3-2s-jb3" name="contentValues" keyPath="arrangedObjects.theSMTableServerName" id="PB5-xf-egS"/>
                                             </connections>
                                         </popUpButton>
-                                        <button verticalHuggingPriority="750" id="Q2F-9g-cL7">
+                                        <button toolTip="Delete the currently selected user in the User Table." verticalHuggingPriority="750" id="Q2F-9g-cL7">
                                             <rect key="frame" x="11" y="506" width="169" height="32"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                             <buttonCell key="cell" type="push" title="Delete Selected User" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="Gqd-O2-inM">
                                                 <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                                                 <font key="font" metaFont="system"/>
                                             </buttonCell>
+                                            <accessibility description="Delete Selected User" help="Delete the currently selected user in the User Table."/>
                                             <connections>
                                                 <action selector="deleteSelectedUsers:" target="Voe-Tx-rLC" id="DLq-dN-Hyl"/>
                                             </connections>
@@ -1143,6 +1163,23 @@
                                                 <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                                             </textFieldCell>
                                         </textField>
+                                        <textField toolTip="Enter the user name for the new user here, must conform to Nagios username requirements." verticalHuggingPriority="750" id="CaH-g7-Vvk">
+                                            <rect key="frame" x="93" y="422" width="190" height="22"/>
+                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                            <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" continuous="YES" sendsActionOnEndEditing="YES" state="on" borderStyle="bezel" drawsBackground="YES" id="tBI-KH-BU5">
+                                                <font key="font" metaFont="system"/>
+                                                <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
+                                                <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                            </textFieldCell>
+                                            <accessibility description="New User Name" help="Enter the user name for the new user here, must conform to Nagios username requirements."/>
+                                            <connections>
+                                                <binding destination="Voe-Tx-rLC" name="value" keyPath="theNagiosNewUserName" id="gbP-bb-aHy">
+                                                    <dictionary key="options">
+                                                        <bool key="NSContinuouslyUpdatesValue" value="YES"/>
+                                                    </dictionary>
+                                                </binding>
+                                            </connections>
+                                        </textField>
                                         <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" id="JWY-r6-hTO">
                                             <rect key="frame" x="17" y="398" width="66" height="17"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
@@ -1152,6 +1189,29 @@
                                                 <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                                             </textFieldCell>
                                         </textField>
+                                        <secureTextField verticalHuggingPriority="750" id="YuL-ra-LM2">
+                                            <rect key="frame" x="93" y="395" width="190" height="22"/>
+                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                            <string key="toolTip">Enter new user password here. By default, this password info will be emailed to the new user and will have to be changed on first login</string>
+                                            <secureTextFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" continuous="YES" sendsActionOnEndEditing="YES" borderStyle="bezel" drawsBackground="YES" usesSingleLineMode="YES" id="nG5-aA-yiR">
+                                                <font key="font" metaFont="system"/>
+                                                <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
+                                                <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                                <allowedInputSourceLocales>
+                                                    <string>NSAllRomanInputSourcesLocaleIdentifier</string>
+                                                </allowedInputSourceLocales>
+                                            </secureTextFieldCell>
+                                            <accessibility description="New User Password">
+                                                <string key="help">Enter new user password here. By default, this password info will be emailed to the new user and will have to be changed on first login. This is a secure text field.</string>
+                                            </accessibility>
+                                            <connections>
+                                                <binding destination="Voe-Tx-rLC" name="value" keyPath="theNagiosNewUserPassword" id="CoM-uF-i1V">
+                                                    <dictionary key="options">
+                                                        <bool key="NSContinuouslyUpdatesValue" value="YES"/>
+                                                    </dictionary>
+                                                </binding>
+                                            </connections>
+                                        </secureTextField>
                                         <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" id="Msd-Cy-6K2">
                                             <rect key="frame" x="17" y="371" width="44" height="17"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
@@ -1160,6 +1220,23 @@
                                                 <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
                                                 <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                                             </textFieldCell>
+                                        </textField>
+                                        <textField toolTip="New User's Name goes here. This is separate from their username" verticalHuggingPriority="750" id="qP9-Kt-YGN">
+                                            <rect key="frame" x="93" y="368" width="190" height="22"/>
+                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                            <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" continuous="YES" sendsActionOnEndEditing="YES" state="on" borderStyle="bezel" drawsBackground="YES" id="AqK-pM-bPi">
+                                                <font key="font" metaFont="system"/>
+                                                <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
+                                                <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                            </textFieldCell>
+                                            <accessibility description="New User Name" help="The new user's &quot;real&quot; name goes here, not their nagios username."/>
+                                            <connections>
+                                                <binding destination="Voe-Tx-rLC" name="value" keyPath="theNagiosNewUserRealName" id="sj1-cS-Heo">
+                                                    <dictionary key="options">
+                                                        <bool key="NSContinuouslyUpdatesValue" value="YES"/>
+                                                    </dictionary>
+                                                </binding>
+                                            </connections>
                                         </textField>
                                         <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" id="Nhh-jX-Q2h">
                                             <rect key="frame" x="17" y="343" width="90" height="17"/>
@@ -1170,6 +1247,23 @@
                                                 <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                                             </textFieldCell>
                                         </textField>
+                                        <textField toolTip="New User's email address" verticalHuggingPriority="750" id="P6c-M3-iK4">
+                                            <rect key="frame" x="113" y="340" width="170" height="22"/>
+                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                            <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" continuous="YES" sendsActionOnEndEditing="YES" state="on" borderStyle="bezel" drawsBackground="YES" id="Ref-0z-GXc">
+                                                <font key="font" metaFont="system"/>
+                                                <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
+                                                <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                            </textFieldCell>
+                                            <accessibility description="New User Email Address" help="The new user's email address goes here. Note there is NO sanity checking for a &quot;correct&quot; email address."/>
+                                            <connections>
+                                                <binding destination="Voe-Tx-rLC" name="value" keyPath="theNagiosNewUserEmailAddress" id="bZA-1W-gKn">
+                                                    <dictionary key="options">
+                                                        <bool key="NSContinuouslyUpdatesValue" value="YES"/>
+                                                    </dictionary>
+                                                </binding>
+                                            </connections>
+                                        </textField>
                                         <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" id="sac-gU-Uj1">
                                             <rect key="frame" x="17" y="318" width="72" height="17"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
@@ -1179,6 +1273,32 @@
                                                 <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                                             </textFieldCell>
                                         </textField>
+                                        <button toolTip="Admin User " verticalHuggingPriority="750" id="syf-bY-6Gc">
+                                            <rect key="frame" x="112" y="317" width="68" height="18"/>
+                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                            <buttonCell key="cell" type="radio" title="Admin" bezelStyle="regularSquare" imagePosition="left" alignment="left" inset="2" id="8Do-bd-VaZ">
+                                                <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
+                                                <font key="font" metaFont="system"/>
+                                            </buttonCell>
+                                            <accessibility description="Admin User" help="Select this radio button to make this user an admin user. All other options are automatically set if this button is selected."/>
+                                            <connections>
+                                                <action selector="getUserLevel:" target="Voe-Tx-rLC" id="RmF-ha-mUY"/>
+                                            </connections>
+                                        </button>
+                                        <button toolTip="Non-admin user" verticalHuggingPriority="750" id="dwM-41-H7r">
+                                            <rect key="frame" x="185" y="317" width="51" height="18"/>
+                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                            <buttonCell key="cell" type="radio" title="User" bezelStyle="regularSquare" imagePosition="left" alignment="left" state="on" inset="2" id="OLf-bG-bPD">
+                                                <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
+                                                <font key="font" metaFont="system"/>
+                                            </buttonCell>
+                                            <accessibility description="Non-admin user">
+                                                <string key="help">Select this radio button to make the user a non-admin user. Other user options can be manually configured with this option. This is the default option. Required for read-only users.</string>
+                                            </accessibility>
+                                            <connections>
+                                                <action selector="getUserLevel:" target="Voe-Tx-rLC" id="BYg-KC-UQx"/>
+                                            </connections>
+                                        </button>
                                         <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" id="cEM-r1-9xo">
                                             <rect key="frame" x="15" y="293" width="128" height="17"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
@@ -1188,15 +1308,37 @@
                                                 <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                                             </textFieldCell>
                                         </textField>
-                                        <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" id="VA1-Et-lgA">
-                                            <rect key="frame" x="15" y="268" width="178" height="17"/>
+                                        <button toolTip="Can see all objects checkbox" verticalHuggingPriority="750" id="wnB-Ld-KVg">
+                                            <rect key="frame" x="263" y="292" width="22" height="18"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                            <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="Can Reconfigure All Objects:" id="dGh-X2-BSS">
+                                            <buttonCell key="cell" type="check" bezelStyle="regularSquare" imagePosition="left" inset="2" id="oay-iw-vCy">
+                                                <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
+                                                <font key="font" metaFont="system"/>
+                                            </buttonCell>
+                                            <accessibility description="Can See All Objects">
+                                                <string key="help">Enabling this allows the user to see all hosts and services on the Nagios server, without being a contact for those hosts and/or services. DIsabling this requires the user to be a contact for a host or service to see that host or service.</string>
+                                            </accessibility>
+                                        </button>
+                                        <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" id="VA1-Et-lgA">
+                                            <rect key="frame" x="15" y="268" width="164" height="17"/>
+                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                            <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="Can Configure All Objects:" id="dGh-X2-BSS">
                                                 <font key="font" metaFont="system"/>
                                                 <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
                                                 <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                                             </textFieldCell>
                                         </textField>
+                                        <button toolTip="Can Configure All Objects Checkbox" verticalHuggingPriority="750" id="1ak-Dl-V9F">
+                                            <rect key="frame" x="263" y="267" width="22" height="18"/>
+                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                            <buttonCell key="cell" type="check" bezelStyle="regularSquare" imagePosition="left" inset="2" id="pL7-LP-Fkc">
+                                                <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
+                                                <font key="font" metaFont="system"/>
+                                            </buttonCell>
+                                            <accessibility description="Can Configure All Objects">
+                                                <string key="help">When enabled, his allows the user to run configuration wizards, delete a host or service from the detail page for that host or service, or (re)configure a host or service from the detail page for that host or service.</string>
+                                            </accessibility>
+                                        </button>
                                         <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" id="uHk-8v-1b1">
                                             <rect key="frame" x="15" y="243" width="149" height="17"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
@@ -1206,6 +1348,17 @@
                                                 <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                                             </textFieldCell>
                                         </textField>
+                                        <button toolTip="Can control all objects checkbox" verticalHuggingPriority="750" id="zhR-eq-mNA">
+                                            <rect key="frame" x="263" y="242" width="22" height="18"/>
+                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                            <buttonCell key="cell" type="check" bezelStyle="regularSquare" imagePosition="left" inset="2" id="rYp-Gi-cUv">
+                                                <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
+                                                <font key="font" metaFont="system"/>
+                                            </buttonCell>
+                                            <accessibility description="Can Control All Objects">
+                                                <string key="help">Allows the user to run commands on all hosts and services, regardless of if they are a contact for that host or service. If disabled, they can only run commands on the hosts or services they are a contact for.</string>
+                                            </accessibility>
+                                        </button>
                                         <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" id="Kho-Fn-hcq">
                                             <rect key="frame" x="15" y="218" width="221" height="17"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
@@ -1215,6 +1368,17 @@
                                                 <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                                             </textFieldCell>
                                         </textField>
+                                        <button toolTip="Can See/Control Monitoring Engine" verticalHuggingPriority="750" id="WwK-vz-39Y">
+                                            <rect key="frame" x="263" y="217" width="22" height="18"/>
+                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                            <buttonCell key="cell" type="check" bezelStyle="regularSquare" imagePosition="left" inset="2" id="CiH-57-xaF">
+                                                <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
+                                                <font key="font" metaFont="system"/>
+                                            </buttonCell>
+                                            <accessibility description="Can See/Control Monitoring Engine">
+                                                <string key="help">If enabled, allows the user to manage the Nagios core process including starting/stopping, restarting, and changing settings for the core Nagios Process. Also allows access to the Nagios Event Log.</string>
+                                            </accessibility>
+                                        </button>
                                         <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" id="HzT-SF-Zz1">
                                             <rect key="frame" x="15" y="193" width="199" height="17"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
@@ -1224,6 +1388,17 @@
                                                 <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                                             </textFieldCell>
                                         </textField>
+                                        <button toolTip="Can Access Advanced Features checkbox" verticalHuggingPriority="750" id="WhP-XN-0Da">
+                                            <rect key="frame" x="263" y="192" width="22" height="18"/>
+                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                            <buttonCell key="cell" type="check" bezelStyle="regularSquare" imagePosition="left" inset="2" id="bTe-Ev-2nM">
+                                                <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
+                                                <font key="font" metaFont="system"/>
+                                            </buttonCell>
+                                            <accessibility description="Can Access Advanced Features">
+                                                <string key="help">If enabled, this allows the user to edit the check command for hosts or services in the re-configure host/service page. GIves access to the advanced tab for a host or service, and allows access to commands in the host or service detail page. Allows setting of host parents when using wiards and reconfiguring parents on the host detail page.</string>
+                                            </accessibility>
+                                        </button>
                                         <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" id="QvI-lC-slh">
                                             <rect key="frame" x="15" y="168" width="70" height="17"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
@@ -1233,7 +1408,21 @@
                                                 <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                                             </textFieldCell>
                                         </textField>
-                                        <button verticalHuggingPriority="750" id="fHy-zc-PYd">
+                                        <button toolTip="Read Only Checkbox" verticalHuggingPriority="750" id="tLi-2o-hbI">
+                                            <rect key="frame" x="263" y="167" width="22" height="18"/>
+                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                            <buttonCell key="cell" type="check" bezelStyle="regularSquare" imagePosition="left" inset="2" id="OEr-tU-pDM">
+                                                <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
+                                                <font key="font" metaFont="system"/>
+                                            </buttonCell>
+                                            <accessibility description="Read Only">
+                                                <string key="help">Enabling this forces the user to only have read-only access and disables control hosts and services, can configure hosts and services and can access advanced features. An admin user cannot be read-only.</string>
+                                            </accessibility>
+                                            <connections>
+                                                <action selector="enabledReadOnly:" target="Voe-Tx-rLC" id="y2Q-pF-EOU"/>
+                                            </connections>
+                                        </button>
+                                        <button toolTip="Add New User button " verticalHuggingPriority="750" id="fHy-zc-PYd">
                                             <rect key="frame" x="11" y="132" width="97" height="32"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                             <buttonCell key="cell" type="push" title="Add User" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="h2S-d1-Blc">
@@ -1243,6 +1432,9 @@
 DQ
 </string>
                                             </buttonCell>
+                                            <accessibility description="Add User">
+                                                <string key="help">This button adds a new user to the the Nagios server selected in the popup. If a required field is not filled out, that will be noted in the status field at the bottom of the window.</string>
+                                            </accessibility>
                                             <connections>
                                                 <action selector="addUser:" target="Voe-Tx-rLC" id="VkV-1N-Xse"/>
                                             </connections>
@@ -1265,147 +1457,7 @@ Gw
                                             <rect key="frame" x="17" y="95" width="626" height="5"/>
                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
                                         </box>
-                                        <textField verticalHuggingPriority="750" id="CaH-g7-Vvk">
-                                            <rect key="frame" x="93" y="422" width="190" height="22"/>
-                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                            <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" continuous="YES" sendsActionOnEndEditing="YES" state="on" borderStyle="bezel" drawsBackground="YES" id="tBI-KH-BU5">
-                                                <font key="font" metaFont="system"/>
-                                                <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
-                                                <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
-                                            </textFieldCell>
-                                            <connections>
-                                                <binding destination="Voe-Tx-rLC" name="value" keyPath="theNagiosNewUserName" id="gbP-bb-aHy">
-                                                    <dictionary key="options">
-                                                        <bool key="NSContinuouslyUpdatesValue" value="YES"/>
-                                                    </dictionary>
-                                                </binding>
-                                            </connections>
-                                        </textField>
-                                        <secureTextField verticalHuggingPriority="750" id="YuL-ra-LM2">
-                                            <rect key="frame" x="93" y="395" width="190" height="22"/>
-                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                            <secureTextFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" continuous="YES" sendsActionOnEndEditing="YES" borderStyle="bezel" drawsBackground="YES" usesSingleLineMode="YES" id="nG5-aA-yiR">
-                                                <font key="font" metaFont="system"/>
-                                                <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
-                                                <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
-                                                <allowedInputSourceLocales>
-                                                    <string>NSAllRomanInputSourcesLocaleIdentifier</string>
-                                                </allowedInputSourceLocales>
-                                            </secureTextFieldCell>
-                                            <connections>
-                                                <binding destination="Voe-Tx-rLC" name="value" keyPath="theNagiosNewUserPassword" id="CoM-uF-i1V">
-                                                    <dictionary key="options">
-                                                        <bool key="NSContinuouslyUpdatesValue" value="YES"/>
-                                                    </dictionary>
-                                                </binding>
-                                            </connections>
-                                        </secureTextField>
-                                        <textField verticalHuggingPriority="750" id="qP9-Kt-YGN">
-                                            <rect key="frame" x="93" y="368" width="190" height="22"/>
-                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                            <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" continuous="YES" sendsActionOnEndEditing="YES" state="on" borderStyle="bezel" drawsBackground="YES" id="AqK-pM-bPi">
-                                                <font key="font" metaFont="system"/>
-                                                <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
-                                                <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
-                                            </textFieldCell>
-                                            <connections>
-                                                <binding destination="Voe-Tx-rLC" name="value" keyPath="theNagiosNewUserRealName" id="sj1-cS-Heo">
-                                                    <dictionary key="options">
-                                                        <bool key="NSContinuouslyUpdatesValue" value="YES"/>
-                                                    </dictionary>
-                                                </binding>
-                                            </connections>
-                                        </textField>
-                                        <textField verticalHuggingPriority="750" id="P6c-M3-iK4">
-                                            <rect key="frame" x="113" y="340" width="170" height="22"/>
-                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                            <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" continuous="YES" sendsActionOnEndEditing="YES" state="on" borderStyle="bezel" drawsBackground="YES" id="Ref-0z-GXc">
-                                                <font key="font" metaFont="system"/>
-                                                <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
-                                                <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
-                                            </textFieldCell>
-                                            <connections>
-                                                <binding destination="Voe-Tx-rLC" name="value" keyPath="theNagiosNewUserEmailAddress" id="bZA-1W-gKn">
-                                                    <dictionary key="options">
-                                                        <bool key="NSContinuouslyUpdatesValue" value="YES"/>
-                                                    </dictionary>
-                                                </binding>
-                                            </connections>
-                                        </textField>
-                                        <button verticalHuggingPriority="750" id="syf-bY-6Gc">
-                                            <rect key="frame" x="112" y="317" width="68" height="18"/>
-                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                            <buttonCell key="cell" type="radio" title="Admin" bezelStyle="regularSquare" imagePosition="left" alignment="left" inset="2" id="8Do-bd-VaZ">
-                                                <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
-                                                <font key="font" metaFont="system"/>
-                                            </buttonCell>
-                                            <connections>
-                                                <action selector="getUserLevel:" target="Voe-Tx-rLC" id="RmF-ha-mUY"/>
-                                            </connections>
-                                        </button>
-                                        <button verticalHuggingPriority="750" id="dwM-41-H7r">
-                                            <rect key="frame" x="185" y="317" width="51" height="18"/>
-                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                            <buttonCell key="cell" type="radio" title="User" bezelStyle="regularSquare" imagePosition="left" alignment="left" state="on" inset="2" id="OLf-bG-bPD">
-                                                <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
-                                                <font key="font" metaFont="system"/>
-                                            </buttonCell>
-                                            <connections>
-                                                <action selector="getUserLevel:" target="Voe-Tx-rLC" id="BYg-KC-UQx"/>
-                                            </connections>
-                                        </button>
-                                        <button verticalHuggingPriority="750" id="wnB-Ld-KVg">
-                                            <rect key="frame" x="263" y="292" width="22" height="18"/>
-                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                            <buttonCell key="cell" type="check" bezelStyle="regularSquare" imagePosition="left" inset="2" id="oay-iw-vCy">
-                                                <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
-                                                <font key="font" metaFont="system"/>
-                                            </buttonCell>
-                                        </button>
-                                        <button verticalHuggingPriority="750" id="1ak-Dl-V9F">
-                                            <rect key="frame" x="263" y="267" width="22" height="18"/>
-                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                            <buttonCell key="cell" type="check" bezelStyle="regularSquare" imagePosition="left" inset="2" id="pL7-LP-Fkc">
-                                                <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
-                                                <font key="font" metaFont="system"/>
-                                            </buttonCell>
-                                        </button>
-                                        <button verticalHuggingPriority="750" id="zhR-eq-mNA">
-                                            <rect key="frame" x="263" y="242" width="22" height="18"/>
-                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                            <buttonCell key="cell" type="check" bezelStyle="regularSquare" imagePosition="left" inset="2" id="rYp-Gi-cUv">
-                                                <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
-                                                <font key="font" metaFont="system"/>
-                                            </buttonCell>
-                                        </button>
-                                        <button verticalHuggingPriority="750" id="WwK-vz-39Y">
-                                            <rect key="frame" x="263" y="217" width="22" height="18"/>
-                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                            <buttonCell key="cell" type="check" bezelStyle="regularSquare" imagePosition="left" inset="2" id="CiH-57-xaF">
-                                                <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
-                                                <font key="font" metaFont="system"/>
-                                            </buttonCell>
-                                        </button>
-                                        <button verticalHuggingPriority="750" id="WhP-XN-0Da">
-                                            <rect key="frame" x="263" y="192" width="22" height="18"/>
-                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                            <buttonCell key="cell" type="check" bezelStyle="regularSquare" imagePosition="left" inset="2" id="bTe-Ev-2nM">
-                                                <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
-                                                <font key="font" metaFont="system"/>
-                                            </buttonCell>
-                                        </button>
-                                        <button verticalHuggingPriority="750" id="tLi-2o-hbI">
-                                            <rect key="frame" x="263" y="167" width="22" height="18"/>
-                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                            <buttonCell key="cell" type="check" bezelStyle="regularSquare" imagePosition="left" inset="2" id="OEr-tU-pDM">
-                                                <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
-                                                <font key="font" metaFont="system"/>
-                                            </buttonCell>
-                                            <connections>
-                                                <action selector="enabledReadOnly:" target="Voe-Tx-rLC" id="y2Q-pF-EOU"/>
-                                            </connections>
-                                        </button>
-                                        <textField verticalHuggingPriority="750" id="7yd-pA-wfw">
+                                        <textField toolTip="Status field" verticalHuggingPriority="750" id="7yd-pA-wfw">
                                             <rect key="frame" x="15" y="-3" width="630" height="92"/>
                                             <autoresizingMask key="autoresizingMask" widthSizable="YES"/>
                                             <textFieldCell key="cell" selectable="YES" allowsUndo="NO" sendsActionOnEndEditing="YES" allowsEditingTextAttributes="YES" id="lS7-GJ-NEz">
@@ -1413,6 +1465,7 @@ Gw
                                                 <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                                                 <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                                             </textFieldCell>
+                                            <accessibility description="Status field" help="This text field is used for status of users, and commands submitted on this tab."/>
                                             <connections>
                                                 <binding destination="Voe-Tx-rLC" name="value" keyPath="theRESTresults" id="M3C-tE-xjT">
                                                     <dictionary key="options">
