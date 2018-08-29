@@ -1010,7 +1010,7 @@
                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                             <clipView key="contentView" drawsBackground="NO" id="rAa-PW-jfz">
                                                 <rect key="frame" x="1" y="0.0" width="350" height="489"/>
-                                                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                                <autoresizingMask key="autoresizingMask"/>
                                                 <subviews>
                                                     <tableView verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="firstColumnOnly" columnSelection="YES" multipleSelection="NO" autosaveColumns="NO" rowSizeStyle="automatic" headerView="es9-5J-ksV" viewBased="YES" id="fVd-64-b9e">
                                                         <rect key="frame" x="0.0" y="0.0" width="350" height="466"/>
@@ -1449,6 +1449,7 @@ DQ
 Gw
 </string>
                                             </buttonCell>
+                                            <accessibility description="Cancel Add User" help="This button cancels out adding a user. "/>
                                             <connections>
                                                 <action selector="cancelAddUser:" target="Voe-Tx-rLC" id="kvl-jG-S4g"/>
                                             </connections>
@@ -1487,7 +1488,7 @@ Gw
                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                             <clipView key="contentView" id="LTo-sO-MEg">
                                                 <rect key="frame" x="1" y="0.0" width="385" height="464"/>
-                                                <autoresizingMask key="autoresizingMask"/>
+                                                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                 <subviews>
                                                     <tableView verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" columnSelection="YES" multipleSelection="NO" autosaveColumns="NO" rowSizeStyle="automatic" headerView="bbp-qv-gaf" viewBased="YES" id="edc-nj-R3v">
                                                         <rect key="frame" x="0.0" y="0.0" width="385" height="439"/>
@@ -1506,6 +1507,7 @@ Gw
                                                                     <font key="font" metaFont="system"/>
                                                                     <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                                                                     <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                                                    <accessibility description="Host Name" help="Tha name of the host on the selected Nagios server. Not necessarily the DNS name."/>
                                                                 </textFieldCell>
                                                                 <tableColumnResizingMask key="resizingMask" resizeWithTable="YES" userResizable="YES"/>
                                                                 <connections>
@@ -1526,6 +1528,7 @@ Gw
                                                                     <font key="font" metaFont="system"/>
                                                                     <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                                                                     <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                                                    <accessibility description="Host Address" help="IP Address or DNS Name of the host on the selected Nagios server"/>
                                                                 </textFieldCell>
                                                                 <tableColumnResizingMask key="resizingMask" resizeWithTable="YES" userResizable="YES"/>
                                                                 <connections>
@@ -1546,6 +1549,7 @@ Gw
                                                                     <font key="font" metaFont="system"/>
                                                                     <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                                                                     <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                                                    <accessibility description="Host Active Status"/>
                                                                 </textFieldCell>
                                                                 <tableColumnResizingMask key="resizingMask" resizeWithTable="YES" userResizable="YES"/>
                                                                 <connections>
@@ -1557,6 +1561,9 @@ Gw
                                                                 </connections>
                                                             </tableColumn>
                                                         </tableColumns>
+                                                        <accessibility description="Hosts Table">
+                                                            <string key="help">This table contains basic information on all hosts for a selected Nagios Server, including host name, IP address or DNS name, and active status</string>
+                                                        </accessibility>
                                                         <connections>
                                                             <action selector="displayHMHostInfo:" target="Voe-Tx-rLC" id="pzh-s2-w1n"/>
                                                             <action trigger="doubleAction" selector="getHMHostStatus:" target="Voe-Tx-rLC" id="NeF-KU-BYb"/>
@@ -1577,6 +1584,9 @@ Gw
                                                 <rect key="frame" x="0.0" y="0.0" width="385" height="25"/>
                                                 <autoresizingMask key="autoresizingMask"/>
                                             </tableHeaderView>
+                                            <accessibility description="Hosts">
+                                                <string key="help">This table contains basic information on all hosts for a selected Nagios Server, including host name, IP address or DNS name, and active status</string>
+                                            </accessibility>
                                         </scrollView>
                                         <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" id="ttm-pd-2aL">
                                             <rect key="frame" x="15" y="591" width="89" height="17"/>
@@ -1601,6 +1611,7 @@ Gw
                                                     </items>
                                                 </menu>
                                             </popUpButtonCell>
+                                            <accessibility description="Select Server" help="Popup with server names of all servers Nagios Manager knows about. Select the server whose hosts you want to manage here."/>
                                             <connections>
                                                 <action selector="selectedHMServerName:" target="Voe-Tx-rLC" id="FJq-rn-Raf"/>
                                                 <binding destination="Av3-2s-jb3" name="contentValues" keyPath="arrangedObjects.theSMTableServerName" id="W3G-Kq-n6O"/>
@@ -1613,6 +1624,7 @@ Gw
                                                 <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                                                 <font key="font" metaFont="system"/>
                                             </buttonCell>
+                                            <accessibility description="Get Host Status" help="This button enables a HUD window that gives more detailed information on a selected host."/>
                                             <connections>
                                                 <action selector="getHMHostStatus:" target="Voe-Tx-rLC" id="Qn8-48-mDN"/>
                                             </connections>
@@ -1638,6 +1650,7 @@ Gw
                                                 <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                                                 <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                                             </textFieldCell>
+                                            <accessibility description="New Host Name" help="Enter the name of a new host here."/>
                                             <connections>
                                                 <binding destination="Voe-Tx-rLC" name="value" keyPath="theHMNewHostName" id="Tl4-9R-GbQ">
                                                     <dictionary key="options">
@@ -1663,6 +1676,7 @@ Gw
                                                 <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                                                 <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                                             </textFieldCell>
+                                            <accessibility description="New Host Address" help="Enter the new host's IP Address or DNS name here."/>
                                             <connections>
                                                 <binding destination="Voe-Tx-rLC" name="value" keyPath="theHMNewHostAddress" id="wJO-JI-DOa">
                                                     <dictionary key="options">
@@ -1688,6 +1702,7 @@ Gw
                                                 <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                                                 <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                                             </textFieldCell>
+                                            <accessibility description="New Host check interval" help="Enter how often Nagios should check to see if the host is up. This is in minutes by default."/>
                                             <connections>
                                                 <binding destination="Voe-Tx-rLC" name="value" keyPath="theHMNewHostCheckInterval" id="mhO-ig-g2E">
                                                     <dictionary key="options">
@@ -1713,6 +1728,9 @@ Gw
                                                 <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                                                 <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                                             </textFieldCell>
+                                            <accessibility description="New Host Retry Interval">
+                                                <string key="help">When a host is possibly down, this is how often Nagios will recheck that host in that event. This number is in minutes by default.</string>
+                                            </accessibility>
                                             <connections>
                                                 <binding destination="Voe-Tx-rLC" name="value" keyPath="theHMNewHostRetryInterval" id="6Hv-ab-BkY">
                                                     <dictionary key="options">
@@ -1738,6 +1756,7 @@ Gw
                                                 <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                                                 <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                                             </textFieldCell>
+                                            <accessibility description="New Host Max Check Attempts" help="How many times Nagios will re-check a host that is possibly down. "/>
                                             <connections>
                                                 <binding destination="Voe-Tx-rLC" name="value" keyPath="theHMNewHostMaxCheckAttempts" id="tSA-qe-FRp">
                                                     <dictionary key="options">
@@ -1762,6 +1781,7 @@ Gw
                                                 <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                                                 <font key="font" metaFont="system"/>
                                             </buttonCell>
+                                            <accessibility description="New Host Notifications Enabled" help="A check box that enables/disables notifications for a host"/>
                                             <connections>
                                                 <binding destination="Voe-Tx-rLC" name="value" keyPath="theHMNewHostNotificationsEnabled" id="c0m-x9-EJ0"/>
                                             </connections>
@@ -1790,6 +1810,9 @@ Gw
                                                     </binding>
                                                 </connections>
                                             </comboBoxCell>
+                                            <accessibility description="New Host Notification Period">
+                                                <string key="help">This is a combo box that allos you to choose the existing notification periods for host up/down notifications on the selected Nagios server, or enter in a new notification period. Note: If entering a new notification period, you will still have to configure that manually on the Nagios server.</string>
+                                            </accessibility>
                                             <connections>
                                                 <action selector="getHMTimePeriodComboBoxChoice:" target="Voe-Tx-rLC" id="SWY-H0-sKQ"/>
                                             </connections>
@@ -1811,6 +1834,7 @@ Gw
                                                 <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                                                 <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                                             </textFieldCell>
+                                            <accessibility description="New Host Notification Interval" help="How often notifications are sent out for a down server."/>
                                             <connections>
                                                 <binding destination="Voe-Tx-rLC" name="value" keyPath="theHMNewHostNotificationInterval" id="vhi-6E-Ux9">
                                                     <dictionary key="options">
@@ -1836,6 +1860,7 @@ Gw
                                                 <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                                                 <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                                             </textFieldCell>
+                                            <accessibility description="New Host First Notification Delay" help="How long, in minutes, the first notification for a down host should be delayed before being sent."/>
                                             <connections>
                                                 <binding destination="Voe-Tx-rLC" name="value" keyPath="theHMNewHostFirstNotificationDelay" id="Bgi-Zh-cJa">
                                                     <dictionary key="options">
@@ -1861,6 +1886,9 @@ Gw
                                                 <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                                                 <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                                             </textFieldCell>
+                                            <accessibility description="New Host Notification Options">
+                                                <string key="help">The conditions for which notifications are sent out. For example, for warning, critical and recovery, you would use w,c,r, all lower-case.</string>
+                                            </accessibility>
                                             <connections>
                                                 <binding destination="Voe-Tx-rLC" name="value" keyPath="theHMNewHostNotificationOptions" id="yC0-lu-FiW">
                                                     <dictionary key="options">
@@ -1886,6 +1914,7 @@ Gw
                                                 <font key="font" metaFont="menu"/>
                                                 <menu key="menu" id="No5-Jd-OOG"/>
                                             </popUpButtonCell>
+                                            <accessibility description="New Host Hostgroup" help="Pop-up list hostgroups that the host you are adding should be placed in. You can only select one or no hostgroups."/>
                                             <connections>
                                                 <action selector="getHMHostGroupNameFromPopup:" target="Voe-Tx-rLC" id="utd-pR-tLH"/>
                                             </connections>
@@ -1895,7 +1924,7 @@ Gw
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                             <clipView key="contentView" id="TOr-O2-qdh">
                                                 <rect key="frame" x="1" y="0.0" width="229" height="101"/>
-                                                <autoresizingMask key="autoresizingMask"/>
+                                                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                 <subviews>
                                                     <tableView verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" columnSelection="YES" autosaveColumns="NO" rowSizeStyle="automatic" headerView="sMV-sv-x4R" viewBased="YES" id="0RI-NN-yR2">
                                                         <rect key="frame" x="0.0" y="0.0" width="229" height="76"/>
@@ -1943,6 +1972,7 @@ Gw
                                                 <rect key="frame" x="0.0" y="0.0" width="229" height="25"/>
                                                 <autoresizingMask key="autoresizingMask"/>
                                             </tableHeaderView>
+                                            <accessibility description="New Host Contacts" help="This table contains all existing contacts on the selected Nagios server. You can select one, none, or multiple contacts here."/>
                                         </scrollView>
                                         <button verticalHuggingPriority="750" id="Ngz-7X-47f">
                                             <rect key="frame" x="10" y="116" width="97" height="32"/>
@@ -1954,6 +1984,9 @@ Gw
 DQ
 </string>
                                             </buttonCell>
+                                            <accessibility description="Add New Host">
+                                                <string key="help">Button to add a new host to the selected Nagios server. There is some basic error checking for required fields here. Error messages are shown in the text field at the bottom of the tab.</string>
+                                            </accessibility>
                                             <connections>
                                                 <action selector="addHMHost:" target="Voe-Tx-rLC" id="Van-HY-e9d"/>
                                             </connections>
@@ -1968,6 +2001,7 @@ DQ
 Gw
 </string>
                                             </buttonCell>
+                                            <accessibility description="Cancel new host" help="Button to cancel adding a new host."/>
                                         </button>
                                         <box verticalHuggingPriority="750" boxType="separator" id="D9B-M6-f19">
                                             <rect key="frame" x="9" y="114" width="642" height="5"/>
@@ -1981,6 +2015,7 @@ Gw
                                                 <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                                                 <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                                             </textFieldCell>
+                                            <accessibility description="Status Field" help="Read-only text field that shows host statuses, command results, etc."/>
                                             <connections>
                                                 <binding destination="Voe-Tx-rLC" name="value" keyPath="theHMStatusDisplay" id="2Dl-Md-5UV">
                                                     <dictionary key="options">
@@ -2020,6 +2055,7 @@ Gw
                                                     </items>
                                                 </menu>
                                             </popUpButtonCell>
+                                            <accessibility description="Select Server" help="Popup with server names of all servers Nagios Manager knows about. Select the server whose hosts you want to manage here."/>
                                             <connections>
                                                 <action selector="selectedHGMServerName:" target="Voe-Tx-rLC" id="dNJ-lj-EvJ"/>
                                                 <binding destination="Av3-2s-jb3" name="contentValues" keyPath="arrangedObjects.theSMTableServerName" id="0AO-hc-ifm"/>
@@ -2030,7 +2066,7 @@ Gw
                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                             <clipView key="contentView" id="auM-5z-ScC">
                                                 <rect key="frame" x="1" y="0.0" width="368" height="376"/>
-                                                <autoresizingMask key="autoresizingMask"/>
+                                                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                 <subviews>
                                                     <tableView verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" columnSelection="YES" multipleSelection="NO" autosaveColumns="NO" rowSizeStyle="automatic" headerView="uj4-f0-Vmk" viewBased="YES" id="F3g-fs-Or1">
                                                         <rect key="frame" x="0.0" y="0.0" width="368" height="351"/>
@@ -2049,6 +2085,7 @@ Gw
                                                                     <font key="font" metaFont="system"/>
                                                                     <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                                                                     <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                                                    <accessibility description="Hostgroup Name" help="This is the name of the hostgroup on the selected Nagios server"/>
                                                                 </textFieldCell>
                                                                 <tableColumnResizingMask key="resizingMask" resizeWithTable="YES" userResizable="YES"/>
                                                                 <connections>
@@ -2069,6 +2106,7 @@ Gw
                                                                     <font key="font" metaFont="system"/>
                                                                     <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                                                                     <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                                                    <accessibility description="Hostgroup Active Status" help="This shows the active status of the hostgroup on the selected Nagios server"/>
                                                                 </textFieldCell>
                                                                 <tableColumnResizingMask key="resizingMask" resizeWithTable="YES" userResizable="YES"/>
                                                                 <connections>
@@ -2080,6 +2118,7 @@ Gw
                                                                 </connections>
                                                             </tableColumn>
                                                         </tableColumns>
+                                                        <accessibility description="Hostgroup Table" help="This table shows the name and activity status for all hostgroups on the server"/>
                                                         <connections>
                                                             <action trigger="doubleAction" selector="getHostGroupMembers:" target="Voe-Tx-rLC" id="FFN-wb-cOu"/>
                                                             <action selector="getHostGroupMembers:" target="Voe-Tx-rLC" id="Fxf-t8-5zy"/>
@@ -2100,6 +2139,7 @@ Gw
                                                 <rect key="frame" x="0.0" y="0.0" width="368" height="25"/>
                                                 <autoresizingMask key="autoresizingMask"/>
                                             </tableHeaderView>
+                                            <accessibility description="Hostgroup Table" help="This table shows the name and activity status for all hostgroups on the server"/>
                                         </scrollView>
                                         <box verticalHuggingPriority="750" boxType="separator" id="bXa-a6-tGU">
                                             <rect key="frame" x="17" y="497" width="248" height="5"/>
@@ -2122,6 +2162,7 @@ Gw
                                                 <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                                                 <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                                             </textFieldCell>
+                                            <accessibility description="New Hostgroup Name" help="Enter the name of the hostgroup you are adding here."/>
                                             <connections>
                                                 <binding destination="Voe-Tx-rLC" name="value" keyPath="theHGMHostGroupNewHostGroupName" id="hQT-Rm-OXF">
                                                     <dictionary key="options">
@@ -2147,6 +2188,7 @@ Gw
                                                 <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                                                 <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                                             </textFieldCell>
+                                            <accessibility description="New Hostgroup Alias" help="Enter the alias of the hostgroup you are adding here."/>
                                             <connections>
                                                 <binding destination="Voe-Tx-rLC" name="value" keyPath="theHGMHostGroupNewHostGroupAlias" id="uLi-OK-wO7">
                                                     <dictionary key="options">
@@ -2165,6 +2207,9 @@ Gw
 IA
 </string>
                                             </buttonCell>
+                                            <accessibility description="Add New Hostgroup">
+                                                <string key="help">This button adds the hostgroup you are creating to the selected Nagios server. The results of the command, including any errors are shown in the read-only text field at the bottom of the window.</string>
+                                            </accessibility>
                                             <connections>
                                                 <action selector="addNewHostGroup:" target="Voe-Tx-rLC" id="xEV-MS-xb6"/>
                                             </connections>
@@ -2179,6 +2224,7 @@ IA
 DQ
 </string>
                                             </buttonCell>
+                                            <accessibility description="Cancel New Hostgroup" help="This button cancels the creation of a new hostgroup on the selected Nagios server."/>
                                         </button>
                                         <box verticalHuggingPriority="750" boxType="separator" id="dBc-tq-TwA">
                                             <rect key="frame" x="17" y="220" width="626" height="5"/>
@@ -2192,6 +2238,9 @@ DQ
                                                 <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                                                 <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                                             </textFieldCell>
+                                            <accessibility description="Status Field">
+                                                <string key="help">This read-only text field shows the hosts within a selected hostgroup and the results of adding a new host group to the selected Nagios server.</string>
+                                            </accessibility>
                                             <connections>
                                                 <binding destination="Voe-Tx-rLC" name="value" keyPath="theHGMHostGroupMemberListDisplay" id="gtx-qZ-agg">
                                                     <dictionary key="options">
@@ -2265,6 +2314,7 @@ DQ
                             <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                             <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                         </textFieldCell>
+                        <accessibility description="Host ID" help="The numerical host ID value for the selected host"/>
                         <connections>
                             <binding destination="Voe-Tx-rLC" name="value" keyPath="theHMHostID" id="TfY-Fo-sAv">
                                 <dictionary key="options">
@@ -2290,6 +2340,7 @@ DQ
                             <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                             <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                         </textFieldCell>
+                        <accessibility description="Last Host Status" help="The last up/down status for the selecteed host and the details of that check."/>
                         <connections>
                             <binding destination="Voe-Tx-rLC" name="value" keyPath="theHMHostLastStatus" id="udf-u1-zWn">
                                 <dictionary key="options">
@@ -2315,6 +2366,7 @@ DQ
                             <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                             <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                         </textFieldCell>
+                        <accessibility description="Last Status Update Time" help="The dated and time of the last up/down check on the selected host."/>
                         <connections>
                             <binding destination="Voe-Tx-rLC" name="value" keyPath="theHMHostLastStatusUpdateTime" id="8pM-xp-KC2">
                                 <dictionary key="options">
@@ -2340,6 +2392,7 @@ DQ
                             <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                             <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                         </textFieldCell>
+                        <accessibility description="Last Time Down" help="The last time the selected host showed as &quot;down&quot;."/>
                         <connections>
                             <binding destination="Voe-Tx-rLC" name="value" keyPath="theHMHostLastTimeDown" id="Kn0-kR-O9j">
                                 <dictionary key="options">
@@ -2365,6 +2418,7 @@ DQ
                             <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                             <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                         </textFieldCell>
+                        <accessibility description="Last Time Unreachable" help="The last time the selected host showed as &quot;Unreachable&quot;"/>
                         <connections>
                             <binding destination="Voe-Tx-rLC" name="value" keyPath="theHMHostLastTimeUnreachable" id="J6r-Rb-xfH">
                                 <dictionary key="options">
@@ -2390,6 +2444,7 @@ DQ
                             <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                             <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                         </textFieldCell>
+                        <accessibility description="Last Check" help="The date and time of the most recent status check on the selected host"/>
                         <connections>
                             <binding destination="Voe-Tx-rLC" name="value" keyPath="theHMHostLastCheck" id="rBr-Zk-8An">
                                 <dictionary key="options">
@@ -2415,6 +2470,7 @@ DQ
                             <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                             <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                         </textFieldCell>
+                        <accessibility description="Next Check" help="The date and time of the next scheduled up/down check of the selected host."/>
                         <connections>
                             <binding destination="Voe-Tx-rLC" name="value" keyPath="theHMHostNextCheck" id="tik-AJ-REN">
                                 <dictionary key="options">
@@ -2440,6 +2496,7 @@ DQ
                             <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                             <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                         </textFieldCell>
+                        <accessibility description="Flapping Detection Enabled" help="The status of flapping detection for the selected host."/>
                         <connections>
                             <binding destination="Voe-Tx-rLC" name="value" keyPath="theHMHostFlapDetectionEnabled" id="ZRs-Ht-7Bk">
                                 <dictionary key="options">
@@ -2465,6 +2522,7 @@ DQ
                             <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                             <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                         </textFieldCell>
+                        <accessibility description="Is Flapping?" help="The flapping status of the selected host."/>
                         <connections>
                             <binding destination="Voe-Tx-rLC" name="value" keyPath="theHMHostIsFLapping" id="Ybr-Rv-FQy">
                                 <dictionary key="options">
@@ -2490,6 +2548,7 @@ DQ
                             <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                             <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                         </textFieldCell>
+                        <accessibility description="Problem Acknowledged" help="If the selected host has a problem, this field will show if that problem has been acknowledged."/>
                         <connections>
                             <binding destination="Voe-Tx-rLC" name="value" keyPath="theHMHostProblemAcknowledged" id="j6h-Lb-Tpy">
                                 <dictionary key="options">
@@ -2506,15 +2565,6 @@ DQ
             <point key="canvasLocation" x="683" y="-203"/>
         </window>
         <arrayController id="E0z-cH-mpT"/>
-        <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" id="xAr-hX-SoE">
-            <rect key="frame" x="0.0" y="0.0" width="37" height="18"/>
-            <autoresizingMask key="autoresizingMask"/>
-            <textFieldCell key="cell" lineBreakMode="clipping" title="Label" id="a93-H5-M2x">
-                <font key="font" usesAppearanceFont="YES"/>
-                <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
-                <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
-            </textFieldCell>
-        </textField>
         <arrayController id="KYw-eJ-hrA">
             <connections>
                 <binding destination="Voe-Tx-rLC" name="contentArray" keyPath="theHGMHostGroupTableControllerArray" id="kEg-Nx-gT6">
