@@ -6,6 +6,10 @@
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
+	<key>CFBundleHelpBookFolder</key>
+	<string>NagiosManager.help</string>
+	<key>CFBundleHelpBookName</key>
+	<string>bynkii.com.Nagios-Manager</string>
 	<key>CFBundleIconFile</key>
 	<string></string>
 	<key>CFBundleIdentifier</key>
@@ -19,7 +23,7 @@
 	<key>CFBundleShortVersionString</key>
 	<string>1.8</string>
 	<key>CFBundleVersion</key>
-	<string>1878</string>
+	<string>1892</string>
 	<key>LSApplicationCategoryType</key>
 	<string>public.app-category.business</string>
 	<key>LSMinimumSystemVersion</key>
