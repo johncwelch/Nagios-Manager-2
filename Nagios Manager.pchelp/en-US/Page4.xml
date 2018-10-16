@@ -1,0 +1,202 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<page pageId="Page4" pageName="User Manager" title="">
+    <abstract></abstract>
+    <keywords></keywords>
+    <contents>
+        <line Align="Left">
+            <content style="Normal">The User Manager tab is where you manage users on the selected Nagios server. You can:</content>
+        </line>
+        <list ListStyle="listDecimalRP">
+            <listItem style="Normal">
+                <line Align="Left">
+                    <content style="Normal">Add users</content>
+                </line>
+            </listItem>
+            <listItem style="Normal">
+                <line Align="Left">
+                    <content style="Normal">Delete users</content>
+                </line>
+            </listItem>
+            <listItem style="Normal">
+                <line Align="Left">
+                    <content style="Normal">Get information about a user: full name, username, user id, email address, enabled status (1 or 0)</content>
+                </line>
+            </listItem>
+        </list>
+        <line Align="Left">
+            <content style="Normal">Please note that due to limitations in the REST API, you can’t update or change a user’s settings from Nagios Manager. Also, if you’re using version 1.8 or earlier, you cannot add Active Directory/LDAP users with Nagios Manager, but you can delete them. </content>
+        </line>
+        <line Align="Left">
+            <content style="Normal"></content>
+        </line>
+        <line Align="Left">
+            <content style="Heading2">User Manager Tab</content>
+        </line>
+        <line Align="Left">
+            <textElement rightMargin="0" width="1" style="Normal" textId="HorizontalRule" leftMargin="0" color="RGBA(0,0,0,1.000000)"></textElement>
+        </line>
+        <line Align="Left">
+            <image height="559.391" style="Heading2" leftMargin="0.0" bottomMargin="0.0" rightMargin="0.0" width="567.016" topMargin="0.0" imageId="User Tab.png"></image>
+        </line>
+        <line Align="Left">
+            <content style="Normal">As with all tabs, the User Manager Tab has the same three basic </content>
+            <content style="Normal" linkTarget="helpcrafter://Page2">functional areas</content>
+            <content style="Normal">. The </content>
+            <content style="Normal" linkTarget="helpcrafter://Page2">main table</content>
+            <content style="Normal"> contains the User Name (Full Name) and User ID for each user on a given Nagios server. It does not show what level user they are. (i.e. admin, read-only, other.) When you select a user in the </content>
+            <content style="Normal" linkTarget="helpcrafter://Page2">main table</content>
+            <content style="Normal">, the </content>
+            <content style="Normal" linkTarget="helpcrafter://Page2">status display</content>
+            <content style="Normal"> will show the following info for that user:</content>
+        </line>
+        <list ListStyle="listDisc">
+            <listItem style="Normal">
+                <line Align="Left">
+                    <content style="Normal">Full Name</content>
+                </line>
+            </listItem>
+            <listItem style="Normal">
+                <line Align="Left">
+                    <content style="Normal">Username (aka login name)</content>
+                </line>
+            </listItem>
+            <listItem style="Normal">
+                <line Align="Left">
+                    <content style="Normal">User ID</content>
+                </line>
+            </listItem>
+            <listItem style="Normal">
+                <line Align="Left">
+                    <content style="Normal">Email Address</content>
+                </line>
+            </listItem>
+            <listItem style="Normal">
+                <line Align="Left">
+                    <content style="Normal">User Enabled status, (1 for enabled, 0 for disabled.)</content>
+                </line>
+            </listItem>
+        </list>
+        <line Align="Left">
+            <content style="Normal"></content>
+        </line>
+        <line Align="Left">
+            <content style="Heading2">Selecting a Server</content>
+        </line>
+        <line Align="Left">
+            <textElement rightMargin="0" width="1" style="Normal" textId="HorizontalRule" leftMargin="0" color="RGBA(0,0,0,1.000000)"></textElement>
+        </line>
+        <line Align="Left">
+            <content style="Normal">The “Select Server” popup is where  you select the specific server whose users you are managing. If there are multiple servers in </content>
+            <content style="Normal" linkTarget="helpcrafter://Page3">Nagios Manager’s preferences file</content>
+            <content style="Normal">, then the first server is decided by its order in the preferences file. The first user returned for a given server is selected by default in the </content>
+            <content style="Normal" linkTarget="helpcrafter://Page2">main table</content>
+            <content style="Normal">. If you change servers, the </content>
+            <content style="Normal" linkTarget="helpcrafter://Page2">main table</content>
+            <content style="Normal"> will be reloaded with the users for the server you select.</content>
+        </line>
+        <line Align="Left">
+            <content style="Normal"></content>
+        </line>
+        <line Align="Left">
+            <content style="Heading2">Selecting and Deleting a User</content>
+        </line>
+        <line Align="Left">
+            <textElement rightMargin="0" width="1" style="Normal" textId="HorizontalRule" leftMargin="0" color="RGBA(0,0,0,1.000000)"></textElement>
+        </line>
+        <line Align="Left">
+            <content style="Normal">To select a user, click on that user’s row in the</content>
+            <content style="Normal" linkTarget="helpcrafter://Page2"> main table</content>
+            <content style="Normal">. To delete, either double-click on a row in the </content>
+            <content style="Normal" linkTarget="helpcrafter://Page2">main table</content>
+            <content style="Normal">, or select the user you want to delete and click the “Delete Selected User” button. You’ll be asked if you’re really sure you want to delete the user. If you click “OK”, the user will be deleted.</content>
+        </line>
+        <line Align="Left">
+            <content style="Heading2">Adding a User</content>
+        </line>
+        <line Align="Left">
+            <textElement rightMargin="0" width="1" style="Normal" textId="HorizontalRule" leftMargin="0" color="RGBA(0,0,0,1.000000)"></textElement>
+        </line>
+        <line Align="Left">
+            <content style="Normal">When adding a user, the Username, Password, Full Name and Email address are required. Please do not put spaces or special characters in the username, that makes Nagios sad. When adding a user, there are certain settings that are not shown, and cannot be changed within Nagios Manager:</content>
+        </line>
+        <list ListStyle="listDisc">
+            <listItem style="Normal">
+                <line Align="Left">
+                    <content style="Normal">Default Language is set to “xi default” or the default language for the specified Nagios server</content>
+                </line>
+            </listItem>
+            <listItem style="Normal">
+                <line Align="Left">
+                    <content style="Normal">Date format is set to the default date format for the specified Nagios server</content>
+                </line>
+            </listItem>
+            <listItem style="Normal">
+                <line Align="Left">
+                    <content style="Normal">Number format is set to the default number format for the specified Nagios server</content>
+                </line>
+            </listItem>
+            <listItem style="Normal">
+                <line Align="Left">
+                    <content style="Normal">Force Password Change upon login is always enabled</content>
+                </line>
+            </listItem>
+            <listItem style="Normal">
+                <line Align="Left">
+                    <content style="Normal">Email account info to the user you’re creating is always enabled</content>
+                </line>
+            </listItem>
+            <listItem style="Normal">
+                <line Align="Left">
+                    <content style="Normal">Make this user a monitoring contact is always enabled</content>
+                </line>
+            </listItem>
+            <listItem style="Normal">
+                <line Align="Left">
+                    <content style="Normal">Enable notifications for this user is always enabled</content>
+                </line>
+            </listItem>
+            <listItem style="Normal">
+                <line Align="Left">
+                    <content style="Normal">You cannot enable API access from Nagios Manager. This is a deliberate design decision.</content>
+                </line>
+            </listItem>
+        </list>
+        <line Align="Left">
+            <content style="Normal"></content>
+        </line>
+        <line Align="Left">
+            <content style="Normal">These can all be changed in the main Nagios web UI, if wanted/needed.</content>
+        </line>
+        <line Align="Left">
+            <content style="Normal">There are three levels of Nagios user: Admin, Read Only, User. The default setting on application launch is User, with permissions that will allow that user to interact with Nagios in a useful manner sans being an admin.</content>
+        </line>
+        <list ListStyle="listDisc">
+            <listItem style="Normal">
+                <line Align="Left">
+                    <content style="Normal">Admin: All permissions enabled save API access, that must be enabled within Nagios itself. Selecting the “Admin” radio button locks out Read Only as an option. </content>
+                </line>
+            </listItem>
+            <listItem style="Normal">
+                <line Align="Left">
+                    <content style="Normal">Read Only: Only available if the “User” radio button is selected. Removes all other permissions. Note: As it removes “Can See All Objects”, by default, this user will not be able to actually see any Nagios host or service on the selected server. That will have to be enabled within Nagios itself.</content>
+                </line>
+            </listItem>
+            <listItem style="Normal">
+                <line Align="Left">
+                    <content style="Normal">User: The default user level. The default permissions for this are: Can See All Objects:, Can Control All Objects:, Can Access Advanced Features:. For detailed explanation(s) of these permission levels, use the online help within Nagios XI. </content>
+                </line>
+            </listItem>
+        </list>
+        <line Align="Left">
+            <content style="Normal">Once you have set up the user you want to add, click the “Add User” button, and the add user REST command will be submitted to Nagios, and the user list automatically reloaded. If you do not see the user you just added, wait a few minutes. Sometimes, Nagios is slow. Reselect the server in the “Select Server:” popup to force a user list reload. </content>
+        </line>
+        <line Align="Left">
+            <content style="Normal">If you get an error in the </content>
+            <content style="Normal" linkTarget="helpcrafter://Page2">status display</content>
+            <content style="Normal">, you either left out a necessary piece of information, or an error with Nagios occurred. For the former, double-check what you entered in terms of user name/password/etc. For the latter, refer to the error message and Nagios’ own logs. </content>
+        </line>
+        <line Align="Left">
+            <content style="Normal"></content>
+        </line>
+    </contents>
+</page>

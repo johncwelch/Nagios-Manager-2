@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<page pageId="Page6" pageName="Hostgroup Manager" title="">
+    <abstract></abstract>
+    <keywords></keywords>
+    <contents>
+        <line Align="Left">
+            <content style="Normal">The Hostgroup Manager tab is where you manage hostgroups on the selected Nagios server. You can:</content>
+        </line>
+        <line Align="Left">
+            <content style="Normal">	•	Add hostgroups</content>
+        </line>
+        <line Align="Left">
+            <content style="Normal">	•	Get information about an existing hostgroup</content>
+        </line>
+        <line Align="Left">
+            <content style="Normal">Due to limitations in the Nagios REST API, you cannot add hosts to a hostgroup when you create the hostgroup, or to one that already exists. Nor can you delete a hostgroup. In addition, the amount of useful information you can get on a hostgroup beyond what is displayed in the </content>
+            <content style="Normal" linkTarget="helpcrafter://Page2">main table</content>
+            <content style="Normal"> consists of the members of the hostgroup. Should the API allow for more functionality and information in the future, that will be added to the app.</content>
+        </line>
+        <line Align="Left">
+            <content style="Normal"></content>
+        </line>
+        <line Align="Left">
+            <content style="Heading2">Host Manager Tab</content>
+        </line>
+        <line Align="Left">
+            <textElement rightMargin="0" width="1" style="Normal" textId="HorizontalRule" leftMargin="0" color="RGBA(0,0,0,1.000000)"></textElement>
+        </line>
+        <line Align="Left">
+            <image height="616.661" style="Normal" leftMargin="0.0" bottomMargin="0.0" rightMargin="0.0" width="625.066" topMargin="0.0" imageId="Hostgroup Tab.png"></image>
+        </line>
+        <line Align="Left">
+            <content style="Normal">As with the other tabs in Nagios Manager, the Hostgroup Manager contains the three basic </content>
+            <content style="Normal" linkTarget="helpcrafter://Page2">functional areas</content>
+            <content style="Normal">. The </content>
+            <content style="Normal" linkTarget="helpcrafter://Page2">main table</content>
+            <content style="Normal"> shows the Hostgroup name and active status for every hostgroup on a given Nagios server. The members of the selected hostgroup are shown in the </content>
+            <content style="Normal" linkTarget="helpcrafter://Page2">status display</content>
+            <content style="Normal">.</content>
+        </line>
+        <line Align="Left">
+            <content style="Normal"></content>
+        </line>
+        <line Align="Left">
+            <content style="Heading2">Selecting a Server</content>
+        </line>
+        <line Align="Left">
+            <textElement rightMargin="0" width="1" style="Normal" textId="HorizontalRule" leftMargin="0" color="RGBA(0,0,0,1.000000)"></textElement>
+        </line>
+        <line Align="Left">
+            <content style="Normal">The “Select Server” popup is where  you select the specific server whose hostgroups you are managing. If there are multiple servers in </content>
+            <content style="Normal" linkTarget="helpcrafter://Page3">Nagios Manager’s preferences file</content>
+            <content style="Normal">, then the first server is decided by its order in the preferences file. The first hostgroup returned for a given server is selected by default in the </content>
+            <content style="Normal" linkTarget="helpcrafter://Page2">main table</content>
+            <content style="Normal">, and the </content>
+            <content style="Normal" linkTarget="helpcrafter://Page2">status display</content>
+            <content style="Normal"> will show the members of the selected hostgroup. If you change servers, the </content>
+            <content style="Normal" linkTarget="helpcrafter://Page2">main table</content>
+            <content style="Normal"> will be reloaded with the hostgroups for the server you select.</content>
+        </line>
+        <line Align="Left">
+            <content style="Normal"></content>
+        </line>
+        <line Align="Left">
+            <content style="Heading2">Selecting and Getting member information for a Hostgroup</content>
+        </line>
+        <line Align="Left">
+            <textElement rightMargin="0" width="1" style="Normal" textId="HorizontalRule" leftMargin="0" color="RGBA(0,0,0,1.000000)"></textElement>
+        </line>
+        <line Align="Left">
+            <content style="Normal">To select a hostgroup, click on that hostgroup’s row in the</content>
+            <content style="Normal" linkTarget="helpcrafter://Page2"> main table</content>
+            <content style="Normal">. The </content>
+            <content style="Normal" linkTarget="helpcrafter://Page2">status display</content>
+            <content style="Normal"> will automatically display the member hosts, if any exist, for that hostgroup.</content>
+        </line>
+        <line Align="Left">
+            <content style="Normal"></content>
+        </line>
+        <line Align="Left">
+            <content style="Heading2">Adding a Hostgroup</content>
+        </line>
+        <line Align="Left">
+            <textElement rightMargin="0" width="1" style="Normal" textId="HorizontalRule" leftMargin="0" color="RGBA(0,0,0,1.000000)"></textElement>
+        </line>
+        <line Align="Left">
+            <content style="Normal">When adding a hostgroup, the Hostgroup Name and Hostgroup Alias are required. Adding a hostgroup via Nagios Manager does not populate the hostgroup with any hosts, nor can you do this from Nagios Manager due to limitations in the Nagios REST API. There is six-second delay in refreshing the hostgroup list after adding a hostgroup. To manually refresh, re-select the current Nagios Server in the “Select Server” popup.</content>
+        </line>
+    </contents>
+</page>

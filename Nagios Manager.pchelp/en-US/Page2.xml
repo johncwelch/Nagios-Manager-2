@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<page pageId="Page2" pageName="Basic App Information" title="">
+    <abstract></abstract>
+    <keywords></keywords>
+    <contents>
+        <line Align="Left">
+            <content style="Normal">While each tab in Nagios Manager has its own specific function, the overall design of each tab is fairly similar:</content>
+        </line>
+        <line Align="Left">
+            <image height="419.979" style="Normal" leftMargin="0.0" bottomMargin="0.0" rightMargin="0.0" width="425.703" topMargin="0.0" imageId="Basic Tab Annotated.png"></image>
+        </line>
+        <line Align="Left">
+            <content style="Normal">Each tab has the same basic four sections:</content>
+        </line>
+        <list ListStyle="listDisc">
+            <listItem style="Normal">
+                <line Align="Left">
+                    <content style="Normal">Main Tab bar. This is where you select the function you want to manage, which currently consists of:</content>
+                </line>
+            </listItem>
+            <listItem style="Normal">
+                <line Align="Left">
+                    <content style="Normal" linkTarget="helpcrafter://Page3">Server Manager</content>
+                    <content style="Normal">, for managing one or more Nagios Servers</content>
+                </line>
+            </listItem>
+            <listItem style="Normal">
+                <line Align="Left">
+                    <content style="Normal" linkTarget="helpcrafter://Page4">User Manager</content>
+                    <content style="Normal">, for managing uses on a given Nagios Server</content>
+                </line>
+            </listItem>
+            <listItem style="Normal">
+                <line Align="Left">
+                    <content style="Normal" linkTarget="helpcrafter://Page5">Host Manager</content>
+                    <content style="Normal">, for managing hosts on a given Nagios Server</content>
+                </line>
+            </listItem>
+            <listItem style="Normal">
+                <line Align="Left">
+                    <content style="Normal" linkTarget="helpcrafter://Page6">Hostgroup Manager</content>
+                    <content style="Normal">, for managing hostgroups on a given Nagios server</content>
+                </line>
+            </listItem>
+            <listItem style="Normal">
+                <line Align="Left">
+                    <content style="Normal">The main table. This holds lists of servers, users, hosts, or hostgroups</content>
+                </line>
+            </listItem>
+            <listItem style="Normal">
+                <line Align="Left">
+                    <content style="Normal">Tab Functions. This is where you interact with the items in the main table for the tab, add new items, or delete existing items.</content>
+                </line>
+            </listItem>
+            <listItem style="Normal">
+                <line Align="Left">
+                    <content style="Normal">Status Display. This shows additional information on a selected item, or the results of commands.</content>
+                </line>
+            </listItem>
+        </list>
+        <line Align="Left">
+            <content style="Normal">The Application starts up in a size that will work on any display from a 2013 13” MacBook Pro on up. That’s the minimum size for the windows. You can of course, increase the size as you see fit. </content>
+        </line>
+        <line Align="Left">
+            <content style="Normal">The first time you select a tab when running Nagios Manager, there may be a slight lag as that tab is performing an initial download fo the information it will display. This is done to allow for greater flexibility (you can have different servers selected in each tab), but over a slow connection, the delay might become more noticeable. If you switch out of a tab, then switch back, there should be no lag, at that point, the tab already has data to work with.</content>
+        </line>
+        <line Align="Left">
+            <content style="Normal">When items are added or deleted, that change is saved to the Nagios server (User/Host/Hostgroup Manager) or the application preferences &amp; settings (Server Manager) immediately. There’s no need to worry about saving your changes. Remember that. I try to do as much safety checking as possible, but if you’re using this, I assume you have some experience as a sysadmin. I expect you to be at least somewhat careful. </content>
+        </line>
+        <line Align="Left">
+            <content style="Normal">Each tab has its own keyboard equivalent, also available in the Window Menu (for those who hate clicking):</content>
+        </line>
+        <list ListStyle="listDisc">
+            <listItem style="Custom">
+                <line Align="Left">
+                    <content style="Custom">⌘</content>
+                    <content style="Normal">-1 : </content>
+                    <content style="Normal" linkTarget="helpcrafter://Page3">Server Manager</content>
+                </line>
+            </listItem>
+            <listItem style="Custom">
+                <line Align="Left">
+                    <content style="Custom">⌘</content>
+                    <content style="Normal">-2 : </content>
+                    <content style="Normal" linkTarget="helpcrafter://Page4">User Manager</content>
+                </line>
+            </listItem>
+            <listItem style="Custom">
+                <line Align="Left">
+                    <content style="Custom">⌘</content>
+                    <content style="Normal">-3 : </content>
+                    <content style="Normal" linkTarget="helpcrafter://Page5">Host Manager</content>
+                </line>
+            </listItem>
+            <listItem style="Custom">
+                <line Align="Left">
+                    <content style="Custom">⌘</content>
+                    <content style="Normal">-4 : </content>
+                    <content style="Normal" linkTarget="helpcrafter://Page6">Hostgroup Manager</content>
+                </line>
+            </listItem>
+        </list>
+        <line Align="Left">
+            <content style="Normal">I have also tried to provide at least some mouseover and voiceover functionality in terms of what each control does. If I’ve missed something, please let me know via email. (Address is in the footer of this help.)</content>
+        </line>
+    </contents>
+</page>

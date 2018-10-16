@@ -1,0 +1,228 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<page pageId="Page5" pageName="Host Manager" title="">
+    <abstract></abstract>
+    <keywords></keywords>
+    <contents>
+        <line Align="Left">
+            <content style="Normal">The Host Manager tab is where you manage hosts on the selected Nagios server. You can:</content>
+        </line>
+        <list ListStyle="listDisc">
+            <listItem style="Normal">
+                <line Align="Left">
+                    <content style="Normal">Add hosts</content>
+                </line>
+            </listItem>
+            <listItem style="Normal">
+                <line Align="Left">
+                    <content style="Normal">Get information about an existing host</content>
+                </line>
+            </listItem>
+        </list>
+        <line Align="Left">
+            <content style="Normal">Because of how complex Nagios dependencies can be (A host can be linked to host escalations, service escalations, services, etc.) and there being no effective way to resolve these within the Nagios API, for now, Nagios Manager cannot delete hosts. If the API is updated to allow for this, then the app will be too.</content>
+        </line>
+        <line Align="Left">
+            <content style="Normal"></content>
+        </line>
+        <line Align="Left">
+            <content style="Heading2">Host Manager Tab</content>
+        </line>
+        <line Align="Left">
+            <textElement rightMargin="0" width="1" style="Normal" textId="HorizontalRule" leftMargin="0" color="RGBA(0,0,0,1.000000)"></textElement>
+        </line>
+        <line Align="Left">
+            <image height="584.652" style="Normal" leftMargin="0.0" bottomMargin="0.0" rightMargin="0.0" width="592.621" topMargin="0.0" imageId="Host Tab.png"></image>
+        </line>
+        <line Align="Left">
+            <content style="Normal">As with the other tabs in Nagios Manager, the Host Manager contains the three basic </content>
+            <content style="Normal" linkTarget="helpcrafter://Page2">functional areas</content>
+            <content style="Normal">. The </content>
+            <content style="Normal" linkTarget="helpcrafter://Page2">main table</content>
+            <content style="Normal"> contains the (Nagios, not DNS) host name, IP Address/DNS Name, and the active status for every host on a given Nagios Server. (Note that when you first select the Host Manager tab, you see the warning about deleting hosts in the </content>
+            <content style="Normal" linkTarget="helpcrafter://Page5">status display</content>
+            <content style="Normal">.) When you select a server in the </content>
+            <content style="Normal" linkTarget="helpcrafter://Page2">main table</content>
+            <content style="Normal">, the following information is displayed in the </content>
+            <content style="Normal" linkTarget="helpcrafter://Page2">status display</content>
+            <content style="Normal">:</content>
+        </line>
+        <list ListStyle="listDisc">
+            <listItem style="Normal">
+                <line Align="Left">
+                    <content style="Normal">Display Name</content>
+                </line>
+            </listItem>
+            <listItem style="Normal">
+                <line Align="Left">
+                    <content style="Normal">Alias Name</content>
+                </line>
+            </listItem>
+            <listItem style="Normal">
+                <line Align="Left">
+                    <content style="Normal">Active Checks Enabled</content>
+                </line>
+            </listItem>
+            <listItem style="Normal">
+                <line Align="Left">
+                    <content style="Normal">Passive Checks Enabled</content>
+                </line>
+            </listItem>
+            <listItem style="Normal">
+                <line Align="Left">
+                    <content style="Normal">Notifications Enabled</content>
+                </line>
+            </listItem>
+            <listItem style="Normal">
+                <line Align="Left">
+                    <content style="Normal">Check Intervals (in minutes by default)</content>
+                </line>
+            </listItem>
+            <listItem style="Normal">
+                <line Align="Left">
+                    <content style="Normal">Retry Intervals (in minutes by default)</content>
+                </line>
+            </listItem>
+            <listItem style="Normal">
+                <line Align="Left">
+                    <content style="Normal">Max Check Attempts</content>
+                </line>
+            </listItem>
+            <listItem style="Normal">
+                <line Align="Left">
+                    <content style="Normal">Notification Interval (in minutes by default)</content>
+                </line>
+            </listItem>
+            <listItem style="Normal">
+                <line Align="Left">
+                    <content style="Normal">First Notification Delay (in minutes by default)</content>
+                </line>
+            </listItem>
+        </list>
+        <line Align="Left">
+            <content style="Normal">If you select a host and click the “Get Host Status” button, or double-click a host in the </content>
+            <content style="Normal" linkTarget="helpcrafter://Page2">main table</content>
+            <content style="Normal">, a HUD window appears with further information for that host:</content>
+        </line>
+        <list ListStyle="listDisc">
+            <listItem style="Normal">
+                <line Align="Left">
+                    <content style="Normal">Numerical Nagios Host ID for the selected host</content>
+                </line>
+            </listItem>
+            <listItem style="Normal">
+                <line Align="Left">
+                    <content style="Normal">Last Status</content>
+                </line>
+            </listItem>
+            <listItem style="Normal">
+                <line Align="Left">
+                    <content style="Normal">Last Status Update Time</content>
+                </line>
+            </listItem>
+            <listItem style="Normal">
+                <line Align="Left">
+                    <content style="Normal">Last Time Down</content>
+                </line>
+            </listItem>
+            <listItem style="Normal">
+                <line Align="Left">
+                    <content style="Normal">Last Time Unreachable</content>
+                </line>
+            </listItem>
+            <listItem style="Normal">
+                <line Align="Left">
+                    <content style="Normal">Last Check</content>
+                </line>
+            </listItem>
+            <listItem style="Normal">
+                <line Align="Left">
+                    <content style="Normal">Next Check</content>
+                </line>
+            </listItem>
+            <listItem style="Normal">
+                <line Align="Left">
+                    <content style="Normal">Flap Detection Enabled</content>
+                </line>
+            </listItem>
+            <listItem style="Normal">
+                <line Align="Left">
+                    <content style="Normal">Is Flapping?</content>
+                </line>
+            </listItem>
+            <listItem style="Normal">
+                <line Align="Left">
+                    <content style="Normal">Problem Acknowledged? (This is </content>
+                    <content style="Normal italic">only</content>
+                    <content style="Normal"> for host problems, not service problems.)</content>
+                </line>
+            </listItem>
+        </list>
+        <line Align="Left">
+            <content style="Normal"></content>
+        </line>
+        <line Align="Left">
+            <content style="Heading2">Selecting a Server</content>
+        </line>
+        <line Align="Left">
+            <textElement rightMargin="0" width="1" style="Normal" textId="HorizontalRule" leftMargin="0" color="RGBA(0,0,0,1.000000)"></textElement>
+        </line>
+        <line Align="Left">
+            <content style="Normal">The “Select Server” popup is where  you select the specific server whose hosts you are managing. If there are multiple servers in </content>
+            <content style="Normal" linkTarget="helpcrafter://Page3">Nagios Manager’s preferences file</content>
+            <content style="Normal">, then the first server is decided by its order in the preferences file. The first host returned for a given server is selected by default in the </content>
+            <content style="Normal" linkTarget="helpcrafter://Page2">main table</content>
+            <content style="Normal">, while the </content>
+            <content style="Normal" linkTarget="helpcrafter://Page2">status display</content>
+            <content style="Normal"> will show the warning about being unable to delete hosts in Nagios Manager the first time you select the Host Manager tab. If you change servers, the </content>
+            <content style="Normal" linkTarget="helpcrafter://Page2">main table</content>
+            <content style="Normal"> will be reloaded with the hosts for the server you select.</content>
+        </line>
+        <line Align="Left">
+            <content style="Normal"></content>
+        </line>
+        <line Align="Left">
+            <content style="Heading2">Selecting and Getting more information for a Host</content>
+        </line>
+        <line Align="Left">
+            <textElement rightMargin="0" width="1" style="Normal" textId="HorizontalRule" leftMargin="0" color="RGBA(0,0,0,1.000000)"></textElement>
+        </line>
+        <line Align="Left">
+            <content style="Normal">To select a host, click on that host’s row in the</content>
+            <content style="Normal" linkTarget="helpcrafter://Page2"> main table</content>
+            <content style="Normal">. To get more information for that host beyond what is shown in the </content>
+            <content style="Normal" linkTarget="helpcrafter://Page2">status display</content>
+            <content style="Normal">, either double-click on that host in the </content>
+            <content style="Normal" linkTarget="helpcrafter://Page2">main table</content>
+            <content style="Normal">, or click the “Get Host Status” button.</content>
+        </line>
+        <line Align="Left">
+            <content style="Normal"></content>
+        </line>
+        <line Align="Left">
+            <content style="Heading2">Adding a Host</content>
+        </line>
+        <line Align="Left">
+            <textElement rightMargin="0" width="1" style="Normal" textId="HorizontalRule" leftMargin="0" color="RGBA(0,0,0,1.000000)"></textElement>
+        </line>
+        <line Align="Left">
+            <content style="Normal">When adding a host, the Host Name and Address are required. For the Host Name, the DNS name is not required. For the Address, you can use either the DNS name or the IP Address of the host. Note there is </content>
+            <content style="Normal italic">no</content>
+            <content style="Normal"> sanity checking of the address whatsoever. Any typos, the entering of an invalid IP address or DNS name will not be caught by Nagios Manager. That’s up to you. </content>
+        </line>
+        <line Align="Left">
+            <content style="Normal">Once the host has been added, there can be a delay, up to six seconds, before Nagios Manager can pull that information. To refresh the list, re-select the Nagios Server you’re working against in the “Select Server:” popup list.</content>
+        </line>
+        <line Align="Left">
+            <content style="Normal">A note on contacts: the contacts list in the Host Manager tab allows for multiple selections so you can add multiple contacts when you create the host. </content>
+        </line>
+        <line Align="Left">
+            <content style="Normal">The Hostgroup popup defaults to “None”, but allows you to put the host in one hostgroup when creating/adding a host. </content>
+        </line>
+        <line Align="Left">
+            <content style="Normal">The Notification Period combo box allows you to select an already existing Notification Period, or enter one of your own. Note that entering one here will not set up the times/days for that notification period. You’ll have to go into that specific Nagios server and use the web UI to set up that information. </content>
+        </line>
+        <line Align="Left">
+            <content style="Normal">By default, the Notification Options provided are for down, up, and recovery. </content>
+        </line>
+    </contents>
+</page>

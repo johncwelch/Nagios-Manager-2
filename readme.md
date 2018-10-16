@@ -14,6 +14,12 @@ add in host management. DONE
 
 1.8 is going to be documentation and then I'll look at services. it may be limited to adding them because of how Nagios lists them in the REST API. 
 
+Okay, so here's the final 1.8 build complete with a help file and voiceover working at least basically.
+
+IMPORTANT!!!!!
+
+1.8 is the FINAL version that will support Nagios XI pre-5.5.X. There are MAJOR improvements to the REST API that make supporting both pre- and post- 5.5 really hard. So this one will remain up for anyone needing pre-5.5.x support. The next update will be the 2.X branch wherein I can start adding in the 5.5. changes. Like AD/LDAP support!
+
 
 yes, it's written in AppleScriptObjective C. No, I don't particularly care if you like that language, it does what *I* need it to do and that's its only
 requirement.

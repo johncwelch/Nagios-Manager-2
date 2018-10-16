@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<page pageId="Page0" pageName="Welcome" title="">
+    <abstract></abstract>
+    <keywords></keywords>
+    <contents>
+        <line Align="Left">
+            <content style="Normal">Nagios Manager is an app designed to help folks who are running one or more Nagios XI servers. It’s an interface to the Nagios REST API, and is here to help you lose less of your mind with the day-to-day grind of managing Nagios. Especially if you have multiple Nagios servers. Specifically, Nagios Manager is here to help you manage:</content>
+        </line>
+        <list ListStyle="listDisc">
+            <listItem style="Normal">
+                <line Align="Left">
+                    <content style="Normal" linkTarget="helpcrafter://Page3">Nagios Servers themselves</content>
+                </line>
+            </listItem>
+            <listItem style="Normal">
+                <line Align="Left">
+                    <content style="Normal" linkTarget="helpcrafter://Page4">Users on a given Nagios Server</content>
+                </line>
+            </listItem>
+            <listItem style="Normal">
+                <line Align="Left">
+                    <content style="Normal" linkTarget="helpcrafter://Page5">Hosts on a given Nagios Server</content>
+                </line>
+            </listItem>
+            <listItem style="Normal">
+                <line Align="Left">
+                    <content style="Normal" linkTarget="helpcrafter://Page6">Hostgroups on a given Nagios Server</content>
+                </line>
+            </listItem>
+        </list>
+        <line Align="Left">
+            <content style="Normal">(Services may come one day, but right now, the API representation of them is so sub-optimal, I’d need to write an app just to manage that. They’re on the list, but rather far down on the list.)</content>
+        </line>
+        <line Align="Left">
+            <content style="Normal">This help is organized in the same way the app is, by tab.</content>
+        </line>
+    </contents>
+</page>

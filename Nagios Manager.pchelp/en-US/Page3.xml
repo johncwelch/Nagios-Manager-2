@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<page pageId="Page3" pageName="Server Manager" title="">
+    <abstract></abstract>
+    <keywords></keywords>
+    <contents>
+        <line Align="Left">
+            <content style="Normal">The Server manager Tab is where you manage Nagios servers. These are the actual Nagios servers themselves, as opposed to say, servers you may be monitoring via Nagios. Within the server Tab, you can:</content>
+        </line>
+        <list ListStyle="listDisc">
+            <listItem style="Normal">
+                <line Align="Left">
+                    <content style="Normal">Add a Nagios server</content>
+                </line>
+            </listItem>
+            <listItem style="Normal">
+                <line Align="Left">
+                    <content style="Normal">Delete a single Nagios Server</content>
+                </line>
+            </listItem>
+            <listItem style="Normal">
+                <line Align="Left">
+                    <content style="Normal">Delete All Servers </content>
+                </line>
+            </listItem>
+            <listItem style="Normal">
+                <line Align="Left">
+                    <content style="Normal">Reload Servers (re-read the on-disk preferences file)</content>
+                </line>
+            </listItem>
+        </list>
+        <line Align="Left">
+            <content style="Normal">Nagios Manager keeps its preferences in ~/Library/Preferences/bynkii.com.Nagios-Manager.plist. Currently this file is not encrypted at all, so please be careful with it. (I’m looking at adding that at some point.)</content>
+        </line>
+        <line Align="Left">
+            <content style="Normal"></content>
+        </line>
+        <line Align="Left">
+            <content style="Heading2">Server Manager Tab</content>
+        </line>
+        <line Align="Left">
+            <textElement rightMargin="0" width="1" style="Normal" textId="HorizontalRule" leftMargin="0" color="RGBA(0,0,0,1.000000)"></textElement>
+        </line>
+        <line Align="Left">
+            <image height="543.637" style="Normal" leftMargin="0.0" bottomMargin="0.0" rightMargin="0.0" width="551.047" topMargin="0.0" imageId="Server Tab Explained.png"></image>
+        </line>
+        <line Align="Left">
+            <content style="Normal"></content>
+        </line>
+        <line Align="Left">
+            <content style="Normal">The server tab </content>
+            <content style="Normal" linkTarget="helpcrafter://Page2">main table </content>
+            <content style="Normal">holds a list of Nagios servers, one server per row. Each row has:</content>
+        </line>
+        <list ListStyle="listDisc">
+            <listItem style="Normal">
+                <line Align="Left">
+                    <content style="Normal">The Server Name</content>
+                </line>
+            </listItem>
+            <listItem style="Normal">
+                <line Align="Left">
+                    <content style="Normal">The Server URL</content>
+                </line>
+            </listItem>
+            <listItem style="Normal">
+                <line Align="Left">
+                    <content style="Normal">The Server API Key</content>
+                </line>
+            </listItem>
+        </list>
+        <line Align="Left">
+            <content style="Normal">When you select a server in the </content>
+            <content style="Normal" linkTarget="helpcrafter://Page2">main table</content>
+            <content style="Normal">, the </content>
+            <content style="Normal" linkTarget="helpcrafter://Page2">status display</content>
+            <content style="Normal"> will show some basic information for the server you’ve selected. On application launch, the </content>
+            <content style="Normal" linkTarget="helpcrafter://Page2">status display</content>
+            <content style="Normal"> will automatically show status for the first server in the list. </content>
+        </line>
+        <line Align="Left">
+            <content style="Normal"></content>
+        </line>
+        <line Align="Left">
+            <content style="Heading2">Selecting and Deleting a Server</content>
+        </line>
+        <line Align="Left">
+            <textElement rightMargin="0" width="1" style="Normal" textId="HorizontalRule" leftMargin="0" color="RGBA(0,0,0,1.000000)"></textElement>
+        </line>
+        <line Align="Left">
+            <content style="Normal">Selecting a server in the </content>
+            <content style="Normal" linkTarget="helpcrafter://Page2">main table</content>
+            <content style="Normal"> also allows you to delete it from Nagios Manager. You can delete the server by selecting it, then clicking the “Delete Selected Server(s) button, or by double-clicking the server you want to delete. Either way will display a “Are you sure you want to do this” dialog. If you click “OK” in the dialog, the server will be deleted. (Note that currently, you can’t select multiple servers. But soon, you will be able to do just that.)</content>
+        </line>
+        <line Align="Left">
+            <content style="Normal"></content>
+        </line>
+        <line Align="Left">
+            <content style="Heading2">Adding a Server</content>
+        </line>
+        <line Align="Left">
+            <textElement rightMargin="0" width="1" style="Normal" textId="HorizontalRule" leftMargin="0" color="RGBA(0,0,0,1.000000)"></textElement>
+        </line>
+        <line Align="Left">
+            <content style="Normal">To add a server, you have to have the server name, the server URL, and the server API key:</content>
+        </line>
+        <list ListStyle="listDisc">
+            <listItem style="Normal">
+                <line Align="Left">
+                    <content style="Normal">The name of the server goes in the Server Name field. This can be anything you want it to be, it is only there for your ease of identification. This is also the name you will use when selecting servers in the other tabs, so you should make it reasonably short and immediately meaningful. “Network Nagios Server” is immediately meaningful, “NNS34QPK5” less so.</content>
+                </line>
+            </listItem>
+            <listItem style="Normal">
+                <line Align="Left">
+                    <content style="Normal">The URL for the server goes in the Server URL field. </content>
+                    <content style="Custom1">IMPORTANT</content>
+                    <content style="Custom0">: </content>
+                    <content style="Custom1">ONLY</content>
+                    <content style="Normal">enter in the main DNS name or IP address for the server, i.e. http(s)://my.nagios.com/ or https://10.10.10.10/. Do not enter anything else, as at the moment, the basic URL form is grafted on the end of what you enter here. If you enter the wrong thing here, Nagios Manager will not be able to properly communicated with your server. </content>
+                </line>
+            </listItem>
+            <listItem style="Normal">
+                <line Align="Left">
+                    <content style="Normal">Server API Key: This is available from your user account on the Nagios Server you’re adding to Nagios Manager. For best results, it should be an admin account API Key. There’s not a really good way for Nagios Manager to validate what a given key can or cannot do. If you enter an API key that is not an admin key, your results will be…uncertain.</content>
+                </line>
+            </listItem>
+        </list>
+        <line Align="Left">
+            <content style="Normal"></content>
+        </line>
+        <line Align="Left">
+            <content style="Heading2">Reload Servers</content>
+        </line>
+        <line Align="Left">
+            <textElement rightMargin="0" width="1" style="Normal" textId="HorizontalRule" leftMargin="0" color="RGBA(0,0,0,1.000000)"></textElement>
+        </line>
+        <line Align="Left">
+            <content style="Normal">This is simply a way to reload the preferences file data into the app. It’s not something you’ll really need to do much, unless you’re directly editing the file outside of Nagios Manager. That’s maybe not the best idea, but if you have a lot of Nagios Servers, doing them one at a time can be tedious, so this exists primarily for that use case. If you want to twiddle the prefs file directly, I’d recommend adding one server via the Nagios Manager UI so that you can get an idea of the formatting conventions for the plist.</content>
+        </line>
+        <line Align="Left">
+            <content style="Normal"></content>
+        </line>
+        <line Align="Left">
+            <content style="Heading2">Delete All Servers</content>
+        </line>
+        <line Align="Left">
+            <textElement rightMargin="0" width="1" style="Normal" textId="HorizontalRule" leftMargin="0" color="RGBA(0,0,0,1.000000)"></textElement>
+        </line>
+        <line Align="Left">
+            <content style="Normal">As it implies, this wipes all the servers out of the preferences file. It does not delete the preference file, just removes the server data from it.</content>
+        </line>
+        <line Align="Left">
+            <content style="Normal"></content>
+        </line>
+    </contents>
+</page>

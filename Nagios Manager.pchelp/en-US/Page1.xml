@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<page pageId="Page1" pageName="System Requirements" title="">
+    <abstract></abstract>
+    <keywords></keywords>
+    <contents>
+        <line Align="Left">
+            <content style="Normal">This app is supported under macOS 10.13 and later. If it works on 10.12 and earlier, great, but if it has problems, you’re mostly on your own.</content>
+        </line>
+        <line Align="Left">
+            <content style="Normal">Nagios XI versions supported are versions 5.2 and later. Earlier versions don’t have the REST API, so Nagios Manager can’t work with them.</content>
+        </line>
+        <line Align="Left">
+            <content style="Heading2">IMPORTANT</content>
+        </line>
+        <line Align="Left">
+            <content style="Normal">Nagios Manager version 1.8 is the </content>
+            <content style="Normal bold">LAST</content>
+            <content style="Normal"> version that will work with Nagios prior to version 5.5.x. Nagios made some massive changes to the REST API with the 5.5.x series, which makes supporting both versions extremely tedious. There’s too much error checking involved to make it worth the effort for me. The source is up on github, if you want to fork it for your own </content>
+            <content style="Normal italic">internal</content>
+            <content style="Normal"> use, you’re welcome to do so. The official version will only support 5.5.x starting with 1.9.</content>
+        </line>
+    </contents>
+</page>
