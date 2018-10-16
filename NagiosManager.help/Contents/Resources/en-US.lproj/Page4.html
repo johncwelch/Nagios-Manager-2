@@ -1,0 +1,243 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN">
+
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+    <head>
+        <script src="../js/topicpage.js" type="text/javascript"></script>
+        <title>User Manager</title>
+        <meta name="robots" content="index" />
+        <meta name="description" content="" />
+        <meta name="keywords" content="" />
+    </head>
+    <body>
+        <a name="Page4"></a>
+        <p class="Left Heading1">
+            <img style="margin: 0.0px 0.0px 0.0px 0.0px;" height="61.44" src="../images/nagios manager mac os 256 px size.png" width="61.44" />
+            <span class="Heading1">User Manager</span>
+        </p>
+        <p class="Left Normal">
+            <span class="Normal">The User Manager tab is where you manage users on the selected Nagios server. You can:</span>
+        </p>
+        <ul class="listDecimalRP">
+            <li class="Normal">
+                <p class="Left Normal">
+                    <span class="Normal">Add users</span>
+                </p>
+            </li>
+            <li class="Normal">
+                <p class="Left Normal">
+                    <span class="Normal">Delete users</span>
+                </p>
+            </li>
+            <li class="Normal">
+                <p class="Left Normal">
+                    <span class="Normal">Get information about a user: full name, username, user id, email address, enabled status (1 or 0)</span>
+                </p>
+            </li>
+        </ul>
+        <p class="Left Normal">
+            <span class="Normal">Please note that due to limitations in the REST API, you can’t update or change a user’s settings from Nagios Manager. Also, if you’re using version 1.8 or earlier, you cannot add Active Directory/LDAP users with Nagios Manager, but you can delete them.&nbsp;</span>
+        </p>
+        <p class="Left">
+            <br />
+        </p>
+        <p class="Left Heading2">
+            <span class="Heading2">User Manager Tab</span>
+        </p>
+        <p class="Left">
+            <hr style="color:RGBA(0,0,0,1.000000);background-color:RGBA(0,0,0,1.000000);height:1.000000pt;" />
+        </p>
+        <p class="Left">
+            <img style="margin: 0.0px 0.0px 0.0px 0.0px;" height="559.391" src="../images/User Tab.png" width="567.016" />
+        </p>
+        <p class="Left Normal">
+            <span class="Normal">As with all tabs, the User Manager Tab has the same three basic&nbsp;</span>
+            <a href="javascript:$('#tree').fancytree('getTree').activateKey('Page2')">
+                <span class="Normal_link">functional areas</span>
+            </a>
+            <span class="Normal">. The&nbsp;</span>
+            <a href="javascript:$('#tree').fancytree('getTree').activateKey('Page2')">
+                <span class="Normal_link">main table</span>
+            </a>
+            <span class="Normal">&nbsp;contains the User Name (Full Name) and User ID for each user on a given Nagios server. It does not show what level user they are. (i.e. admin, read-only, other.) When you select a user in the&nbsp;</span>
+            <a href="javascript:$('#tree').fancytree('getTree').activateKey('Page2')">
+                <span class="Normal_link">main table</span>
+            </a>
+            <span class="Normal">, the&nbsp;</span>
+            <a href="javascript:$('#tree').fancytree('getTree').activateKey('Page2')">
+                <span class="Normal_link">status display</span>
+            </a>
+            <span class="Normal">&nbsp;will show the following info for that user:</span>
+        </p>
+        <ul class="listDisc">
+            <li class="Normal">
+                <p class="Left Normal">
+                    <span class="Normal">Full Name</span>
+                </p>
+            </li>
+            <li class="Normal">
+                <p class="Left Normal">
+                    <span class="Normal">Username (aka login name)</span>
+                </p>
+            </li>
+            <li class="Normal">
+                <p class="Left Normal">
+                    <span class="Normal">User ID</span>
+                </p>
+            </li>
+            <li class="Normal">
+                <p class="Left Normal">
+                    <span class="Normal">Email Address</span>
+                </p>
+            </li>
+            <li class="Normal">
+                <p class="Left Normal">
+                    <span class="Normal">User Enabled status, (1 for enabled, 0 for disabled.)</span>
+                </p>
+            </li>
+        </ul>
+        <p class="Left">
+            <br />
+        </p>
+        <p class="Left Heading2">
+            <span class="Heading2">Selecting a Server</span>
+        </p>
+        <p class="Left">
+            <hr style="color:RGBA(0,0,0,1.000000);background-color:RGBA(0,0,0,1.000000);height:1.000000pt;" />
+        </p>
+        <p class="Left Normal">
+            <span class="Normal">The “Select Server” popup is where  you select the specific server whose users you are managing. If there are multiple servers in&nbsp;</span>
+            <a href="javascript:$('#tree').fancytree('getTree').activateKey('Page3')">
+                <span class="Normal_link">Nagios Manager’s preferences file</span>
+            </a>
+            <span class="Normal">, then the first server is decided by its order in the preferences file. The first user returned for a given server is selected by default in the&nbsp;</span>
+            <a href="javascript:$('#tree').fancytree('getTree').activateKey('Page2')">
+                <span class="Normal_link">main table</span>
+            </a>
+            <span class="Normal">. If you change servers, the&nbsp;</span>
+            <a href="javascript:$('#tree').fancytree('getTree').activateKey('Page2')">
+                <span class="Normal_link">main table</span>
+            </a>
+            <span class="Normal">&nbsp;will be reloaded with the users for the server you select.</span>
+        </p>
+        <p class="Left">
+            <br />
+        </p>
+        <p class="Left Heading2">
+            <span class="Heading2">Selecting and Deleting a User</span>
+        </p>
+        <p class="Left">
+            <hr style="color:RGBA(0,0,0,1.000000);background-color:RGBA(0,0,0,1.000000);height:1.000000pt;" />
+        </p>
+        <p class="Left Normal">
+            <span class="Normal">To select a user, click on that user’s row in the</span>
+            <a href="javascript:$('#tree').fancytree('getTree').activateKey('Page2')">
+                <span class="Normal_link">&nbsp;main table</span>
+            </a>
+            <span class="Normal">. To delete, either double-click on a row in the&nbsp;</span>
+            <a href="javascript:$('#tree').fancytree('getTree').activateKey('Page2')">
+                <span class="Normal_link">main table</span>
+            </a>
+            <span class="Normal">, or select the user you want to delete and click the “Delete Selected User” button. You’ll be asked if you’re really sure you want to delete the user. If you click “OK”, the user will be deleted.</span>
+        </p>
+        <p class="Left Heading2">
+            <span class="Heading2">Adding a User</span>
+        </p>
+        <p class="Left">
+            <hr style="color:RGBA(0,0,0,1.000000);background-color:RGBA(0,0,0,1.000000);height:1.000000pt;" />
+        </p>
+        <p class="Left Normal">
+            <span class="Normal">When adding a user, the Username, Password, Full Name and Email address are required. Please do not put spaces or special characters in the username, that makes Nagios sad. When adding a user, there are certain settings that are not shown, and cannot be changed within Nagios Manager:</span>
+        </p>
+        <ul class="listDisc">
+            <li class="Normal">
+                <p class="Left Normal">
+                    <span class="Normal">Default Language is set to “xi default” or the default language for the specified Nagios server</span>
+                </p>
+            </li>
+            <li class="Normal">
+                <p class="Left Normal">
+                    <span class="Normal">Date format is set to the default date format for the specified Nagios server</span>
+                </p>
+            </li>
+            <li class="Normal">
+                <p class="Left Normal">
+                    <span class="Normal">Number format is set to the default number format for the specified Nagios server</span>
+                </p>
+            </li>
+            <li class="Normal">
+                <p class="Left Normal">
+                    <span class="Normal">Force Password Change upon login is always enabled</span>
+                </p>
+            </li>
+            <li class="Normal">
+                <p class="Left Normal">
+                    <span class="Normal">Email account info to the user you’re creating is always enabled</span>
+                </p>
+            </li>
+            <li class="Normal">
+                <p class="Left Normal">
+                    <span class="Normal">Make this user a monitoring contact is always enabled</span>
+                </p>
+            </li>
+            <li class="Normal">
+                <p class="Left Normal">
+                    <span class="Normal">Enable notifications for this user is always enabled</span>
+                </p>
+            </li>
+            <li class="Normal">
+                <p class="Left Normal">
+                    <span class="Normal">You cannot enable API access from Nagios Manager. This is a deliberate design decision.</span>
+                </p>
+            </li>
+        </ul>
+        <p class="Left">
+            <br />
+        </p>
+        <p class="Left Normal">
+            <span class="Normal">These can all be changed in the main Nagios web UI, if wanted/needed.</span>
+        </p>
+        <p class="Left Normal">
+            <span class="Normal">There are three levels of Nagios user: Admin, Read Only, User. The default setting on application launch is User, with permissions that will allow that user to interact with Nagios in a useful manner sans being an admin.</span>
+        </p>
+        <ul class="listDisc">
+            <li class="Normal">
+                <p class="Left Normal">
+                    <span class="Normal">Admin: All permissions enabled save API access, that must be enabled within Nagios itself. Selecting the “Admin” radio button locks out Read Only as an option.&nbsp;</span>
+                </p>
+            </li>
+            <li class="Normal">
+                <p class="Left Normal">
+                    <span class="Normal">Read Only: Only available if the “User” radio button is selected. Removes all other permissions. Note: As it removes “Can See All Objects”, by default, this user will not be able to actually see any Nagios host or service on the selected server. That will have to be enabled within Nagios itself.</span>
+                </p>
+            </li>
+            <li class="Normal">
+                <p class="Left Normal">
+                    <span class="Normal">User: The default user level. The default permissions for this are: Can See All Objects:, Can Control All Objects:, Can Access Advanced Features:. For detailed explanation(s) of these permission levels, use the online help within Nagios XI.&nbsp;</span>
+                </p>
+            </li>
+        </ul>
+        <p class="Left Normal">
+            <span class="Normal">Once you have set up the user you want to add, click the “Add User” button, and the add user REST command will be submitted to Nagios, and the user list automatically reloaded. If you do not see the user you just added, wait a few minutes. Sometimes, Nagios is slow. Reselect the server in the “Select Server:” popup to force a user list reload.&nbsp;</span>
+        </p>
+        <p class="Left Normal">
+            <span class="Normal">If you get an error in the&nbsp;</span>
+            <a href="javascript:$('#tree').fancytree('getTree').activateKey('Page2')">
+                <span class="Normal_link">status display</span>
+            </a>
+            <span class="Normal">, you either left out a necessary piece of information, or an error with Nagios occurred. For the former, double-check what you entered in terms of user name/password/etc. For the latter, refer to the error message and Nagios’ own logs.&nbsp;</span>
+        </p>
+        <p class="Left">
+            <br />
+        </p>
+        <p class="Left">
+            <br />
+        </p>
+        <p class="Left Normal">
+            <span class="Normal bold">Questions? Email me,&nbsp;</span>
+            <a href="mailto:jwelch@bynkii.com?subject=Nagios Manager Help" onclick="setTimeout(function(){location.reload()}, 2000); return true;">
+                <span class="Normal_link">jwelch@bynkii.com</span>
+            </a>
+        </p>
+    </body>
+</html>

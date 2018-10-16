@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN">
+
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+    <head>
+        <script src="../js/topicpage.js" type="text/javascript"></script>
+        <title>Hostgroup Manager</title>
+        <meta name="robots" content="index" />
+        <meta name="description" content="" />
+        <meta name="keywords" content="" />
+    </head>
+    <body>
+        <a name="Page6"></a>
+        <p class="Left Heading1">
+            <img style="margin: 0.0px 0.0px 0.0px 0.0px;" height="61.44" src="../images/nagios manager mac os 256 px size.png" width="61.44" />
+            <span class="Heading1">Hostgroup Manager</span>
+        </p>
+        <p class="Left Normal">
+            <span class="Normal">The Hostgroup Manager tab is where you manage hostgroups on the selected Nagios server. You can:</span>
+        </p>
+        <p class="Left Normal">
+            <span class="Normal">	•	Add hostgroups</span>
+        </p>
+        <p class="Left Normal">
+            <span class="Normal">	•	Get information about an existing hostgroup</span>
+        </p>
+        <p class="Left Normal">
+            <span class="Normal">Due to limitations in the Nagios REST API, you cannot add hosts to a hostgroup when you create the hostgroup, or to one that already exists. Nor can you delete a hostgroup. In addition, the amount of useful information you can get on a hostgroup beyond what is displayed in the&nbsp;</span>
+            <a href="javascript:$('#tree').fancytree('getTree').activateKey('Page2')">
+                <span class="Normal_link">main table</span>
+            </a>
+            <span class="Normal">&nbsp;consists of the members of the hostgroup. Should the API allow for more functionality and information in the future, that will be added to the app.</span>
+        </p>
+        <p class="Left">
+            <br />
+        </p>
+        <p class="Left Heading2">
+            <span class="Heading2">Host Manager Tab</span>
+        </p>
+        <p class="Left">
+            <hr style="color:RGBA(0,0,0,1.000000);background-color:RGBA(0,0,0,1.000000);height:1.000000pt;" />
+        </p>
+        <p class="Left">
+            <img style="margin: 0.0px 0.0px 0.0px 0.0px;" height="616.661" src="../images/Hostgroup Tab.png" width="625.066" />
+        </p>
+        <p class="Left Normal">
+            <span class="Normal">As with the other tabs in Nagios Manager, the Hostgroup Manager contains the three basic&nbsp;</span>
+            <a href="javascript:$('#tree').fancytree('getTree').activateKey('Page2')">
+                <span class="Normal_link">functional areas</span>
+            </a>
+            <span class="Normal">. The&nbsp;</span>
+            <a href="javascript:$('#tree').fancytree('getTree').activateKey('Page2')">
+                <span class="Normal_link">main table</span>
+            </a>
+            <span class="Normal">&nbsp;shows the Hostgroup name and active status for every hostgroup on a given Nagios server. The members of the selected hostgroup are shown in the&nbsp;</span>
+            <a href="javascript:$('#tree').fancytree('getTree').activateKey('Page2')">
+                <span class="Normal_link">status display</span>
+            </a>
+            <span class="Normal">.</span>
+        </p>
+        <p class="Left">
+            <br />
+        </p>
+        <p class="Left Heading2">
+            <span class="Heading2">Selecting a Server</span>
+        </p>
+        <p class="Left">
+            <hr style="color:RGBA(0,0,0,1.000000);background-color:RGBA(0,0,0,1.000000);height:1.000000pt;" />
+        </p>
+        <p class="Left Normal">
+            <span class="Normal">The “Select Server” popup is where  you select the specific server whose hostgroups you are managing. If there are multiple servers in&nbsp;</span>
+            <a href="javascript:$('#tree').fancytree('getTree').activateKey('Page3')">
+                <span class="Normal_link">Nagios Manager’s preferences file</span>
+            </a>
+            <span class="Normal">, then the first server is decided by its order in the preferences file. The first hostgroup returned for a given server is selected by default in the&nbsp;</span>
+            <a href="javascript:$('#tree').fancytree('getTree').activateKey('Page2')">
+                <span class="Normal_link">main table</span>
+            </a>
+            <span class="Normal">, and the&nbsp;</span>
+            <a href="javascript:$('#tree').fancytree('getTree').activateKey('Page2')">
+                <span class="Normal_link">status display</span>
+            </a>
+            <span class="Normal">&nbsp;will show the members of the selected hostgroup. If you change servers, the&nbsp;</span>
+            <a href="javascript:$('#tree').fancytree('getTree').activateKey('Page2')">
+                <span class="Normal_link">main table</span>
+            </a>
+            <span class="Normal">&nbsp;will be reloaded with the hostgroups for the server you select.</span>
+        </p>
+        <p class="Left">
+            <br />
+        </p>
+        <p class="Left Heading2">
+            <span class="Heading2">Selecting and Getting member information for a Hostgroup</span>
+        </p>
+        <p class="Left">
+            <hr style="color:RGBA(0,0,0,1.000000);background-color:RGBA(0,0,0,1.000000);height:1.000000pt;" />
+        </p>
+        <p class="Left Normal">
+            <span class="Normal">To select a hostgroup, click on that hostgroup’s row in the</span>
+            <a href="javascript:$('#tree').fancytree('getTree').activateKey('Page2')">
+                <span class="Normal_link">&nbsp;main table</span>
+            </a>
+            <span class="Normal">. The&nbsp;</span>
+            <a href="javascript:$('#tree').fancytree('getTree').activateKey('Page2')">
+                <span class="Normal_link">status display</span>
+            </a>
+            <span class="Normal">&nbsp;will automatically display the member hosts, if any exist, for that hostgroup.</span>
+        </p>
+        <p class="Left">
+            <br />
+        </p>
+        <p class="Left Heading2">
+            <span class="Heading2">Adding a Hostgroup</span>
+        </p>
+        <p class="Left">
+            <hr style="color:RGBA(0,0,0,1.000000);background-color:RGBA(0,0,0,1.000000);height:1.000000pt;" />
+        </p>
+        <p class="Left Normal">
+            <span class="Normal">When adding a hostgroup, the Hostgroup Name and Hostgroup Alias are required. Adding a hostgroup via Nagios Manager does not populate the hostgroup with any hosts, nor can you do this from Nagios Manager due to limitations in the Nagios REST API. There is six-second delay in refreshing the hostgroup list after adding a hostgroup. To manually refresh, re-select the current Nagios Server in the “Select Server” popup.</span>
+        </p>
+        <p class="Left">
+            <br />
+        </p>
+        <p class="Left Normal">
+            <span class="Normal bold">Questions? Email me,&nbsp;</span>
+            <a href="mailto:jwelch@bynkii.com?subject=Nagios Manager Help" onclick="setTimeout(function(){location.reload()}, 2000); return true;">
+                <span class="Normal_link">jwelch@bynkii.com</span>
+            </a>
+        </p>
+    </body>
+</html>
