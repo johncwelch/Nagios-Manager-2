@@ -18,10 +18,12 @@ Okay, so here's the final 1.8 build complete with a help file and voiceover work
 
 IMPORTANT!!!!!
 
-1.8 is the FINAL version that will support Nagios XI pre-5.5.X. There are MAJOR improvements to the REST API that make supporting both pre- and post- 5.5 really hard. So this one will remain up for anyone needing pre-5.5.x support. The next update will be the 2.X branch wherein I can start adding in the 5.5. changes. Like AD/LDAP support!
+1.8 is the FINAL version that will support Nagios XI pre-5.5.X. There are MAJOR improvements to the REST API that make supporting both pre- and post- 5.5 really hard. So this one will remain up for anyone needing pre-5.5.x support. The next update will be the 2.X branch wherein I can start adding in the 5.5. changes. Like AD/LDAP support! So cool.
 
 
 yes, it's written in AppleScriptObjective C. No, I don't particularly care if you like that language, it does what *I* need it to do and that's its only
 requirement.
 
 Too many thanks to Mark Aldritt, Sal Soghoian, Andy Bachorski (RIP), Chris Nebel, Chris Espinosa (other chris) Chris Page (other, other chris), Todd Fernandez, Shane Stanely, and a host of people at Apple and other companies who realize what gems AppleScript and AppleScript Objective C are.
+
+
