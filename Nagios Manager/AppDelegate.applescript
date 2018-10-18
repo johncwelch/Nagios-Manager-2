@@ -56,6 +56,30 @@ script AppDelegate
 	property theWindow : missing value --outlet for theWindow
 	property theTabView : missing value --outlet for the tab view. not any individual tab, but all the tabs
 	
+	-- Server manager IBOutlets
+	property theDefaults : missing value --referencing outlet for our NSDefaults object
+	property theServerTable : missing value --table view referencing outlet
+	property theServerTableController : missing value --server table array controller referencing outlet
+	
+	--Server manager other properties
+	
+	property theSMServerName : "" --used to be theServerName, avoiding overuse of properties here
+	property theSMServerURL : "" --used to be theServerURL, avoiding overuse of properties here
+	property theSMServerAPIKey : "" --used to be theServerAPIKey, avoiding overuse of properties here
+	property theSMServerTableControllerArray : {} --bound to content of the server table controller, not used
+	property theSMTableServerName : "" --bound to server name column in table
+	property theSMTableServerURL : "" --bound to server url column in table
+	property theSMTableServerAPIKey : "" --bound to server API Key column in table
+	
+	--property theSMSettingsExist : "" --are there any settings already there?
+	property theSMDefaultsExist : "" --are there currently settings?
+	property theSMSettingsList : {} --settings list array
+	property theSMSDeletingLastServerFlag : false --if you're about to manually delete the last server, we set this to true so you don't get two alerts
+	property theSMStatusFieldText : "" --binding for the text field at the bottom of the Server Manager. Allows it and User Manager to have different statuses
+	
+	--property theSMServerStatusSearchPattern : "/user"
+	--property theSMServerStatusReplacementPattern : "/status"
+	
 	-- User Manager IBOutlets
      property popupSelection:missing value --this is attached to the array controller's referencing outlet
      --it contains the full record for the selected server name in the popup list
@@ -80,14 +104,18 @@ script AppDelegate
 	--just buy them, this pie takes long enough as it is
 	
 	--User Manager Other properties
-	property theUMJSONDict:"" --this holds the result of NSJSONSerialization as an NSArray of NSDicts
-	property theServerUsers:"" --grabs just the users out of theUMJSONDict as a NSArray of NSDicts
+	
+	property theUMServerName:"" --name of the current Nagios server
+	property theUMServerAPIKey:"" --API Key for the current nagios server
+	property theUMServerURL:"" --URL for the current nagios server
+	--property theUMJSONDict:"" --this holds the result of NSJSONSerialization as an NSArray of NSDicts
+	--property theServerUsers:"" --grabs just the users out of theUMJSONDict as a NSArray of NSDicts
 	property theUserName:"" --user full name from the nagios server
 	property theUserID:"" --user id from the nagios server
 	
 	property theOtherUserInfoList : {} -- alist of records we'll need to do something cool without a gob of recoding
 	
-	property theUserNameList:{} --a list of records we convert from NSDicts
+	--property theUserNameList:{} --a list of records we convert from NSDicts
 	property theUMUserDeletePattern : "\\?" --figured out how to do NSRegularExpressions SO much better. This is the new pattern
 --step 9: put all the ingredients in a blender (blenders are your friend) and run until everything is liquid AF
 	
@@ -117,30 +145,10 @@ script AppDelegate
 --step 12: bake at 425 for 15 minutes or so, then reduce to 350 for 45 minutes or so until it passes the toothpick test
 
 
-	-- Server manager IBOutlets
-	property theDefaults : missing value --referencing outlet for our NSDefaults object
-	property theServerTable : missing value --table view referencing outlet
-	property theServerTableController : missing value --server table array controller referencing outlet
+
 --step 13: eat the hell out of that pie. See? a prize for reading comments!
 	
-	--Server manager other properties
 	
-	property theSMServerName : "" --used to be theServerName, avoiding overuse of properties here
-	property theSMServerURL : "" --used to be theServerURL, avoiding overuse of properties here
-	property theSMServerAPIKey : "" --used to be theServerAPIKey, avoiding overuse of properties here
-	property theSMServerTableControllerArray : {} --bound to content of the server table controller, not used
-	property theSMTableServerName : "" --bound to server name column in table
-	property theSMTableServerURL : "" --bound to server url column in table
-	property theSMTableServerAPIKey : "" --bound to server API Key column in table
-	
-	property theSMSettingsExist : "" --are there any settings already there?
-	property theSMDefaultsExist : "" --are there currently settings?
-	property theSMSettingsList : {} --settings list array
-	property theSMSDeletingLastServerFlag : false --if you're about to manually delete the last server, we set this to true so you don't get two alerts
-	property theSMStatusFieldText : "" --binding for the text field at the bottom of the Server Manager. Allows it and User Manager to have different statuses
-
-	property theSMServerStatusSearchPattern : "/user"
-	property theSMServerStatusReplacementPattern : "/status"
 
 	--Host Manager IB Outlets
 	property theHostTableController : missing value --referencing outlet for host array controller
@@ -682,7 +690,7 @@ script AppDelegate
 					theDefaults's setObject:my theSMSettingsList forKey:"serverSettingsList" --write the new settings list to defaults
 					theDefaults's setBool:my theSMDefaultsExist forKey:"hasDefaults" --setting hasDefaults to true (1), this way we avoid the
 					--"but I thought it was okay" problem. We don't think we know what hasDefaults is on exit, we KNOW
-					my loadUserManagerPopup:(missing value) --reload the popup since we deleted a server out from under it. this loads the first object in the server array controller
+					--my loadUserManagerPopup:(missing value) --reload the popup since we deleted a server out from under it. this loads the first object in the server array controller
 				end if
 			else if theDeleteServerButton is "Cancel" then --nope
 				return
@@ -739,15 +747,15 @@ script AppDelegate
 			return --back to main loop
 		end if
 		
-		set x to my theServerTableController's arrangedObjects()'s firstObject() --get the first object in the array controller
+		set x to my theServerTableController's arrangedObjects()'s firstObject() --get the first object in the server array controller on the first tab
 		
 		if x is missing value then --if there's nothing in x, stop the function
 			return --back to the main loop
 		end if
 		
-		set my theServerName to x's theSMTableServerName --grab the server name
-		set my theServerAPIKey to x's theSMTableServerAPIKey --grab the server key
-		set my theServerURL to x's theSMTableServerURL --grab the server URL
+		set my theUMServerName to x's theSMTableServerName --grab the server name
+		set my theUMServerAPIKey to x's theSMTableServerAPIKey --grab the server key
+		set my theUMServerURL to x's theSMTableServerURL as text--grab the server URL
 		
 		my getServerUsers:(missing value) --use missing value because we have to pass something. in ths case, the ASOC version of nil
 
@@ -755,24 +763,29 @@ script AppDelegate
 	
 	on getServerUsers:sender --this isn't attached to a specific button, but we'll leave the sender
 		--in case we want to do so at a future date
-		set theServerJSONCommand to "/usr/bin/curl -XGET \"" & my theServerURL & my theServerAPIKey & "&pretty=1\"" --gets the JSON dump as text
-		set my theUMJSONDict to my getJSONData:(theServerJSONCommand)
-		set my theServerUsers to users of my theUMJSONDict --yank out just the "users" section of the JSON return, that's
+		set theUMUserNameList to {} --initialze this as a list/record
+		set theUMGetUserListURL to my theUMServerURL
+		
+		set  theUMGetUserListURL to  theUMGetUserListURL & "system/user?apikey=" --append the bit we need to get user lists
+		
+		set theServerJSONCommand to "/usr/bin/curl -XGET \"" &  theUMGetUserListURL & my theUMServerAPIKey & "&pretty=1\""
+		
+		set theUMJSONDict to my getJSONData:(theServerJSONCommand)
+		
+		set theUMServerUsers to users of theUMJSONDict --yank out just the "users" section of the JSON return, that's
 		--all we care about
 		
 		set my theOtherUserInfoList to current application's NSMutableArray's array --init this as an NSMutableArray
 		--doing this the long way, will fix to be more "cocoa-y" later
-		repeat with x from 1 to count of my theServerUsers --iterate through theServerUsers
-			set theItem to item x of theServerUsers as record --convert NSDict to record because it's initially easier
-			set the end of my theUserNameList to {theUserName:|name| of theItem,theUserID:user_id of theItem} --build a list of records with the two values we care about
+		repeat with x from 1 to count of theUMServerUsers --iterate through theUMServerUsers
+			set theItem to item x of theUMServerUsers as record --convert NSDict to record because it's initially easier
+			set the end of theUMUserNameList to {theUserName:|name| of theItem,theUserID:user_id of theItem} --build a list of records with the two values we care about
 			--also, don't use "my" within the record definition!
 			my theOtherUserInfoList's addObject:theItem --shove theItem on the end of the array
-			
 		end repeat
 		my userSelection's removeObjects:(my userSelection's arrangedObjects()) --clear the table
-		my userSelection's addObjects:my theUserNameList --fill the table
-		set my theUserNameList to {} --clear out theUserNameList so it's got fresh data each time.
-		
+		my userSelection's addObjects:theUMUserNameList --fill the table
+		set theUMUserNameList to {} --clear out theUserNameList so it's got fresh data each time.
 	end getServerUsers:
 	
 	on displayUserInfo:sender --this is a VERY inelegant way of displaying basic info on the selected user in the user manager table
