@@ -6,29 +6,11 @@
 --  Copyright © 2018 John Welch. All rights reserved.
 --step 1 : get a good sized pumpkin
 
---1.0 goals: to delete users from a nagios server
---1.1 goals: add a local user to a nagios server (make sure to label as "local only, no AD"
-     --URL scheme for adding is same as getting info, so no change necessary there, woohoo!
-     --hardcode:
-          --language: "xi default"
-          --date_format: 1
-          --number_format: 1
-          --use radio buttons for auth_level default to user.
-               --if admin selected, all options but read-only are enabled and unchangeable
-          --if read_only set to 1, then auth-level is forced to user, only "see all" is changeable, others set to 0
-     --all text fields are mandatory
-     --when using this, force_pw_change, email_info, monitoring_contact, enable_notifications are always set to 1
-     --sans the NSMatrix object, point all "related" radio buttons at the same thing to get them to work "together" properly.
-	--BONUS, figured out autoincrementing builds (see the build phases for details)
---step 2: cut pumpkin into wedges about 4" wide and remove pulp
---1.2 goals : build tabbed interface so we can add a server manager (add/remove) tab that's separate from user manager (and other features eventually DONE
---1.3 move from hardcoded server list to user-entered list. This will be fun DONE
---1.4 Get a proper icon and make the menus in the menubar actually do something. also add hosts. DONE  
---1.5 convert time periods (cannot be done with current API, would require MySQL queries) and contacts in new host to pulldowns/popups and see about duplicate code, like grep & json code. Workaround
-	--for time periods in 1.5 - combo box with most common timeperiods listed, and the ability to manually type a different one in. Contacts is done, but it's a table, not a popup/pulldown.
---1.6 add hostgroup option to build new host. Add in hostgroup view option and service tab.
---1.7 add hostgroup tab (due to services being WAY more complicated than we thought, and Nagios changing things, this is now 1.7)
---1.8 will be the cleanup build.
+--1.8 will be the cleanup build. It was, also added accessibility and help.
+--2.0
+----We'll look at the URL setup, maybe we can dump some of the GREPing.
+----First tab makeover will be the server tab, we're going to do this in order.
+----initial server manager changes done. Waiting on the answer about AD passwords in Nagios to add in the LDAP/AD server bits
 
 --changed from _() to : syntax in function calls
 --table columns are not editable. Table size atrib's are all solid bars
@@ -442,20 +424,10 @@ script AppDelegate
 		end if
 	end tableViewSelectionDidChange:
 
-	--COMMON CODE FUNCTION
+	--COMMON CODE FUNCTIONS
 	on buildNewURL:theCallingTab --the important thing we need passed here is what's calling it - server/host/user/other tabs.
 		--so the call should look like "buildNewURL:("host")
-		if theCallingTab is "server" then
-			set theSearchPattern to my theSMServerStatusSearchPattern --create local search string
-			set theReplacePattern to my theSMServerStatusReplacementPattern --create local replace string
-			set theSelectedServer to my theServerTableController's selectedObjects() --get the selected server so we can get the URL. This is really only needed for
-			--getting the status of the nagios server itself.
-			set theURL to theSelectedServer's theSMTableServerURL as text --get the URL for the server that was clicked on in the Server
-			--manager table. Note, the conversion to text is necessary, or you get as a single item array or dictionary. Either way, it makes
-			--rangeOfFirstMatchInString REALLY UNHAPPY
-			set theURL to current application's NSString's stringWithString:theURL --for whatever reason, this function required this so that we could get the length
-			--beats the heck outta me
-		else if theCallingTab is "user" then
+		if theCallingTab is "user" then
 			set theSelection to userSelection's selectedObjects() as record --this gets the selection in the table row
 			--and converts the NSArray to an AS record. Is it strictly needed? No, but it's not a big deal either.
 			set theUserIDToBeDeleted to |theUserID| of theSelection  --set user id to local var
@@ -573,22 +545,33 @@ script AppDelegate
 		--array controller
 		my theServerTableController's addObjects:my theSMSettingsList --shove the current contents of theSettingsList into the array controller
 		set my theSMDefaultsExist to theDefaults's boolForKey:"hasDefaults" --grab current state for this every time this function runs
-		if my theSMDefaultsExist then --we want to refresh the user manager popup when we add or delete a server
-			my loadUserManagerPopup:(missing value) --refresh the popup data too
-		end if
 	end loadServerTable:
 
 	on getSMServerStatus:sender
 		try
 			set theSelectedServer to my theServerTableController's selectedObjects() --so we can pull data from the selection
-			set theSMStatusURL to my buildNewURL:("server")
+			#set theSMStatusURL to my buildNewURL:("server")
+			set theSMSURL to theSelectedServer's theSMTableServerURL as text--this is the root URL we'll use for status and info. we're going to move away from so many
+			--global properties
+			set theSMSURL to current application's NSString's stringWithString:theSMSURL
+			set theSMStatusURL to theSMSURL's stringByAppendingString: "system/status?apikey="
+			set theSMInfoURL to theSMSURL's stringByAppendingString: "system/info?apikey="
 			
 			set theSMSelectedAPIKey to theSelectedServer's theSMTableServerAPIKey as text --pull the selected server's API key as text
 			set theSMServerStatusCommand to "/usr/bin/curl -XGET \"" & theSMStatusURL & theSMSelectedAPIKey & "&pretty=1\"" --build the server
 			--status command
-			set theSMSServerStatusJSONDict to my getJSONData:(theSMServerStatusCommand)
-			
-			set my theSMStatusFieldText to "active host checks enabled: " & theSMSServerStatusJSONDict's active_host_checks_enabled & "\ractive service checks enabled: " & theSMSServerStatusJSONDict's active_service_checks_enabled & "\rNagios in daemon mode: " & theSMSServerStatusJSONDict's daemon_mode & "\revent handlers enabled: " & theSMSServerStatusJSONDict's event_handlers_enabled & "\rflap detection enabled: " & theSMSServerStatusJSONDict's flap_detection_enabled & "\rlast log rotation: " & theSMSServerStatusJSONDict's last_log_rotation & "\rnotifications enabled: " & theSMSServerStatusJSONDict's notifications_enabled & "\rpassive host checks enabled: " & theSMSServerStatusJSONDict's passive_host_checks_enabled & "\rpassive service checks enabled: " & theSMSServerStatusJSONDict's passive_service_checks_enabled & "\rprocess id: " & theSMSServerStatusJSONDict's process_id
+			set theSMServerInfoCommand to "/usr/bin/curl -XGET \"" & theSMInfoURL & theSMSelectedAPIKey & "&pretty=1\"" --build the server info command
+			set theSMSServerStatusJSONDict to my getJSONData:(theSMServerStatusCommand) --get the status JSON
+			set theSMServerInfoJSONDict to my getJSONData:(theSMServerInfoCommand) --get the info JSON
+			--set theSMServerReportedVersion to theSMServerInfoJSONDict's |version| as text
+			set theSMServerReportedMinorVersion to theSMServerInfoJSONDict's version_minor's floatValue() --get the minor version. We don't care about the major
+			--version, since if that's earlier than 5, there's no API to work with anyway.
+			if theSMServerReportedMinorVersion is less than 5.0 then --the minor version must be at least 5.0 (nagios xi 5.5.0) for this app to work.
+				set my theSMStatusFieldText to "This server is running a version of Nagios earlier than what this App supports. You must be running at least Nagios XI 5.5.0"
+				return
+			else
+				set my theSMStatusFieldText to "active host checks enabled: " & theSMSServerStatusJSONDict's active_host_checks_enabled & "\t\tactive service checks enabled: " & theSMSServerStatusJSONDict's active_service_checks_enabled & "\rNagios in daemon mode: " & theSMSServerStatusJSONDict's daemon_mode & "\t\t\tevent handlers enabled: " & theSMSServerStatusJSONDict's event_handlers_enabled & "\rflap detection enabled: " & theSMSServerStatusJSONDict's flap_detection_enabled & "\t\t\tlast log rotation: " & theSMSServerStatusJSONDict's last_log_rotation & "\rnotifications enabled: " & theSMSServerStatusJSONDict's notifications_enabled & "\t\t\t\tpassive host checks enabled: " & theSMSServerStatusJSONDict's passive_host_checks_enabled & "\rpassive service checks enabled: " & theSMSServerStatusJSONDict's passive_service_checks_enabled & "\tprocess id: " & theSMSServerStatusJSONDict's process_id & "\rproduct: " & theSMServerInfoJSONDict's product & "\t\t\t\t\tversion: " & theSMServerInfoJSONDict's |version|
+			end if
 		on error errorMessage number errorNumber
 			if errorNumber is -1700 then
 				--we do nothing here, but we want to note the specific error we're trying to sink. Other errors, we want to know about so we can handle them
@@ -633,7 +616,9 @@ script AppDelegate
 			--scoping maybe? <shrug>
 		end if
 		
-		set my theSMServerURL to my theSMServerURL's stringByAppendingString:"/nagiosxi/api/v1/system/user?apikey=" --NSSTring append
+		#set my theSMServerURL to my theSMServerURL's stringByAppendingString:"/nagiosxi/api/v1/system/user?apikey=" --NSSTring append
+		set my theSMServerURL to my theSMServerURL's stringByAppendingString:"/nagiosxi/api/v1/" --NSSTring Append. 2.0CHANGE to simplify some things,
+		--so we do less GREPping and more appending
 		--this has the side benefit of showing up in the text box, so the user has a nice visual feedback outside of the table
 		--for about .something seconds.
 		
