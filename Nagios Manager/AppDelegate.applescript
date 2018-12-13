@@ -80,6 +80,7 @@ script AppDelegate
 	property theSMLDAPController : missing value --ldap server (one)
 	property theSMLDAPPort : missing value --port ldap server is listening on
 	
+	
 	--property theSMSettingsExist : "" --are there any settings already there?
 	property theSMDefaultsExist : "" --are there currently settings?
 	property theSMSettingsList : {} --settings list array
@@ -632,6 +633,54 @@ script AppDelegate
 			return
 		end if
 		
+		set theAuthServerState to my theSMUsesAuthServer's intValue()
+		if theAuthServerState = 1 then --if they have enabled the Use LDAP/AD Auth checkbox, we need to do some sanity checking here.
+			if (my theSMADRadioButton's state() = 0) and (my theSMLDAPRadioButton's state() = 0) then
+				set my theSMStatusFieldText to "If you want to use an Auth server with this Nagios server, you MUST chose LDAP or Active Directory (AD)" --gotta pick one dude
+				return
+			end if
+			
+			set theBaseDN to theSMBaseDN's stringValue() as text --check for text in the field. We're not checking for a valid base DN. At all. the "as text" is needed for the
+			--content check to work
+			if (theBaseDN is missing value) or (theBaseDN is "") then --nothing in the base DN
+				set my theSMStatusFieldText to "If you want to use an Auth server with this Nagios server, you MUST supply a Base DN value"
+				return
+			end if
+			
+			if my theSMADRadioButton's state() = 1 then --we picked AD, yay!
+				set theAuthServerType to "ad"
+				
+				set theADDomainSuffix to my theSMADDomainSuffix's stringValue() as text --more sanity checking
+				if (theADDomainSuffix is missing value) or (theADDomainSuffix is "") then
+					set my theSMStatusFieldText to "If you want to use an AD Auth server with this Nagios server, you MUST supply a domain suffix"
+					return
+				end if
+				
+				set theADDomainControllers to my theSMADDomainControllerList's stringValue() as text --still more sanity checking
+				if (theADDomainControllers is missing value) or (theADDomainControllers is "") then
+					set my theSMStatusFieldText to "If you want to use an AD Auth server with this Nagios server, you MUST supply at least one domain controller"
+					return
+				end if
+			else
+				set theAuthServerType to "ldap"
+				
+				set theLDAPController to my theSMLDAPController's stringValue() as text --you guessed it, more sanity checking
+				if (theLDAPController is missing value) or (theLDAPController is "") then
+					set my theSMStatusFieldText to "If you want to use an LDAP Auth server with this Nagios server, you MUST supply at least one LDAP server"
+					return
+				end if
+				
+				set theLDAPPort to my theSMLDAPPort's stringValue() as text --are you sure you know what sanity is?
+				if (theLDAPPort is missing value) or (theLDAPPort is "") then
+					set my theSMStatusFieldText to "If you want to use an LDAP Auth server with this Nagios server, you MUST supply the port the LDAP server listens on"
+					return
+				end if
+				
+			end if
+			
+		end if
+		
+		
 		set theTempURL to my theSMServerURL as text  --Create a temp text version --I did this all AppleScript style, because it works
 		--and I was able to get it done faster this way. It may not execute as fast, but given the data sizes we're talking about,
 		--I doubt it's a problem on anything faster than a IIsi
@@ -793,6 +842,11 @@ script AppDelegate
 			my theSMADDomainControllerList's setEnabled:false
 		end if
 	end setAuthServerType:
+	
+	on popupTest:sender
+		set theTest to theSMBaseDN's stringValue()
+		log theTest
+	end popupTest:
 		
 		
 	

@@ -1084,6 +1084,17 @@
                                                 </binding>
                                             </connections>
                                         </textField>
+                                        <button verticalHuggingPriority="750" id="dCN-aP-fyp">
+                                            <rect key="frame" x="206" y="255" width="64" height="32"/>
+                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                            <buttonCell key="cell" type="push" title="test" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="08t-od-sb3">
+                                                <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                                                <font key="font" metaFont="system"/>
+                                            </buttonCell>
+                                            <connections>
+                                                <action selector="popupTest:" target="Voe-Tx-rLC" id="j1B-1p-xHF"/>
+                                            </connections>
+                                        </button>
                                     </subviews>
                                     <accessibility description="Add Server to Nagios Manager button"/>
                                 </view>
