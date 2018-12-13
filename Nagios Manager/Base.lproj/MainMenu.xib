@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="14460.30.1" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" customObjectInstantitationMethod="direct">
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="14460.31" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" customObjectInstantitationMethod="direct">
     <dependencies>
         <deployment identifier="macosx"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="14460.30.1"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="14460.31"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
@@ -31,6 +31,15 @@
                 <outlet property="theHostStatusHUD" destination="ld8-96-Rom" id="SIu-tl-F8A"/>
                 <outlet property="theHostTable" destination="edc-nj-R3v" id="NSj-tF-9Xw"/>
                 <outlet property="theHostTableController" destination="au1-f9-c4y" id="NJk-m7-dgJ"/>
+                <outlet property="theSMADDomainControllerList" destination="vCO-xc-CzZ" id="y5b-Qr-I5u"/>
+                <outlet property="theSMADDomainSuffix" destination="4jH-7l-8bi" id="GyW-hb-qjK"/>
+                <outlet property="theSMADRadioButton" destination="Rwl-s8-xdo" id="qqA-at-4q0"/>
+                <outlet property="theSMAuthServerSecurityLevelPopUp" destination="AEo-2f-ktP" id="e9Z-TV-rwY"/>
+                <outlet property="theSMBaseDN" destination="9kw-9P-QkA" id="4b7-Io-oP0"/>
+                <outlet property="theSMLDAPController" destination="skp-Mh-Jyd" id="ohW-Qq-WdG"/>
+                <outlet property="theSMLDAPPort" destination="aOA-yH-dRE" id="qWo-IB-xSe"/>
+                <outlet property="theSMLDAPRadioButton" destination="ONE-Mk-b2V" id="aPB-Ap-nks"/>
+                <outlet property="theSMUsesAuthServer" destination="sve-eP-LoB" id="5iV-7o-17Z"/>
                 <outlet property="theServerTable" destination="2mQ-JL-6Rl" id="DPC-vb-Ura"/>
                 <outlet property="theServerTableController" destination="Av3-2s-jb3" id="aWR-8L-H4e"/>
                 <outlet property="theTabView" destination="Kwi-PM-7bd" id="pB8-Ie-gNg"/>
@@ -678,14 +687,14 @@
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                     <subviews>
                                         <scrollView toolTip="Table with Nagios Server Information." autohidesScrollers="YES" horizontalLineScroll="19" horizontalPageScroll="10" verticalLineScroll="19" verticalPageScroll="10" usesPredominantAxisScrolling="NO" id="vZD-xc-v3m">
-                                            <rect key="frame" x="280" y="238" width="363" height="370"/>
+                                            <rect key="frame" x="280" y="178" width="363" height="430"/>
                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                             <clipView key="contentView" id="xUI-da-J3c">
-                                                <rect key="frame" x="1" y="0.0" width="361" height="369"/>
+                                                <rect key="frame" x="1" y="0.0" width="361" height="429"/>
                                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                 <subviews>
                                                     <tableView toolTip="Nagios Servers" verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" columnSelection="YES" multipleSelection="NO" autosaveColumns="NO" rowSizeStyle="automatic" headerView="wLo-oJ-UO2" viewBased="YES" id="2mQ-JL-6Rl">
-                                                        <rect key="frame" x="0.0" y="0.0" width="361" height="344"/>
+                                                        <rect key="frame" x="0.0" y="0.0" width="361" height="404"/>
                                                         <autoresizingMask key="autoresizingMask"/>
                                                         <size key="intercellSpacing" width="3" height="2"/>
                                                         <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
@@ -857,8 +866,156 @@
                                                 </binding>
                                             </connections>
                                         </textField>
+                                        <button verticalHuggingPriority="750" id="sve-eP-LoB">
+                                            <rect key="frame" x="15" y="494" width="150" height="18"/>
+                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                            <buttonCell key="cell" type="check" title="Uses AD/LDAP Auth: " bezelStyle="regularSquare" imagePosition="right" inset="2" id="41g-RI-Med">
+                                                <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
+                                                <font key="font" metaFont="system"/>
+                                            </buttonCell>
+                                            <connections>
+                                                <action selector="enableAuthServer:" target="Voe-Tx-rLC" id="SEZ-3v-OF1"/>
+                                            </connections>
+                                        </button>
+                                        <button verticalHuggingPriority="750" id="Rwl-s8-xdo">
+                                            <rect key="frame" x="16" y="468" width="119" height="18"/>
+                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                            <buttonCell key="cell" type="radio" title="Active Directory" bezelStyle="regularSquare" imagePosition="left" alignment="left" inset="2" id="rlb-iC-FyO">
+                                                <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
+                                                <font key="font" metaFont="system"/>
+                                            </buttonCell>
+                                            <connections>
+                                                <action selector="setAuthServerType:" target="Voe-Tx-rLC" id="Iiw-k5-Tvs"/>
+                                            </connections>
+                                        </button>
+                                        <button verticalHuggingPriority="750" id="ONE-Mk-b2V">
+                                            <rect key="frame" x="159" y="468" width="56" height="18"/>
+                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                            <buttonCell key="cell" type="radio" title="LDAP" bezelStyle="regularSquare" imagePosition="left" alignment="left" inset="2" id="JV1-aj-a3l">
+                                                <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
+                                                <font key="font" metaFont="system"/>
+                                            </buttonCell>
+                                            <connections>
+                                                <action selector="setAuthServerType:" target="Voe-Tx-rLC" id="onh-qN-uP6"/>
+                                            </connections>
+                                        </button>
+                                        <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" id="z2K-Vl-b3W">
+                                            <rect key="frame" x="15" y="442" width="93" height="17"/>
+                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                            <textFieldCell key="cell" lineBreakMode="clipping" title="Security Level:" id="nqV-bG-oBj">
+                                                <font key="font" metaFont="system"/>
+                                                <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                                                <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                            </textFieldCell>
+                                        </textField>
+                                        <popUpButton verticalHuggingPriority="750" id="AEo-2f-ktP">
+                                            <rect key="frame" x="116" y="437" width="159" height="25"/>
+                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                            <popUpButtonCell key="cell" type="push" title="None" bezelStyle="rounded" alignment="left" lineBreakMode="truncatingTail" state="on" borderStyle="borderAndBezel" imageScaling="proportionallyDown" inset="2" selectedItem="z6E-fh-QlT" id="Qut-xF-3n4">
+                                                <behavior key="behavior" lightByBackground="YES" lightByGray="YES"/>
+                                                <font key="font" metaFont="menu"/>
+                                                <menu key="menu" id="tej-5V-u3w">
+                                                    <items>
+                                                        <menuItem title="None" state="on" id="z6E-fh-QlT"/>
+                                                        <menuItem title="SSL" id="chd-rB-eY0"/>
+                                                        <menuItem title="TLS" id="Xyc-yy-7kl"/>
+                                                    </items>
+                                                </menu>
+                                            </popUpButtonCell>
+                                        </popUpButton>
+                                        <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" id="xI1-LF-ge3">
+                                            <rect key="frame" x="15" y="407" width="60" height="17"/>
+                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                            <textFieldCell key="cell" lineBreakMode="clipping" title="Base DN:" id="HzZ-OO-X8u">
+                                                <font key="font" metaFont="system"/>
+                                                <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                                                <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                            </textFieldCell>
+                                        </textField>
+                                        <textField verticalHuggingPriority="750" id="9kw-9P-QkA">
+                                            <rect key="frame" x="118" y="405" width="154" height="22"/>
+                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                            <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" borderStyle="bezel" drawsBackground="YES" id="B3b-QE-vYi">
+                                                <font key="font" metaFont="system"/>
+                                                <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
+                                                <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                            </textFieldCell>
+                                        </textField>
+                                        <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" id="4vE-9q-4ER">
+                                            <rect key="frame" x="15" y="380" width="114" height="17"/>
+                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                            <textFieldCell key="cell" lineBreakMode="clipping" title="AD Domain Suffix:" id="FAD-Ff-w7u">
+                                                <font key="font" metaFont="system"/>
+                                                <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                                                <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                            </textFieldCell>
+                                        </textField>
+                                        <textField verticalHuggingPriority="750" id="4jH-7l-8bi">
+                                            <rect key="frame" x="135" y="378" width="137" height="22"/>
+                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                            <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" borderStyle="bezel" drawsBackground="YES" id="97S-bc-UN8">
+                                                <font key="font" metaFont="system"/>
+                                                <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
+                                                <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                            </textFieldCell>
+                                        </textField>
+                                        <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" id="Qhs-8q-d0t">
+                                            <rect key="frame" x="15" y="353" width="146" height="17"/>
+                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                            <textFieldCell key="cell" lineBreakMode="clipping" title="AD Domain Controllers:" id="aBb-l8-LBK">
+                                                <font key="font" metaFont="system"/>
+                                                <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                                                <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                            </textFieldCell>
+                                        </textField>
+                                        <textField verticalHuggingPriority="750" id="vCO-xc-CzZ">
+                                            <rect key="frame" x="167" y="351" width="105" height="22"/>
+                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                            <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" borderStyle="bezel" drawsBackground="YES" id="K6h-75-fwz">
+                                                <font key="font" metaFont="system"/>
+                                                <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
+                                                <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                            </textFieldCell>
+                                        </textField>
+                                        <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" id="UKL-2T-3Eh">
+                                            <rect key="frame" x="15" y="326" width="73" height="17"/>
+                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                            <textFieldCell key="cell" lineBreakMode="clipping" title="LDAP Host:" id="ctm-Gu-ELC">
+                                                <font key="font" metaFont="system"/>
+                                                <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                                                <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                            </textFieldCell>
+                                        </textField>
+                                        <textField verticalHuggingPriority="750" id="skp-Mh-Jyd">
+                                            <rect key="frame" x="118" y="324" width="154" height="22"/>
+                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                            <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" borderStyle="bezel" drawsBackground="YES" id="peR-qN-kaD">
+                                                <font key="font" metaFont="system"/>
+                                                <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
+                                                <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                            </textFieldCell>
+                                        </textField>
+                                        <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" id="ZRP-ar-SH5">
+                                            <rect key="frame" x="15" y="299" width="70" height="17"/>
+                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                            <textFieldCell key="cell" lineBreakMode="clipping" title="LDAP Port:" id="1nZ-44-UXg">
+                                                <font key="font" metaFont="system"/>
+                                                <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                                                <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                            </textFieldCell>
+                                        </textField>
+                                        <textField verticalHuggingPriority="750" id="aOA-yH-dRE">
+                                            <rect key="frame" x="204" y="297" width="68" height="22"/>
+                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                            <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" state="on" borderStyle="bezel" drawsBackground="YES" id="4Gb-cN-6AM">
+                                                <numberFormatter key="formatter" formatterBehavior="default10_4" usesGroupingSeparator="NO" groupingSize="0" minimumIntegerDigits="0" maximumIntegerDigits="42" id="NT7-EL-rOH"/>
+                                                <font key="font" metaFont="system"/>
+                                                <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
+                                                <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                            </textFieldCell>
+                                        </textField>
                                         <button toolTip="Add a new server to Nagios Manager" verticalHuggingPriority="750" id="MTW-yi-p3s">
-                                            <rect key="frame" x="11" y="441" width="108" height="32"/>
+                                            <rect key="frame" x="11" y="255" width="108" height="32"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                             <buttonCell key="cell" type="push" title="Add Server" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="7lR-AX-Z3E">
                                                 <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
@@ -870,7 +1027,7 @@
                                             </connections>
                                         </button>
                                         <button toolTip="Reload server list from prefs" verticalHuggingPriority="750" id="c8O-b0-JvE">
-                                            <rect key="frame" x="11" y="408" width="131" height="32"/>
+                                            <rect key="frame" x="11" y="227" width="131" height="32"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                             <buttonCell key="cell" type="push" title="Reload Servers" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="O2X-Zw-RVw">
                                                 <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
@@ -882,7 +1039,7 @@
                                             </connections>
                                         </button>
                                         <button toolTip="Delete Selected Server(s) from list and prefs" verticalHuggingPriority="750" id="MKV-T4-dfX">
-                                            <rect key="frame" x="11" y="375" width="196" height="32"/>
+                                            <rect key="frame" x="11" y="199" width="196" height="32"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                             <buttonCell key="cell" type="push" title="Delete Selected Server(s)" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="Kfm-kg-s8W">
                                                 <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
@@ -894,7 +1051,7 @@
                                             </connections>
                                         </button>
                                         <button toolTip="Delete all servers from list and prefs" verticalHuggingPriority="750" id="CGF-kG-f58">
-                                            <rect key="frame" x="11" y="342" width="148" height="32"/>
+                                            <rect key="frame" x="11" y="171" width="148" height="32"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                             <buttonCell key="cell" type="push" title="Delete All Servers" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="CrD-cQ-2Z3">
                                                 <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
@@ -906,12 +1063,12 @@
                                             </connections>
                                         </button>
                                         <box verticalHuggingPriority="750" boxType="separator" id="lv9-nJ-Pq3">
-                                            <rect key="frame" x="17" y="214" width="634" height="5"/>
+                                            <rect key="frame" x="17" y="155" width="634" height="5"/>
                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
                                             <accessibility description="Horizontal line to separate the status text field at the bottom of the tab from the controls at the top."/>
                                         </box>
                                         <textField toolTip="This is the status field for command results, etc." verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" id="qJ3-fB-h2k">
-                                            <rect key="frame" x="15" y="17" width="638" height="191"/>
+                                            <rect key="frame" x="15" y="18" width="638" height="132"/>
                                             <autoresizingMask key="autoresizingMask" widthSizable="YES"/>
                                             <textFieldCell key="cell" selectable="YES" allowsUndo="NO" sendsActionOnEndEditing="YES" allowsEditingTextAttributes="YES" id="DBC-Xv-1CU">
                                                 <font key="font" metaFont="systemLight" size="13"/>

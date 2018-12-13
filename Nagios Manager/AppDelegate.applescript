@@ -70,6 +70,15 @@ script AppDelegate
 	property theSMTableServerName : "" --bound to server name column in table
 	property theSMTableServerURL : "" --bound to server url column in table
 	property theSMTableServerAPIKey : "" --bound to server API Key column in table
+	property theSMUsesAuthServer : missing value --bound to the "uses AD/LDAP Auth" checkbox in server manager
+	property theSMADRadioButton : missing value -- bound to the "Active Directory" radio button in server manager
+	property theSMLDAPRadioButton : missing value -- bound to the "LDAP" radio button in server manager
+	property theSMAuthServerSecurityLevelPopUp : missing value --bound to the security level popup
+	property theSMBaseDN : missing value --the base DN text field for the auth server
+	property theSMADDomainSuffix : missing value --the domain suffix for the AD realm, i.e. cortana.com
+	property theSMADDomainControllerList : missing value --comma-delimited list of AD domain controllers
+	property theSMLDAPController : missing value --ldap server (one)
+	property theSMLDAPPort : missing value --port ldap server is listening on
 	
 	--property theSMSettingsExist : "" --are there any settings already there?
 	property theSMDefaultsExist : "" --are there currently settings?
@@ -274,6 +283,20 @@ script AppDelegate
 		else if my theSMDefaultsExist then --there's no point in running loadServerTable: if there's no data to load
 			my loadServerTable:(missing value) -- initial load of existing data into the server table.
 		end if
+		
+		my theSMUsesAuthServer's setEnabled:true --the inital state of "uses auth server" is always enabled, but not checked.
+		my theSMUsesAuthServer's setState:0
+		
+		my theSMADRadioButton's setEnabled:false --these two radio buttons are disable by default until the uses auth server checkbox is checked.
+		my theSMLDAPRadioButton's setEnabled:false
+		
+		--the auth server text fields are disabled by default
+		my theSMAuthServerSecurityLevelPopUp's setEnabled:false
+		my theSMBaseDN's setEnabled:false
+		my theSMADDomainSuffix's setEnabled:false
+		my theSMADDomainControllerList's setEnabled:false
+		my theSMLDAPController's setEnabled:false
+		my theSMLDAPPort's setEnabled:false
 		
 		--tell my theServerTable to setDoubleAction:"deleteServerFromPrefs:" --this ties a doubleclick in the server to deleting that server. We do this with bindings to the
 		--table view now
@@ -733,9 +756,45 @@ script AppDelegate
 		my userSelection's removeObjects:(my userSelection's arrangedObjects()) --since we've deleted all the servers, there's no point in having a list of users in the table. Probably a really bad idea.
 		set my theSMSDeletingLastServerFlag to false --reset this so you get the warning if you delete the last server, add one or more servers, then realize you want to delete them all
 		
-	end deleteAllServersFromPrefs:
+	end deleteAllServersFromPrefs: --handles functions related to enabling auth server entry fields
 	
+	on enableAuthServer:sender
+		set theAuthServerState to my theSMUsesAuthServer's intValue()
+		if theAuthServerState = 1 then
+			my theSMADRadioButton's setEnabled:true
+			my theSMLDAPRadioButton's setEnabled:true
+		else --if the auth server checkbox is unchecked, we want these controls disabled in the UI
+		my theSMADRadioButton's setEnabled:false
+		my theSMADRadioButton's setState:0
+		my theSMLDAPRadioButton's setEnabled:false
+		my theSMLDAPRadioButton's setState:0
+		my theSMBaseDN's setEnabled:false
+		my theSMADDomainSuffix's setEnabled:false
+		my theSMADDomainControllerList's setEnabled:false
+		my theSMLDAPController's setEnabled:false
+		my theSMLDAPPort's setEnabled:false
+		end if
 	
+	end enableAuthServer:
+	
+	on setAuthServerType:sender
+		set theAuthServerType to sender's title as text--get user level as text
+		my theSMBaseDN's setEnabled:true --base dn is used for either type of auth server, so as soon as you click on a radio button, it's set
+		my theSMAuthServerSecurityLevelPopUp's setEnabled:true
+		if theAuthServerType is "Active Directory" then --enable AD fields, disable LDAP fields
+			my theSMADDomainSuffix's setEnabled:true
+			my theSMADDomainControllerList's setEnabled:true
+			my theSMLDAPController's setEnabled:false
+			my theSMLDAPPort's setEnabled:false
+		else if theAuthServerType is "LDAP" then
+			my theSMLDAPController's setEnabled:true
+			my theSMLDAPPort's setEnabled:true
+			my theSMADDomainSuffix's setEnabled:false
+			my theSMADDomainControllerList's setEnabled:false
+		end if
+	end setAuthServerType:
+		
+		
 	
 	
 	--USER MANAGER FUNCTIONS
@@ -766,7 +825,7 @@ script AppDelegate
 		set theUMUserNameList to {} --initialze this as a list/record
 		set theUMGetUserListURL to my theUMServerURL
 		
-		set  theUMGetUserListURL to  theUMGetUserListURL & "system/user?apikey=" --append the bit we need to get user lists
+		set theUMGetUserListURL to  theUMGetUserListURL & "system/user?apikey=" --append the bit we need to get user lists
 		
 		set theServerJSONCommand to "/usr/bin/curl -XGET \"" &  theUMGetUserListURL & my theUMServerAPIKey & "&pretty=1\""
 		
@@ -858,7 +917,8 @@ script AppDelegate
           
      end deleteSelectedUsers:
      
-     on getUserLevel:sender --This is only here to handle the user type radio buttons. but, it works well enough for that.
+     on getUserLevel:sender --This is only here to handle the user type radio buttons. but, it works well enough for that. This also makes radio buttns work
+		--by having all the radio buttons in a "group" point at the same handler
           set my theUserType to sender's title as text--get user level as text
 		
           if my theUserType is "Admin" then --set the checkbutton states to the appropriate setting for an admin
