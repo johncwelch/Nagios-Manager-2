@@ -585,6 +585,7 @@ script AppDelegate
 		--array controller
 		my theServerTableController's addObjects:my theSMSettingsList --shove the current contents of theSettingsList into the array controller
 		set my theSMDefaultsExist to theDefaults's boolForKey:"hasDefaults" --grab current state for this every time this function runs
+		log theSMSettingsList
 	end loadServerTable:
 
 	on getSMServerStatus:sender
@@ -598,6 +599,10 @@ script AppDelegate
 			set theSMInfoURL to theSMSURL's stringByAppendingString: "system/info?apikey="
 			
 			set theSMSelectedAPIKey to theSelectedServer's theSMTableServerAPIKey as text --pull the selected server's API key as text
+			set theSMSelectedAuthServerStatus to theSelectedServer's theSMTableAuthServerEnabled as text --pull is the auth server enabled setting as text
+			if theSMSelectedAuthServerStatus is "1" then --if we are using an auth server, then we want to show the type in the status field
+				set theSMSelectedAuthServerType to theSelectedServer's theSMTableAuthServerConnectionMethod as text --if there's an auth server, get the connection type (ad/ldap)
+			end if
 			set theSMServerStatusCommand to "/usr/bin/curl -XGET \"" & theSMStatusURL & theSMSelectedAPIKey & "&pretty=1\"" --build the server
 			--status command
 			set theSMServerInfoCommand to "/usr/bin/curl -XGET \"" & theSMInfoURL & theSMSelectedAPIKey & "&pretty=1\"" --build the server info command
@@ -610,7 +615,11 @@ script AppDelegate
 				set my theSMStatusFieldText to "This server is running a version of Nagios earlier than what this App supports. You must be running at least Nagios XI 5.5.0"
 				return
 			else
-				set my theSMStatusFieldText to "active host checks enabled: " & theSMSServerStatusJSONDict's active_host_checks_enabled & "\t\tactive service checks enabled: " & theSMSServerStatusJSONDict's active_service_checks_enabled & "\rNagios in daemon mode: " & theSMSServerStatusJSONDict's daemon_mode & "\t\t\tevent handlers enabled: " & theSMSServerStatusJSONDict's event_handlers_enabled & "\rflap detection enabled: " & theSMSServerStatusJSONDict's flap_detection_enabled & "\t\t\tlast log rotation: " & theSMSServerStatusJSONDict's last_log_rotation & "\rnotifications enabled: " & theSMSServerStatusJSONDict's notifications_enabled & "\t\t\t\tpassive host checks enabled: " & theSMSServerStatusJSONDict's passive_host_checks_enabled & "\rpassive service checks enabled: " & theSMSServerStatusJSONDict's passive_service_checks_enabled & "\tprocess id: " & theSMSServerStatusJSONDict's process_id & "\rproduct: " & theSMServerInfoJSONDict's product & "\t\t\t\t\tversion: " & theSMServerInfoJSONDict's |version|
+				if theSMSelectedAuthServerStatus is "0" then
+					set my theSMStatusFieldText to "active host checks enabled: " & theSMSServerStatusJSONDict's active_host_checks_enabled & "\t\tactive service checks enabled: " & theSMSServerStatusJSONDict's active_service_checks_enabled & "\rNagios in daemon mode: " & theSMSServerStatusJSONDict's daemon_mode & "\t\t\tevent handlers enabled: " & theSMSServerStatusJSONDict's event_handlers_enabled & "\rflap detection enabled: " & theSMSServerStatusJSONDict's flap_detection_enabled & "\t\t\tlast log rotation: " & theSMSServerStatusJSONDict's last_log_rotation & "\rnotifications enabled: " & theSMSServerStatusJSONDict's notifications_enabled & "\t\t\t\tpassive host checks enabled: " & theSMSServerStatusJSONDict's passive_host_checks_enabled & "\rpassive service checks enabled: " & theSMSServerStatusJSONDict's passive_service_checks_enabled & "\tprocess id: " & theSMSServerStatusJSONDict's process_id & "\rproduct: " & theSMServerInfoJSONDict's product & "\t\t\t\t\tversion: " & theSMServerInfoJSONDict's |version| & "\ruses auth server: " & theSMSelectedAuthServerStatus
+				else
+					set my theSMStatusFieldText to "active host checks enabled: " & theSMSServerStatusJSONDict's active_host_checks_enabled & "\t\tactive service checks enabled: " & theSMSServerStatusJSONDict's active_service_checks_enabled & "\rNagios in daemon mode: " & theSMSServerStatusJSONDict's daemon_mode & "\t\t\tevent handlers enabled: " & theSMSServerStatusJSONDict's event_handlers_enabled & "\rflap detection enabled: " & theSMSServerStatusJSONDict's flap_detection_enabled & "\t\t\tlast log rotation: " & theSMSServerStatusJSONDict's last_log_rotation & "\rnotifications enabled: " & theSMSServerStatusJSONDict's notifications_enabled & "\t\t\t\tpassive host checks enabled: " & theSMSServerStatusJSONDict's passive_host_checks_enabled & "\rpassive service checks enabled: " & theSMSServerStatusJSONDict's passive_service_checks_enabled & "\tprocess id: " & theSMSServerStatusJSONDict's process_id & "\rproduct: " & theSMServerInfoJSONDict's product & "\t\t\t\t\tversion: " & theSMServerInfoJSONDict's |version| & "\ruses auth server: " & theSMSelectedAuthServerStatus & "\t\t\t\tauth server type: " & theSMSelectedAuthServerType
+				end if
 			end if
 		on error errorMessage number errorNumber
 			if errorNumber is -1700 then
@@ -720,9 +729,9 @@ script AppDelegate
 			--note that we aren't going to show all this in the prefs. At most, we'll show that it's using an auth server and what type in the info area
 			--at the bottom of the window.
 			if theAuthServerType is "ad" then
-				set thePrefsRecord to {theSMTableServerName:my theSMServerName,theSMTableServerURL:my theSMServerURL,theSMTableServerAPIKey:my theSMServerAPIKey,theSMTableAuthServerEnabled:theAuthServerState,theSMTableAuthServerBaseDN:theBaseDN,theSMTableAuthServerSecurityMethod:theAuthServerSecurityMethod,theSMTableAuthServerADDomainSuffix:theADDomainSuffix,theSMTableAuthServerADControllerList:theADDomainControllers} --build the record
+				set thePrefsRecord to {theSMTableServerName:my theSMServerName,theSMTableServerURL:my theSMServerURL,theSMTableServerAPIKey:my theSMServerAPIKey,theSMTableAuthServerEnabled:theAuthServerState,theSMTableAuthServerConnectionMethod:theAuthServerType,theSMTableAuthServerBaseDN:theBaseDN,theSMTableAuthServerSecurityMethod:theAuthServerSecurityMethod,theSMTableAuthServerADDomainSuffix:theADDomainSuffix,theSMTableAuthServerADControllerList:theADDomainControllers} --build the record
 			else
-				set thePrefsRecord to {theSMTableServerName:my theSMServerName,theSMTableServerURL:my theSMServerURL,theSMTableServerAPIKey:my theSMServerAPIKey,theSMTableAuthServerEnabled:theAuthServerState,theSMTableAuthServerBaseDN:theBaseDN,theSMTableAuthServerSecurityMethod:theAuthServerSecurityMethod,theSMTableAuthServerLDAPController:theLDAPController,theSMTableAuthServerLDAPPort:theLDAPPort} --build the record
+				set thePrefsRecord to {theSMTableServerName:my theSMServerName,theSMTableServerURL:my theSMServerURL,theSMTableServerAPIKey:my theSMServerAPIKey,theSMTableAuthServerEnabled:theAuthServerState,theSMTableAuthServerConnectionMethod:theAuthServerType,theSMTableAuthServerBaseDN:theBaseDN,theSMTableAuthServerSecurityMethod:theAuthServerSecurityMethod,theSMTableAuthServerLDAPController:theLDAPController,theSMTableAuthServerLDAPPort:theLDAPPort} --build the record
 			end if
 			
 		else
@@ -791,6 +800,7 @@ script AppDelegate
 					--"but I thought it was okay" problem. We don't think we know what hasDefaults is on exit, we KNOW
 					--my loadUserManagerPopup:(missing value) --reload the popup since we deleted a server out from under it. this loads the first object in the server array controller
 				end if
+				set my theSMStatusFieldText to "" --clear this field
 			else if theDeleteServerButton is "Cancel" then --nope
 				return
 			end if
@@ -831,7 +841,7 @@ script AppDelegate
 		end if
 		my userSelection's removeObjects:(my userSelection's arrangedObjects()) --since we've deleted all the servers, there's no point in having a list of users in the table. Probably a really bad idea.
 		set my theSMSDeletingLastServerFlag to false --reset this so you get the warning if you delete the last server, add one or more servers, then realize you want to delete them all
-		
+		set my theSMStatusFieldText to "" --clear this field
 	end deleteAllServersFromPrefs: --handles functions related to enabling auth server entry fields
 	
 	on enableAuthServer:sender
