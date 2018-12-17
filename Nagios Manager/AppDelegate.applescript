@@ -70,6 +70,14 @@ script AppDelegate
 	property theSMTableServerName : "" --bound to server name column in table
 	property theSMTableServerURL : "" --bound to server url column in table
 	property theSMTableServerAPIKey : "" --bound to server API Key column in table
+	property theSMTableAuthServerEnabled : "" --is there an auth server  (for prefs, this is the actual value sent to the server if needed)
+	property theSMTableAuthServerBaseDN : "" --base dn for the auth server (for prefs)
+	property theSMTableAuthServerSecurityMethod : "" --security method for the auth server (for prefs)
+	property theSMTableAuthServerConnectionMethod : "" --ad or ldap (for prefs)
+	property theSMTableAuthServerADDomainSuffix : "" --ad domain suffex (for prefs)
+	property theSMTableAuthServerADControllerList : "" --ad controller list (for prefs)
+	property theSMTableAuthServerLDAPController : "" --LDAP Controller (for prefs)
+	property theSMTableAuthServerLDAPPort : "" -- LDAP port (for prefs)
 	property theSMUsesAuthServer : missing value --bound to the "uses AD/LDAP Auth" checkbox in server manager
 	property theSMADRadioButton : missing value -- bound to the "Active Directory" radio button in server manager
 	property theSMLDAPRadioButton : missing value -- bound to the "LDAP" radio button in server manager
@@ -616,6 +624,7 @@ script AppDelegate
 	
 	on addServerToPrefs:sender --this was saveSettings:. I know renaming functions will cause problems in the short run, but better names will save pain in the long run
 		--also, it avoids name clash with existing stuff until I can get that cleaned up
+		set hasAuthServer to false --initially, no one has an auth server. We change this if needed.
 		
 		--check for blank fields, and handle them. This is all the sanity checking I plan on doing for now.
 		if (my theSMServerName is missing value) or (my theSMServerName is "") then --did they enter a name for the server?
@@ -635,6 +644,11 @@ script AppDelegate
 		
 		set theAuthServerState to my theSMUsesAuthServer's intValue()
 		if theAuthServerState = 1 then --if they have enabled the Use LDAP/AD Auth checkbox, we need to do some sanity checking here.
+			set hasAuthServer to true --we have an auth server, this needs to be in the prefs. maybe. we'll see. but just in case.
+			
+			set theAuthServerSecurityMethod to theSMAuthServerSecurityLevelPopUp's titleOfSelectedItem()'s lowercaseString() --get the lowercase version
+			--of the security method just in case the case matters.
+			
 			if (my theSMADRadioButton's state() = 0) and (my theSMLDAPRadioButton's state() = 0) then
 				set my theSMStatusFieldText to "If you want to use an Auth server with this Nagios server, you MUST chose LDAP or Active Directory (AD)" --gotta pick one dude
 				return
@@ -702,7 +716,20 @@ script AppDelegate
 		--this has the side benefit of showing up in the text box, so the user has a nice visual feedback outside of the table
 		--for about .something seconds.
 		
-		set thePrefsRecord to {theSMTableServerName:my theSMServerName,theSMTableServerURL:my theSMServerURL,theSMTableServerAPIKey:my theSMServerAPIKey} --build the record
+		if hasAuthServer then --if we have an auth server, we need to handle the prefs for it.
+			--note that we aren't going to show all this in the prefs. At most, we'll show that it's using an auth server and what type in the info area
+			--at the bottom of the window.
+			if theAuthServerType is "ad" then
+				set thePrefsRecord to {theSMTableServerName:my theSMServerName,theSMTableServerURL:my theSMServerURL,theSMTableServerAPIKey:my theSMServerAPIKey,theSMTableAuthServerEnabled:theAuthServerState,theSMTableAuthServerBaseDN:theBaseDN,theSMTableAuthServerSecurityMethod:theAuthServerSecurityMethod,theSMTableAuthServerADDomainSuffix:theADDomainSuffix,theSMTableAuthServerADControllerList:theADDomainControllers} --build the record
+			else
+				set thePrefsRecord to {theSMTableServerName:my theSMServerName,theSMTableServerURL:my theSMServerURL,theSMTableServerAPIKey:my theSMServerAPIKey,theSMTableAuthServerEnabled:theAuthServerState,theSMTableAuthServerBaseDN:theBaseDN,theSMTableAuthServerSecurityMethod:theAuthServerSecurityMethod,theSMTableAuthServerLDAPController:theLDAPController,theSMTableAuthServerLDAPPort:theLDAPPort} --build the record
+			end if
+			
+		else
+			set thePrefsRecord to {theSMTableServerName:my theSMServerName,theSMTableServerURL:my theSMServerURL,theSMTableServerAPIKey:my theSMServerAPIKey,theSMTableAuthServerEnabled:theAuthServerState} --build the record for no auth server
+		end if
+		
+		
 		
 		my theSMSettingsList's addObject:thePrefsRecord --add the record to the end of the settings list
 		
@@ -844,7 +871,7 @@ script AppDelegate
 	end setAuthServerType:
 	
 	on popupTest:sender
-		set theTest to theSMBaseDN's stringValue()
+		set theTest to theSMAuthServerSecurityLevelPopUp's titleOfSelectedItem()'s lowercaseString()
 		log theTest
 	end popupTest:
 		
