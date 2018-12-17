@@ -131,6 +131,8 @@ script AppDelegate
 	--property theServerUsers:"" --grabs just the users out of theUMJSONDict as a NSArray of NSDicts
 	property theUserName:"" --user full name from the nagios server
 	property theUserID:"" --user id from the nagios server
+	property theUMUserAuthType : missing value
+	property theUserCanLocalAuth : missing value
 	
 	property theOtherUserInfoList : {} -- alist of records we'll need to do something cool without a gob of recoding
 	
@@ -852,15 +854,16 @@ script AppDelegate
 			my theSMADRadioButton's setEnabled:true
 			my theSMLDAPRadioButton's setEnabled:true
 		else --if the auth server checkbox is unchecked, we want these controls disabled in the UI
-		my theSMADRadioButton's setEnabled:false
-		my theSMADRadioButton's setState:0
-		my theSMLDAPRadioButton's setEnabled:false
-		my theSMLDAPRadioButton's setState:0
-		my theSMBaseDN's setEnabled:false
-		my theSMADDomainSuffix's setEnabled:false
-		my theSMADDomainControllerList's setEnabled:false
-		my theSMLDAPController's setEnabled:false
-		my theSMLDAPPort's setEnabled:false
+			my theSMADRadioButton's setEnabled:false
+			my theSMADRadioButton's setState:0
+			my theSMLDAPRadioButton's setEnabled:false
+			my theSMLDAPRadioButton's setState:0
+			my theSMAuthServerSecurityLevelPopUp's setEnabled:false
+			my theSMBaseDN's setEnabled:false
+			my theSMADDomainSuffix's setEnabled:false
+			my theSMADDomainControllerList's setEnabled:false
+			my theSMLDAPController's setEnabled:false
+			my theSMLDAPPort's setEnabled:false
 		end if
 	
 	end enableAuthServer:
@@ -910,9 +913,20 @@ script AppDelegate
 		set my theUMServerURL to x's theSMTableServerURL as text--grab the server URL
 		set my theUMServerUsesAuthServer to x's theSMTableAuthServerEnabled --get auth server status
 		
-		my getServerUsers:(missing value) --use missing value because we have to pass something. in ths case, the ASOC version of nil
+		if (my theUMServerUsesAuthServer as text) is "0" then --we aren't using an auth server
+			my theUMUserAuthType's setEnabled:false
+			my theUserCanLocalAuth's setEnabled:false
+		else --we're using an auth server
+			my theUMUserAuthType's setEnabled:true
+			
+			if (my theUMUserAuthType's titleOfSelectedItem() as text) is "Local" then --if the popup's current value is local, then we don't want to enable the local auth checkbox, it's extraneous
+				my theUserCanLocalAuth's setEnabled:false
+				else
+				my theUserCanLocalAuth's setEnabled:true
+			end if
+		end if
 		
-
+		my getServerUsers:(missing value) --use missing value because we have to pass something. in ths case, the ASOC version of nil
 	end loadUserManagerPopup:
 	
 	on getServerUsers:sender --this isn't attached to a specific button, but we'll leave the sender
@@ -973,6 +987,19 @@ script AppDelegate
           set my theUMServerAPIKey to x's theSMTableServerAPIKey --grab the server key
           set my theUMServerURL to x's theSMTableServerURL --grab the server url
 		set my theUMServerUsesAuthServer to x's theSMTableAuthServerEnabled --get auth server status
+		
+		if (my theUMServerUsesAuthServer as text) is "0" then --we aren't using an auth server
+			my theUMUserAuthType's setEnabled:false
+			my theUserCanLocalAuth's setEnabled:false
+		else --we're using an auth server
+			my theUMUserAuthType's setEnabled:true
+			
+			if (my theUMUserAuthType's titleOfSelectedItem() as text) is "Local" then --if the popup's value is local, then we don't want to enable the local auth checkbox, it's extraneous
+				my theUserCanLocalAuth's setEnabled:false
+			else
+				my theUserCanLocalAuth's setEnabled:true
+			end if
+		end if
 		
 		my getServerUsers:(missing value) --load the user manager user table data
           
@@ -1075,6 +1102,8 @@ script AppDelegate
 	
 	on addUser:sender --kicks off when add user button is clicked
 		set theAddUserServerURL to (my theUMServerURL as text) & "system/user?apikey=" --build the URL to add the user
+		set allowsLocalOnlyAuth to "0" --this is only used if it's an AD or LDAP user. This only allows this user to log in when the auth server is reachable
+		--we may not do it this way depending on UI room
 		set my theRESTresults to "" --clear the notification field value
 		set isAdminUser to my adminRadioButton's objectValue() --get the value of the admin radio button, since it's mutually exclusive
 		if isAdminUser then
@@ -1135,6 +1164,14 @@ script AppDelegate
 		
 		set my theRESTresults to "" --clear the notification field value
 	end cancelAddUser:
+	
+	on enableLocalAuthControl:sender --runs if the popup changes
+		if (sender's title as text) is "Local" then
+			my theUserCanLocalAuth's setEnabled:false --if it's local, this is a given, no need to have it enabled.
+		else
+			my theUserCanLocalAuth's setEnabled:true --if it's AD or LDAP, then yeah, we want to enable this control
+		end if
+	end enableLocalAuthControl:
 	
 	
 	--HOST MANAGER FUNCTIONS
