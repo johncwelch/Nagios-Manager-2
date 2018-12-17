@@ -908,6 +908,7 @@ script AppDelegate
 		set my theUMServerURL to x's theSMTableServerURL as text--grab the server URL
 		
 		my getServerUsers:(missing value) --use missing value because we have to pass something. in ths case, the ASOC version of nil
+		
 
 	end loadUserManagerPopup:
 	
@@ -977,12 +978,15 @@ script AppDelegate
      
      on deleteSelectedUsers:sender --this activates for either the "delete user" button or a double click in the table
           try
-			set theUMUserDeleteURL to my buildNewURL:("user") --get the URL to delete a user
+			--set theUMUserDeleteURL to my buildNewURL:("user") --get the URL to delete a user
 			set theSelection to userSelection's selectedObjects() as record --this gets the selection in the table row
                --and converts the NSArray to an AS record. Is it strictly needed? No, but it's not a big deal either.
                set theUserNameToBeDeleted to |theUserName| of theSelection --set user name to local var
+			set theUserIDToBeDeleted to |theUserID| of theSelection --get the userID to be deleted
 			
-			set theDeleteUIDCommand to "/usr/bin/curl -XDELETE \"" & theUMUserDeleteURL & my theServerAPIKey & "&pretty=1\"" --builds the full
+			set theUMUserDeleteURL to (my theUMServerURL as text) & "system/user/" & (theUserIDToBeDeleted as text) & "?apikey="--simpler URL build via AS string append rather than grep
+			
+			set theDeleteUIDCommand to "/usr/bin/curl -XDELETE \"" & theUMUserDeleteURL & (my theUMServerAPIKey as text) & "&pretty=1\"" --builds the full
 			--command for the do shell script step. Yes, there may be a more cocoa-y way, but I'm pretty sure it's not more efficient in terms
 			--of coding, (two lines) and I doubt it runs significantly faster.
 
@@ -1066,6 +1070,7 @@ script AppDelegate
      end enabledReadOnly:
 	
 	on addUser:sender --kicks off when add user button is clicked
+		set theAddUserServerURL to (my theUMServerURL as text) & "system/user?apikey=" --build the URL to add the user
 		set my theRESTresults to "" --clear the notification field value
 		set isAdminUser to my adminRadioButton's objectValue() --get the value of the admin radio button, since it's mutually exclusive
 		if isAdminUser then
@@ -1098,7 +1103,7 @@ script AppDelegate
 		
 		(*this next line builds the actual command to add a user. There's a lot of things that are hardcoded as that's the norm.
 		 it's not a problem to fix later if we need, the variables are already declared, just unused.*)
-		set theAddCommand to "/usr/bin/curl -XPOST \"" & (my theServerURL as text) & (my theServerAPIKey as text) & "&pretty=1\"" & " -d \"username=" & my theNagiosNewUserName & "&password=" & my theNagiosNewUserPassword & "&name=" & my theNagiosNewUserRealName & "&email=" & my theNagiosNewUserEmailAddress & "&force_pw_change=1&email_info=1&monitoring_contact=1&enable_notifications=1&language=xi default&date_format=1&number_format=1&auth_level=" & theAuthLevel & "&can_see_all_hs=" & my canSeeAllObjects's intValue() & "&can_control_all_hs=" & my canControlAllObjects's intValue() & "&can_reconfigure_hs=" & my canReconfigureAllObjects's intValue() & "&can_control_engine=" & my canSeeOrConfigureMonitoringEngine's intValue() & "&can_use_advanced=" & my canAccessAdvancedFeatures's intValue() & "&read_only=" & my readOnly's intValue() & "\""
+		set theAddCommand to "/usr/bin/curl -XPOST \"" & (theAddUserServerURL) & (my theUMServerAPIKey as text) & "&pretty=1\"" & " -d \"username=" & my theNagiosNewUserName & "&password=" & my theNagiosNewUserPassword & "&name=" & my theNagiosNewUserRealName & "&email=" & my theNagiosNewUserEmailAddress & "&force_pw_change=1&email_info=1&monitoring_contact=1&enable_notifications=1&language=xi default&date_format=1&number_format=1&auth_level=" & theAuthLevel & "&can_see_all_hs=" & my canSeeAllObjects's intValue() & "&can_control_all_hs=" & my canControlAllObjects's intValue() & "&can_reconfigure_hs=" & my canReconfigureAllObjects's intValue() & "&can_control_engine=" & my canSeeOrConfigureMonitoringEngine's intValue() & "&can_use_advanced=" & my canAccessAdvancedFeatures's intValue() & "&read_only=" & my readOnly's intValue() & "\""
 		
 		set my theRESTresults to do shell script theAddCommand --add the user
 		my getServerUsers:(missing value) --reload the list
