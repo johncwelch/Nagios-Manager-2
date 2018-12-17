@@ -126,6 +126,7 @@ script AppDelegate
 	property theUMServerName:"" --name of the current Nagios server
 	property theUMServerAPIKey:"" --API Key for the current nagios server
 	property theUMServerURL:"" --URL for the current nagios server
+	property theUMServerUsesAuthServer : "" --does this server use an auth server, yes or no?
 	--property theUMJSONDict:"" --this holds the result of NSJSONSerialization as an NSArray of NSDicts
 	--property theServerUsers:"" --grabs just the users out of theUMJSONDict as a NSArray of NSDicts
 	property theUserName:"" --user full name from the nagios server
@@ -253,6 +254,7 @@ script AppDelegate
      property theServerName:"" --name of the server for curl ops
      property theServerAPIKey:"" --API key of server for curl ops
      property theServerURL:"" --URL of server for curl ops
+	property theServerUsesAuthServer : ""
 	property theRESTresults : "" --so we can show the results of rest commands as appropriate. This is actually a generic display value for bottom information display
 		--I might fix it when I'm doing cleanup. or not.
 	property theSelectedTabViewItemIndex : "" --the index of the currently selected tab view item. Note this doesn't have any real value until a
@@ -585,7 +587,7 @@ script AppDelegate
 		--array controller
 		my theServerTableController's addObjects:my theSMSettingsList --shove the current contents of theSettingsList into the array controller
 		set my theSMDefaultsExist to theDefaults's boolForKey:"hasDefaults" --grab current state for this every time this function runs
-		log theSMSettingsList
+		--log theSMSettingsList
 	end loadServerTable:
 
 	on getSMServerStatus:sender
@@ -906,6 +908,7 @@ script AppDelegate
 		set my theUMServerName to x's theSMTableServerName --grab the server name
 		set my theUMServerAPIKey to x's theSMTableServerAPIKey --grab the server key
 		set my theUMServerURL to x's theSMTableServerURL as text--grab the server URL
+		set my theUMServerUsesAuthServer to x's theSMTableAuthServerEnabled --get auth server status
 		
 		my getServerUsers:(missing value) --use missing value because we have to pass something. in ths case, the ASOC version of nil
 		
@@ -966,9 +969,10 @@ script AppDelegate
 		--so we can pull the right info for the curl commands
 		
 		set x to my theServerTableController's selectedObjects() as record--grab the selected record
-          set my theServerName to x's theSMTableServerName --grab the server name
-          set my theServerAPIKey to x's theSMTableServerAPIKey --grab the server key
-          set my theServerURL to x's theSMTableServerURL --grab the server url
+          set my theUMServerName to x's theSMTableServerName --grab the server name
+          set my theUMServerAPIKey to x's theSMTableServerAPIKey --grab the server key
+          set my theUMServerURL to x's theSMTableServerURL --grab the server url
+		set my theUMServerUsesAuthServer to x's theSMTableAuthServerEnabled --get auth server status
 		
 		my getServerUsers:(missing value) --load the user manager user table data
           

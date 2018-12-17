@@ -1084,17 +1084,6 @@
                                                 </binding>
                                             </connections>
                                         </textField>
-                                        <button verticalHuggingPriority="750" id="dCN-aP-fyp">
-                                            <rect key="frame" x="206" y="255" width="64" height="32"/>
-                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                            <buttonCell key="cell" type="push" title="test" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="08t-od-sb3">
-                                                <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
-                                                <font key="font" metaFont="system"/>
-                                            </buttonCell>
-                                            <connections>
-                                                <action selector="popupTest:" target="Voe-Tx-rLC" id="j1B-1p-xHF"/>
-                                            </connections>
-                                        </button>
                                     </subviews>
                                     <accessibility description="Add Server to Nagios Manager button"/>
                                 </view>
@@ -1109,7 +1098,7 @@
                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                             <clipView key="contentView" drawsBackground="NO" id="rAa-PW-jfz">
                                                 <rect key="frame" x="1" y="0.0" width="350" height="489"/>
-                                                <autoresizingMask key="autoresizingMask"/>
+                                                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                 <subviews>
                                                     <tableView verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="firstColumnOnly" columnSelection="YES" multipleSelection="NO" autosaveColumns="NO" rowSizeStyle="automatic" headerView="es9-5J-ksV" viewBased="YES" id="fVd-64-b9e">
                                                         <rect key="frame" x="0.0" y="0.0" width="350" height="466"/>
@@ -1220,7 +1209,7 @@
                                             </connections>
                                         </popUpButton>
                                         <button toolTip="Delete the currently selected user in the User Table." verticalHuggingPriority="750" id="Q2F-9g-cL7">
-                                            <rect key="frame" x="11" y="506" width="169" height="32"/>
+                                            <rect key="frame" x="11" y="524" width="169" height="32"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                             <buttonCell key="cell" type="push" title="Delete Selected User" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="Gqd-O2-inM">
                                                 <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
@@ -1232,23 +1221,14 @@
                                             </connections>
                                         </button>
                                         <box verticalHuggingPriority="750" boxType="separator" id="rvY-NJ-HQN">
-                                            <rect key="frame" x="19" y="490" width="219" height="5"/>
+                                            <rect key="frame" x="19" y="517" width="219" height="5"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                         </box>
                                         <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" id="fIQ-kM-KwF">
-                                            <rect key="frame" x="76" y="467" width="104" height="17"/>
+                                            <rect key="frame" x="76" y="494" width="104" height="17"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                             <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="Add Local User" id="XWs-r1-fVN">
                                                 <font key="font" metaFont="systemHeavy" size="13"/>
-                                                <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
-                                                <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
-                                            </textFieldCell>
-                                        </textField>
-                                        <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" id="Kg3-vz-Dvt">
-                                            <rect key="frame" x="52" y="456" width="152" height="13"/>
-                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                            <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="This App cannot add AD Users" id="7Jw-EG-mXx">
-                                                <font key="font" metaFont="system" size="10"/>
                                                 <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
                                                 <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                                             </textFieldCell>
@@ -1587,7 +1567,7 @@ Gw
                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                             <clipView key="contentView" id="LTo-sO-MEg">
                                                 <rect key="frame" x="1" y="0.0" width="385" height="464"/>
-                                                <autoresizingMask key="autoresizingMask"/>
+                                                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                 <subviews>
                                                     <tableView verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" columnSelection="YES" multipleSelection="NO" autosaveColumns="NO" rowSizeStyle="automatic" headerView="bbp-qv-gaf" viewBased="YES" id="edc-nj-R3v">
                                                         <rect key="frame" x="0.0" y="0.0" width="385" height="439"/>
@@ -2023,7 +2003,7 @@ Gw
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                             <clipView key="contentView" id="TOr-O2-qdh">
                                                 <rect key="frame" x="1" y="0.0" width="229" height="101"/>
-                                                <autoresizingMask key="autoresizingMask"/>
+                                                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                 <subviews>
                                                     <tableView verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" columnSelection="YES" autosaveColumns="NO" rowSizeStyle="automatic" headerView="sMV-sv-x4R" viewBased="YES" id="0RI-NN-yR2">
                                                         <rect key="frame" x="0.0" y="0.0" width="229" height="76"/>
