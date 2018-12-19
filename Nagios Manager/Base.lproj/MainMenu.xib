@@ -688,7 +688,7 @@
                                     <rect key="frame" x="10" y="33" width="660" height="611"/>
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                     <subviews>
-                                        <scrollView toolTip="Table with Nagios Server Information." autohidesScrollers="YES" horizontalLineScroll="19" horizontalPageScroll="10" verticalLineScroll="19" verticalPageScroll="10" usesPredominantAxisScrolling="NO" id="vZD-xc-v3m">
+                                        <scrollView toolTip="This table contains the name, URL and API key of every server the app knows about, one row per server." autohidesScrollers="YES" horizontalLineScroll="19" horizontalPageScroll="10" verticalLineScroll="19" verticalPageScroll="10" usesPredominantAxisScrolling="NO" id="vZD-xc-v3m">
                                             <rect key="frame" x="280" y="178" width="363" height="430"/>
                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                             <clipView key="contentView" id="xUI-da-J3c">
@@ -871,32 +871,38 @@
                                         <button verticalHuggingPriority="750" id="sve-eP-LoB">
                                             <rect key="frame" x="15" y="494" width="150" height="18"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                            <string key="toolTip">Check this if the Nagios Server you are adding uses an LDAP or AD-based authentication server. This will enable the fields needed to add that information to the server settings in Nagios Manager</string>
                                             <buttonCell key="cell" type="check" title="Uses AD/LDAP Auth: " bezelStyle="regularSquare" imagePosition="right" inset="2" id="41g-RI-Med">
                                                 <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                                                 <font key="font" metaFont="system"/>
                                             </buttonCell>
+                                            <accessibility description="Uses AD/LDAP Authentication">
+                                                <string key="help">Check this if the Nagios Server you are adding uses an LDAP or AD-based authentication server. This will enable the fields needed to add that information to the server settings in Nagios Manager</string>
+                                            </accessibility>
                                             <connections>
                                                 <action selector="enableAuthServer:" target="Voe-Tx-rLC" id="SEZ-3v-OF1"/>
                                             </connections>
                                         </button>
-                                        <button verticalHuggingPriority="750" id="Rwl-s8-xdo">
+                                        <button toolTip="If you use an external Active Directory (AD) authentication server, select this radio button" verticalHuggingPriority="750" id="Rwl-s8-xdo">
                                             <rect key="frame" x="16" y="468" width="119" height="18"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                             <buttonCell key="cell" type="radio" title="Active Directory" bezelStyle="regularSquare" imagePosition="left" alignment="left" inset="2" id="rlb-iC-FyO">
                                                 <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                                                 <font key="font" metaFont="system"/>
                                             </buttonCell>
+                                            <accessibility description="Active Directory " help="If you use an external Active Directory (AD) authentication server, select this radio button"/>
                                             <connections>
                                                 <action selector="setAuthServerType:" target="Voe-Tx-rLC" id="Iiw-k5-Tvs"/>
                                             </connections>
                                         </button>
-                                        <button verticalHuggingPriority="750" id="ONE-Mk-b2V">
+                                        <button toolTip="If you use an external LDAP authentication server, select this radio button" verticalHuggingPriority="750" id="ONE-Mk-b2V">
                                             <rect key="frame" x="159" y="468" width="56" height="18"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                             <buttonCell key="cell" type="radio" title="LDAP" bezelStyle="regularSquare" imagePosition="left" alignment="left" inset="2" id="JV1-aj-a3l">
                                                 <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                                                 <font key="font" metaFont="system"/>
                                             </buttonCell>
+                                            <accessibility description="LDAP" help="If you use an external LDAP authentication server, select this radio button"/>
                                             <connections>
                                                 <action selector="setAuthServerType:" target="Voe-Tx-rLC" id="onh-qN-uP6"/>
                                             </connections>
@@ -910,7 +916,7 @@
                                                 <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                                             </textFieldCell>
                                         </textField>
-                                        <popUpButton verticalHuggingPriority="750" id="AEo-2f-ktP">
+                                        <popUpButton toolTip="Use this to select the security level used by the authentication server. The options are None, SSL, TLS" verticalHuggingPriority="750" id="AEo-2f-ktP">
                                             <rect key="frame" x="116" y="434" width="159" height="25"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                             <popUpButtonCell key="cell" type="push" title="None" bezelStyle="rounded" alignment="left" lineBreakMode="truncatingTail" state="on" borderStyle="borderAndBezel" imageScaling="proportionallyDown" inset="2" selectedItem="z6E-fh-QlT" id="Qut-xF-3n4">
@@ -924,6 +930,7 @@
                                                     </items>
                                                 </menu>
                                             </popUpButtonCell>
+                                            <accessibility description="Security Level " help="Use this to select the security level used by the authentication server. The options are None, SSL, TLS"/>
                                         </popUpButton>
                                         <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" id="xI1-LF-ge3">
                                             <rect key="frame" x="15" y="407" width="60" height="17"/>
@@ -934,7 +941,7 @@
                                                 <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                                             </textFieldCell>
                                         </textField>
-                                        <textField verticalHuggingPriority="750" id="9kw-9P-QkA">
+                                        <textField toolTip="Enter the Base DN for the authentication server here. This applies to both LDAP and AD servers." verticalHuggingPriority="750" id="9kw-9P-QkA">
                                             <rect key="frame" x="118" y="405" width="154" height="22"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                             <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" borderStyle="bezel" drawsBackground="YES" id="B3b-QE-vYi">
@@ -942,6 +949,7 @@
                                                 <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                                                 <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                                             </textFieldCell>
+                                            <accessibility description="Base DN" help="Enter the Base DN for the authentication server here. This applies to both LDAP and AD servers."/>
                                         </textField>
                                         <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" id="4vE-9q-4ER">
                                             <rect key="frame" x="15" y="380" width="114" height="17"/>
@@ -952,7 +960,7 @@
                                                 <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                                             </textFieldCell>
                                         </textField>
-                                        <textField verticalHuggingPriority="750" id="4jH-7l-8bi">
+                                        <textField toolTip="Enter the AD authentication domain suffix here, in the form of: @company.com" verticalHuggingPriority="750" id="4jH-7l-8bi">
                                             <rect key="frame" x="135" y="378" width="137" height="22"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                             <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" borderStyle="bezel" drawsBackground="YES" id="97S-bc-UN8">
@@ -960,6 +968,7 @@
                                                 <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                                                 <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                                             </textFieldCell>
+                                            <accessibility description="AD Domain Suffix" help="Enter the AD authentication domain suffix here, in the form of: @company.com"/>
                                         </textField>
                                         <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" id="Qhs-8q-d0t">
                                             <rect key="frame" x="15" y="353" width="146" height="17"/>
@@ -973,11 +982,15 @@
                                         <textField verticalHuggingPriority="750" id="vCO-xc-CzZ">
                                             <rect key="frame" x="167" y="351" width="105" height="22"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                            <string key="toolTip">Enter the AD domain controllers here, either the fully-qualified DNS name(s) or IP address(es). If you have more than one AD controller, separate the servers with commas.</string>
                                             <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" borderStyle="bezel" drawsBackground="YES" id="K6h-75-fwz">
                                                 <font key="font" metaFont="system"/>
                                                 <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                                                 <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                                             </textFieldCell>
+                                            <accessibility description="AD Domain Controllers">
+                                                <string key="help">Enter the AD domain controllers here, either the fully-qualified DNS name(s) or IP address(es). If you have more than one AD controller, separate the servers with commas.</string>
+                                            </accessibility>
                                         </textField>
                                         <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" id="UKL-2T-3Eh">
                                             <rect key="frame" x="15" y="326" width="73" height="17"/>
@@ -988,7 +1001,7 @@
                                                 <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                                             </textFieldCell>
                                         </textField>
-                                        <textField verticalHuggingPriority="750" id="skp-Mh-Jyd">
+                                        <textField toolTip="Enter the fully-qualified DNS name or IP address of your LDAP server here. Note: only enter one." verticalHuggingPriority="750" id="skp-Mh-Jyd">
                                             <rect key="frame" x="118" y="324" width="154" height="22"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                             <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" borderStyle="bezel" drawsBackground="YES" id="peR-qN-kaD">
@@ -996,6 +1009,7 @@
                                                 <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                                                 <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                                             </textFieldCell>
+                                            <accessibility description="LDAP Host" help="Enter the fully-qualified DNS name or IP address of your LDAP server here. Note: only enter one."/>
                                         </textField>
                                         <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" id="ZRP-ar-SH5">
                                             <rect key="frame" x="15" y="299" width="70" height="17"/>
@@ -1006,15 +1020,16 @@
                                                 <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                                             </textFieldCell>
                                         </textField>
-                                        <textField verticalHuggingPriority="750" id="aOA-yH-dRE">
+                                        <textField toolTip="Enter the numerical port used by the LDAP host in the &quot;LDAP Host&quot; field here." verticalHuggingPriority="750" id="aOA-yH-dRE">
                                             <rect key="frame" x="204" y="297" width="68" height="22"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                            <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" state="on" borderStyle="bezel" drawsBackground="YES" id="4Gb-cN-6AM">
+                                            <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" state="on" borderStyle="bezel" placeholderString="389" drawsBackground="YES" id="4Gb-cN-6AM">
                                                 <numberFormatter key="formatter" formatterBehavior="default10_4" usesGroupingSeparator="NO" groupingSize="0" minimumIntegerDigits="0" maximumIntegerDigits="42" id="NT7-EL-rOH"/>
                                                 <font key="font" metaFont="system"/>
                                                 <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                                                 <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                                             </textFieldCell>
+                                            <accessibility help="Enter the numerical port used by the LDAP host in the &quot;LDAP Host&quot; field here."/>
                                         </textField>
                                         <button toolTip="Add a new server to Nagios Manager" verticalHuggingPriority="750" id="MTW-yi-p3s">
                                             <rect key="frame" x="11" y="255" width="108" height="32"/>
@@ -1607,7 +1622,7 @@ Gw
                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                             <clipView key="contentView" id="LTo-sO-MEg">
                                                 <rect key="frame" x="1" y="0.0" width="385" height="464"/>
-                                                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                                <autoresizingMask key="autoresizingMask"/>
                                                 <subviews>
                                                     <tableView verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" columnSelection="YES" multipleSelection="NO" autosaveColumns="NO" rowSizeStyle="automatic" headerView="bbp-qv-gaf" viewBased="YES" id="edc-nj-R3v">
                                                         <rect key="frame" x="0.0" y="0.0" width="385" height="439"/>
@@ -2043,7 +2058,7 @@ Gw
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                             <clipView key="contentView" id="TOr-O2-qdh">
                                                 <rect key="frame" x="1" y="0.0" width="229" height="101"/>
-                                                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                                <autoresizingMask key="autoresizingMask"/>
                                                 <subviews>
                                                     <tableView verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" columnSelection="YES" autosaveColumns="NO" rowSizeStyle="automatic" headerView="sMV-sv-x4R" viewBased="YES" id="0RI-NN-yR2">
                                                         <rect key="frame" x="0.0" y="0.0" width="229" height="76"/>
