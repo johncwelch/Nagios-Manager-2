@@ -1260,7 +1260,7 @@
                                                 <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                                             </textFieldCell>
                                         </textField>
-                                        <popUpButton verticalHuggingPriority="750" id="hme-ba-NYB">
+                                        <popUpButton toolTip="When an external auth server is used for the selected Nagios server, sets the authentication type: Local (only), AD, or LDAP." verticalHuggingPriority="750" id="hme-ba-NYB">
                                             <rect key="frame" x="91" y="464" width="96" height="25"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                             <popUpButtonCell key="cell" type="push" title="Local" bezelStyle="rounded" alignment="left" lineBreakMode="truncatingTail" state="on" borderStyle="borderAndBezel" imageScaling="proportionallyDown" inset="2" selectedItem="fu6-UF-xwn" id="6Px-Uu-QaI">
@@ -1274,6 +1274,7 @@
                                                     </items>
                                                 </menu>
                                             </popUpButtonCell>
+                                            <accessibility description="Auth Type" help="When an auth server is used for the selected Nagios server, sets the authentication type: Local (only), AD, or LDAP."/>
                                             <connections>
                                                 <action selector="enableLocalAuthControl:" target="Voe-Tx-rLC" id="IJ2-7w-pla"/>
                                             </connections>
@@ -1281,10 +1282,14 @@
                                         <button verticalHuggingPriority="750" id="asq-by-j4n">
                                             <rect key="frame" x="17" y="443" width="129" height="18"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                            <string key="toolTip">Toggles the "Allow Local Authentication" value for a user tied to an external authentication server. When enabled, requires the creation of a local password in case the auth server is not available.</string>
                                             <buttonCell key="cell" type="check" title="Allows Local Auth" bezelStyle="regularSquare" imagePosition="right" inset="2" id="ERZ-e5-IIy">
                                                 <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                                                 <font key="font" metaFont="system"/>
                                             </buttonCell>
+                                            <accessibility description="Allows Local Auth">
+                                                <string key="help">Toggles the "Allow Local Authentication" value for a user tied to an external authentication server. When enabled, requires the creation of a local password in case the auth server is not available.</string>
+                                            </accessibility>
                                             <connections>
                                                 <action selector="allowsLocalAuth:" target="Voe-Tx-rLC" id="abX-dn-QNH"/>
                                             </connections>
