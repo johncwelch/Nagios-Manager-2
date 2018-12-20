@@ -1274,7 +1274,7 @@
                                                     </items>
                                                 </menu>
                                             </popUpButtonCell>
-                                            <accessibility description="Auth Type" help="When an auth server is used for the selected Nagios server, sets the authentication type: Local (only), AD, or LDAP."/>
+                                            <accessibility description="Auth Type" help="When an external auth server is used for the selected Nagios server, sets the authentication type: Local (only), AD, or LDAP."/>
                                             <connections>
                                                 <action selector="enableLocalAuthControl:" target="Voe-Tx-rLC" id="IJ2-7w-pla"/>
                                             </connections>
