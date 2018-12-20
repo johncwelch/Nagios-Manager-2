@@ -44,6 +44,7 @@
                 <outlet property="theServerTableController" destination="Av3-2s-jb3" id="aWR-8L-H4e"/>
                 <outlet property="theTabView" destination="Kwi-PM-7bd" id="pB8-Ie-gNg"/>
                 <outlet property="theUMUserAuthType" destination="hme-ba-NYB" id="7p5-Qq-iLJ"/>
+                <outlet property="theUMUserPassword" destination="YuL-ra-LM2" id="I7H-u2-2go"/>
                 <outlet property="theUserCanLocalAuth" destination="asq-by-j4n" id="J3C-Fa-aOy"/>
                 <outlet property="theWindow" destination="QvC-M9-y7g" id="gIp-Ho-8D9"/>
                 <outlet property="userRadioButton" destination="dwM-41-H7r" id="6C6-6A-mMs"/>
@@ -1284,6 +1285,9 @@
                                                 <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                                                 <font key="font" metaFont="system"/>
                                             </buttonCell>
+                                            <connections>
+                                                <action selector="allowsLocalAuth:" target="Voe-Tx-rLC" id="abX-dn-QNH"/>
+                                            </connections>
                                         </button>
                                         <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" id="O0o-XW-KRf">
                                             <rect key="frame" x="17" y="413" width="70" height="17"/>

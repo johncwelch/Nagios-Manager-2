@@ -133,6 +133,7 @@ script AppDelegate
 	property theUserID:"" --user id from the nagios server
 	property theUMUserAuthType : missing value
 	property theUserCanLocalAuth : missing value
+	property theUMUserPassword : missing value --referencing outlet for the new user password field
 	
 	property theOtherUserInfoList : {} -- alist of records we'll need to do something cool without a gob of recoding
 	
@@ -291,8 +292,15 @@ script AppDelegate
 
 		
 		if not my theSMDefaultsExist then --if there are not defaults, let the user know this so they can fix that issue.
-			display dialog "there are no default settings existing at launch" --my version of a first run warning. Slick, ain't it.
-			set my theSMStatusFieldText to "If you're seeing this, then there's no servers saved in the app's settings. This tab is where you add them.\r\rYou'll need three things - the server's name, URL and API Key. For the URL, only the first part, i.e. https://server.com/ is needed. The \"full\" URL is generated from that.\r\rThe app itself is pretty simple. You can add or remove servers. Those are saved locally on your mac.\rThose servers are used to pull down user info in the User Manager tab. More info will be in the (currently nonexistent) help. One day, that help will exist. This is not that day."
+			try --to catch the error -128 when a user hits cancel
+				display dialog "there are no default settings existing at launch" --my version of a first run warning. Slick, ain't it.
+			on error errorMessage number errorNumber
+				if errorNumber is -128 then
+					--this error is generated when the user hits "cancel" in the display dialog. This on error sinkholes that so it doesn't
+					--cause any actual problems, since the end result for either Cancel or OK is what we want.
+				end if
+			end try
+			set my theSMStatusFieldText to "If you're seeing this, then there's no servers saved in the app's settings. This tab is where you add them.\r\rYou'll need three things - the server's name, URL and API Key. For the URL, only the first part, i.e. https://server.com/ is needed. The \"full\" URL is generated from that.\r\rThe app itself is pretty simple. You can add or remove servers. Those are saved locally on your mac.\rThose servers are used to pull down user info in the User Manager tab. More info is in the application help in the Help Menu."
 		else if my theSMDefaultsExist then --there's no point in running loadServerTable: if there's no data to load
 			my loadServerTable:(missing value) -- initial load of existing data into the server table.
 		end if
@@ -392,13 +400,52 @@ script AppDelegate
 					
 				else if my theSelectedTabViewItemIndex is "1" then --this moves the initial user load to a more lazy system, where it doesn't
 				--kick in until the user tab is selected at least once.
+				
 					if not my theUMInitialUserLoadDone then --the user manager hasn't loaded at least once. This prevents us from continually
 						--sending curl commands every time someone clicks on a tab
+						
 						if my theSMDefaultsExist then --if we have no servers in the defaults, there is no sense in sending curl commands to
 							--nothing or trying to fill the popup. putting this here is a bit lazy, but it means launching the application
 							--when it's open to a different tab won't load this for no good reason. Speeds things up a bit. Maybe.
 							my loadUserManagerPopup:(missing value) --initial popup load, moved to a function here.
+							
+							if (my theUMServerUsesAuthServer as text) is "0" then --we aren't using an auth server
+								my theUMUserAuthType's setEnabled:false --this should be disabled, no auth server
+								my theUserCanLocalAuth's setEnabled:false --it's always local, this should be disabled
+								my theUMUserPassword's setEnabled:true --make sure the password field is enabled
+							else --we're using an auth server
+								my theUMUserAuthType's setEnabled:true
+								
+								
+								if (my theUMUserAuthType's titleOfSelectedItem() as text) is "Local" then --if the popup's current value is local, then we don't want to enable the local auth checkbox, it's extraneous
+									my theUserCanLocalAuth's setEnabled:false
+									my theUMUserPassword's setEnabled:true --make sure the password field is enabled
+								else
+									my theUserCanLocalAuth's setEnabled:true --we want this enable since we're using AD/LDAP
+									
+									if (my theUserCanLocalAuth's intValue() as text) is "1" --since we're using AD/LDAP, we want to check this state
+									--if it's on, enable the password field
+										my theUMUserPassword's setEnabled:true --make sure the password field is enabled
+									else --we're not allowing local auth
+										my theUMUserPassword's setEnabled:false --make sure the password field is disabled
+									end if
+								end if
+							end if
 							set my theUMInitialUserLoadDone to true
+						else --even if there's no defaults, we still want the controlls to be correct wrt auth server
+							if (my theUMServerUsesAuthServer as text) is "0" then --we aren't using an auth server
+								my theUMUserAuthType's setEnabled:false --disable the controls entirely
+								my theUserCanLocalAuth's setEnabled:false
+							else --we're using an auth server
+								my theUMUserAuthType's setEnabled:true
+								
+								
+								if (my theUMUserAuthType's titleOfSelectedItem() as text) is "Local" then --if the popup's current value is local, then we don't want to enable the local auth checkbox, it's extraneous
+									my theUserCanLocalAuth's setEnabled:false
+								else
+									my theUserCanLocalAuth's setEnabled:true
+								end if
+							end if
 						end if
 					end if
 				else if my theSelectedTabViewItemIndex is "2" then --we won't do anything here until this is actually doing something
@@ -1122,6 +1169,17 @@ script AppDelegate
 			return
 		end if
 		
+		if (my theUMUserAuthType's titleOfSelectedItem() as text) is "Local"  and ((my theNagiosNewUserPassword is missing value) or (my theNagiosNewUserPassword is "")) then --if you're using local auth even with an auth server, you MUST provide a password.
+			set my theRESTresults to "The password field cannot be blank"
+			return
+		end if
+		
+		if (my theUserCanLocalAuth's intValue() as text) is "1" and ((my theNagiosNewUserPassword is missing value) or (my theNagiosNewUserPassword is "")) then
+			--if you enable local auth, you have to provide a password
+			set my theRESTresults to "The password field cannot be blank"
+			return
+		end if
+		
 		if (my theNagiosNewUserRealName is missing value) or (my theNagiosNewUserRealName is "") then --test for blank user's name
 			set my theRESTresults to "The Name field cannot be blank"
 			return
@@ -1132,14 +1190,22 @@ script AppDelegate
 			return
 		end if
 		
-		set my theNagiosNewUserRealName to my deSpaceify:(my theNagiosNewUserRealName) --despace the real name. The username will fail if it has spaces, and we want it to fail.
+		set my theNagiosNewUserRealName to my deSpaceify:(my theNagiosNewUserRealName) --despace the real name. The username will fail if it has spaces, and we don't
+		--want it to fail.
 		
-		(*this next line builds the actual command to add a user. There's a lot of things that are hardcoded as that's the norm.
-		 it's not a problem to fix later if we need, the variables are already declared, just unused.*)
-		set theAddCommand to "/usr/bin/curl -XPOST \"" & (theAddUserServerURL) & (my theUMServerAPIKey as text) & "&pretty=1\"" & " -d \"username=" & my theNagiosNewUserName & "&password=" & my theNagiosNewUserPassword & "&name=" & my theNagiosNewUserRealName & "&email=" & my theNagiosNewUserEmailAddress & "&force_pw_change=1&email_info=1&monitoring_contact=1&enable_notifications=1&language=xi default&date_format=1&number_format=1&auth_level=" & theAuthLevel & "&can_see_all_hs=" & my canSeeAllObjects's intValue() & "&can_control_all_hs=" & my canControlAllObjects's intValue() & "&can_reconfigure_hs=" & my canReconfigureAllObjects's intValue() & "&can_control_engine=" & my canSeeOrConfigureMonitoringEngine's intValue() & "&can_use_advanced=" & my canAccessAdvancedFeatures's intValue() & "&read_only=" & my readOnly's intValue() & "\""
+		if (my theUMServerUsesAuthServer as text) is "0" then --we aren't using an auth server, this is the "default"
+			
+			(*this next line builds the actual command to add a user sans auth server. There's a lot of things that are hardcoded as that's the norm.
+			 it's not a problem to fix later if we need, the variables are already declared, just unused.*)
+			set theAddCommand to "/usr/bin/curl -XPOST \"" & (theAddUserServerURL) & (my theUMServerAPIKey as text) & "&pretty=1\"" & " -d \"username=" & my theNagiosNewUserName & "&password=" & my theNagiosNewUserPassword & "&name=" & my theNagiosNewUserRealName & "&email=" & my theNagiosNewUserEmailAddress & "&force_pw_change=1&email_info=1&monitoring_contact=1&enable_notifications=1&language=xi default&date_format=1&number_format=1&auth_level=" & theAuthLevel & "&can_see_all_hs=" & my canSeeAllObjects's intValue() & "&can_control_all_hs=" & my canControlAllObjects's intValue() & "&can_reconfigure_hs=" & my canReconfigureAllObjects's intValue() & "&can_control_engine=" & my canSeeOrConfigureMonitoringEngine's intValue() & "&can_use_advanced=" & my canAccessAdvancedFeatures's intValue() & "&read_only=" & my readOnly's intValue() & "\""
+			
+			set my theRESTresults to do shell script theAddCommand --add the user
+			my getServerUsers:(missing value) --reload the list
+		else --we are using an auth server
 		
-		set my theRESTresults to do shell script theAddCommand --add the user
-		my getServerUsers:(missing value) --reload the list
+		end if
+		
+		
 		
 		--set my theNagiosNewUserName to "" --blank out the add user fields after adding a user
 		--set my theNagiosNewUserPassword to ""
@@ -1168,10 +1234,21 @@ script AppDelegate
 	on enableLocalAuthControl:sender --runs if the popup changes
 		if (sender's title as text) is "Local" then
 			my theUserCanLocalAuth's setEnabled:false --if it's local, this is a given, no need to have it enabled.
+			my theUMUserPassword's setEnabled:true --make sure the password field is enabled
 		else
 			my theUserCanLocalAuth's setEnabled:true --if it's AD or LDAP, then yeah, we want to enable this control
+			my theUMUserPassword's setEnabled:false --disable the password by default for AD/LDAP auth
 		end if
 	end enableLocalAuthControl:
+	
+	on allowsLocalAuth:sender --enables the "allows local auth
+		if (my theUserCanLocalAuth's intValue() as text) is "1" --enabled local auth
+			my theUMUserPassword's setEnabled:true --make sure the password field is enabled
+		else
+			my theUMUserPassword's setEnabled:false
+		end if
+		
+	end allowsLocalAuth:
 	
 	
 	--HOST MANAGER FUNCTIONS
