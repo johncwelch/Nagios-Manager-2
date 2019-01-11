@@ -1215,10 +1215,13 @@ script AppDelegate
 		else --we are using an auth server
 			if (my theUserCanLocalAuth's intValue() as text) is "0" --no local auth allowed
 				set theAddCommand to "/usr/bin/curl -XPOST \"" & (theAddUserServerURL) & (my theUMServerAPIKey as text) & "&pretty=1\"" & " -d \"username=" & my theNagiosNewUserName & "&name=" & my theNagiosNewUserRealName & "&email=" & my theNagiosNewUserEmailAddress & "&monitoring_contact=1&enable_notifications=1&language=xi default&date_format=1&number_format=1&auth_level=" & theAuthLevel & "&can_see_all_hs=" & my canSeeAllObjects's intValue() & "&can_control_all_hs=" & my canControlAllObjects's intValue() & "&can_reconfigure_hs=" & my canReconfigureAllObjects's intValue() & "&can_control_engine=" & my canSeeOrConfigureMonitoringEngine's intValue() & "&can_use_advanced=" & my canAccessAdvancedFeatures's intValue() & "&read_only=" & my readOnly's intValue() & "&auth_type=" & theAuthServerType & "&auth_server_id=" & theAuthServerID & "&allow_local=0" & "&ad_username=" & my theNagiosNewUserName & "&ldap_dn=" & theAuthServerBaseDN & "\""
+				log theAddCommand
 				set my theRESTresults to do shell script theAddCommand --add the user
 				my getServerUsers:(missing value) --reload the list
 			else --local auth allowed
-			
+				set theAddCommand to "/usr/bin/curl -XPOST \"" & (theAddUserServerURL) & (my theUMServerAPIKey as text) & "&pretty=1\"" & " -d \"username=" & my theNagiosNewUserName & "&password=" & my theNagiosNewUserPassword & "&name=" & my theNagiosNewUserRealName & "&email=" & my theNagiosNewUserEmailAddress & "&monitoring_contact=1&enable_notifications=1&language=xi default&date_format=1&number_format=1&auth_level=" & theAuthLevel & "&can_see_all_hs=" & my canSeeAllObjects's intValue() & "&can_control_all_hs=" & my canControlAllObjects's intValue() & "&can_reconfigure_hs=" & my canReconfigureAllObjects's intValue() & "&can_control_engine=" & my canSeeOrConfigureMonitoringEngine's intValue() & "&can_use_advanced=" & my canAccessAdvancedFeatures's intValue() & "&read_only=" & my readOnly's intValue() & "&auth_type=" & theAuthServerType & "&auth_server_id=" & theAuthServerID & "&allow_local=1" & "&ad_username=" & my theNagiosNewUserName & "&ldap_dn=" & theAuthServerBaseDN & "\""
+				set my theRESTresults to do shell script theAddCommand --add the user
+				my getServerUsers:(missing value) --reload the list
 			end if
 		end if
 		
