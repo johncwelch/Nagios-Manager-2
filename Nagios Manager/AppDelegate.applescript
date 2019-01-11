@@ -410,6 +410,7 @@ script AppDelegate
 							my loadUserManagerPopup:(missing value) --initial popup load, moved to a function here.
 							
 							if (my theUMServerUsesAuthServer as text) is "0" then --we aren't using an auth server
+								my theUMUserAuthType's selectItemAtIndex:0 --make sure local is selected
 								my theUMUserAuthType's setEnabled:false --this should be disabled, no auth server
 								my theUserCanLocalAuth's setEnabled:false --it's always local, this should be disabled
 								my theUMUserPassword's setEnabled:true --make sure the password field is enabled
@@ -434,6 +435,7 @@ script AppDelegate
 							set my theUMInitialUserLoadDone to true
 						else --even if there's no defaults, we still want the controlls to be correct wrt auth server
 							if (my theUMServerUsesAuthServer as text) is "0" then --we aren't using an auth server
+								my theUMUserAuthType's selectItemAtIndex:0 --make sure local is selected
 								my theUMUserAuthType's setEnabled:false --disable the controls entirely
 								my theUserCanLocalAuth's setEnabled:false
 							else --we're using an auth server
@@ -961,6 +963,7 @@ script AppDelegate
 		set my theUMServerUsesAuthServer to x's theSMTableAuthServerEnabled --get auth server status
 		
 		if (my theUMServerUsesAuthServer as text) is "0" then --we aren't using an auth server
+			my theUMUserAuthType's selectItemAtIndex:0
 			my theUMUserAuthType's setEnabled:false
 			my theUserCanLocalAuth's setEnabled:false
 		else --we're using an auth server
@@ -1036,6 +1039,7 @@ script AppDelegate
 		set my theUMServerUsesAuthServer to x's theSMTableAuthServerEnabled --get auth server status
 		
 		if (my theUMServerUsesAuthServer as text) is "0" then --we aren't using an auth server
+			my theUMUserAuthType's selectItemAtIndex:0
 			my theUMUserAuthType's setEnabled:false
 			my theUserCanLocalAuth's setEnabled:false
 		else --we're using an auth server
@@ -1148,8 +1152,20 @@ script AppDelegate
      end enabledReadOnly:
 	
 	on addUser:sender --kicks off when add user button is clicked
+		
+		if (my theUMUserAuthType's titleOfSelectedItem() as text) is not "Local" then --there is an option for an auth server, and we're using it so we're going to need to get the auth server info
+			set theGetAuthServerInfoURL to (my theUMServerURL as text) & "system/authserver?apikey=" & (my theUMServerAPIKey as text) & "&pretty=1"
+			set theGetAuthServerInfoCommand to "/usr/bin/curl -XGET \"" & theGetAuthServerInfoURL & "\"" --build the curl command to get the auth server info
+			set theGetAuthServerInfo to my getJSONData:(theGetAuthServerInfoCommand) --run it through the json processing, get nsdata back
+			set theAuthServerID to theGetAuthServerInfo's authservers's |id| as text --pull the auth server's ID
+			set theAuthServerBaseDN to theGetAuthServerInfo's authservers's base_dn as text --get the base DN, we need it anyway
+			set theAuthServerType to my theUMUserAuthType's titleOfSelectedItem()'s lowercaseString() -- the command really, really only wants lowercase
+			set allowsLocalOnlyAuth to my theUserCanLocalAuth's intValue() as text --get this value, we need to pass it up to nagios
+			--if it's set to 1, then we'll have to make sure there's a local password too.
+		end if
+		
 		set theAddUserServerURL to (my theUMServerURL as text) & "system/user?apikey=" --build the URL to add the user
-		set allowsLocalOnlyAuth to "0" --this is only used if it's an AD or LDAP user. This only allows this user to log in when the auth server is reachable
+		--set allowsLocalOnlyAuth to "0" --this is only used if it's an AD or LDAP user. This only allows this user to log in when the auth server is reachable
 		--we may not do it this way depending on UI room
 		set my theRESTresults to "" --clear the notification field value
 		set isAdminUser to my adminRadioButton's objectValue() --get the value of the admin radio button, since it's mutually exclusive
@@ -1161,11 +1177,6 @@ script AppDelegate
 		
 		if (my theNagiosNewUserName is missing value) or (my theNagiosNewUserName is "") then --test for blank username
 			set my theRESTresults to "The Username field cannot be blank"
-			return
-		end if
-		
-		if (my theNagiosNewUserPassword is missing value) or (my theNagiosNewUserPassword is "") then --test for blank password
-			set my theRESTresults to "The password field cannot be blank"
 			return
 		end if
 		
