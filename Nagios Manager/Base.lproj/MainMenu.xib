@@ -2145,6 +2145,9 @@ Gw
 </string>
                                             </buttonCell>
                                             <accessibility description="Cancel new host" help="Button to cancel adding a new host."/>
+                                            <connections>
+                                                <action selector="cancelAddNewHost:" target="Voe-Tx-rLC" id="04e-IU-dT4"/>
+                                            </connections>
                                         </button>
                                         <box verticalHuggingPriority="750" boxType="separator" id="D9B-M6-f19">
                                             <rect key="frame" x="9" y="114" width="642" height="5"/>
@@ -2209,7 +2212,7 @@ Gw
                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                             <clipView key="contentView" id="auM-5z-ScC">
                                                 <rect key="frame" x="1" y="0.0" width="368" height="376"/>
-                                                <autoresizingMask key="autoresizingMask"/>
+                                                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                 <subviews>
                                                     <tableView verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" columnSelection="YES" multipleSelection="NO" autosaveColumns="NO" rowSizeStyle="automatic" headerView="uj4-f0-Vmk" viewBased="YES" id="F3g-fs-Or1">
                                                         <rect key="frame" x="0.0" y="0.0" width="368" height="351"/>
@@ -2300,7 +2303,7 @@ Gw
                                         <textField verticalHuggingPriority="750" id="6IP-Ax-A0x">
                                             <rect key="frame" x="132" y="471" width="133" height="22"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                            <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" borderStyle="bezel" drawsBackground="YES" id="GXP-Rb-iLB">
+                                            <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" continuous="YES" sendsActionOnEndEditing="YES" borderStyle="bezel" drawsBackground="YES" id="GXP-Rb-iLB">
                                                 <font key="font" metaFont="system"/>
                                                 <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                                                 <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
@@ -2326,7 +2329,7 @@ Gw
                                         <textField verticalHuggingPriority="750" id="q74-1c-b97">
                                             <rect key="frame" x="132" y="441" width="133" height="22"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                            <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" borderStyle="bezel" drawsBackground="YES" id="Uvt-nn-MOO">
+                                            <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" continuous="YES" sendsActionOnEndEditing="YES" borderStyle="bezel" drawsBackground="YES" id="Uvt-nn-MOO">
                                                 <font key="font" metaFont="system"/>
                                                 <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                                                 <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
@@ -2368,6 +2371,9 @@ DQ
 </string>
                                             </buttonCell>
                                             <accessibility description="Cancel New Hostgroup" help="This button cancels the creation of a new hostgroup on the selected Nagios server."/>
+                                            <connections>
+                                                <action selector="cancelAddNewHostGroup:" target="Voe-Tx-rLC" id="3s7-Bc-nZF"/>
+                                            </connections>
                                         </button>
                                         <box verticalHuggingPriority="750" boxType="separator" id="dBc-tq-TwA">
                                             <rect key="frame" x="17" y="220" width="626" height="5"/>

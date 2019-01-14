@@ -1444,7 +1444,9 @@ script AppDelegate
 
 	on addHMHost:sender --add a host to the selected nagios instance
 		--sanity checking for blanks.
-		set theHMNewHostURL to my buildNewURL:("addnewhost") --build the URL to add a host
+		--set theHMNewHostURL to my buildNewURL:("addnewhost") --build the URL to add a host
+		set theHMNewHostURL to (my theHMServerURL as text) & "config/host?apikey=" --build the first part of the Add Host URL
+		
 		if (my theHMNewHostName is missing value) or (my theHMNewHostName is "") then --did they enter a name for the host?
 			set my theHMStatusDisplay to "The Host Name field cannot be blank"
 			return
@@ -1495,6 +1497,22 @@ script AppDelegate
 		my performSelector:"getHostList:" withObject:(missing value) afterDelay:6 --delay so the nagios server has time to actually insert the new host and refresh itself.
 		--this delay doesn't spike CPU usage to 100%, so we like this.
 	end addHMHost:
+
+	on cancelAddNewHost:sender
+		set my theHMNewHostName to ""
+		set my theHMNewHostAddress to ""
+		set my theHMNewHostCheckInterval to "5"
+		set my theHMNewHostRetryInterval to "1"
+		set my theHMNewHostMaxCheckAttempts to "5"
+		set my theHMNewHostNotificationsEnabled to "1"
+		--set my theHMNewHostNotificationPeriod to ""
+		set my theHMTimePeriodComboBoxEnteredText to ""
+		set my theHMNewHostNotificationInterval to "5"
+		set my theHMNewHostFirstNotificationDelay to  "0"
+		set my theHMNewHostNotificationOptions to "d,u,r"
+		my theHMHostGroupPopup's selectItemAtIndex:0
+		my theHostContactController's setSelectionIndex:0 --select the first item
+	end cancelAddNewHost:
 	
 	on getHMTimePeriodComboBoxChoice:sender --(very) short function where we get the user's choice in this combo box
 		set my theHMTimePeriodComboBoxSelection to my theHMTimePeriodComboBox's objectValueOfSelectedItem() --if someone selects and item from the list but doesn't type or just hit tab, this gets that value
@@ -1579,20 +1597,25 @@ script AppDelegate
 	end loadHostGroupManagerFromPopup:
 	
 	on getHostGroupList:sender --pull down the list of hostgroups
-		set theHGMHostGroupListURL to my buildNewURL:("gethostgroupmanagerlist") --create the URL to get the hostgroup list
-		
-		set theHGMGetHostGroupListCommand to "/usr/bin/curl -XGET \"" & theHGMHostGroupListURL & my theHGMServerAPIKey & "&pretty=1\"" --build the curl command to get the hostgroups
+		--set theHGMHostGroupListURL to my buildNewURL:("gethostgroupmanagerlist") --create the URL to get the hostgroup list
+		set theHGMHostGroupListURL to (my theHGMServerURL as text) & "objects/hostgroup?apikey=" & my theHGMServerAPIKey & "&pretty=1" --create the URL to get the hostgroup list
+		--set theHGMGetHostGroupListCommand to "/usr/bin/curl -XGET \"" & theHGMHostGroupListURL & my theHGMServerAPIKey & "&pretty=1\"" --build the curl command to get the hostgroups
+		set theHGMGetHostGroupListCommand to "/usr/bin/curl -XGET \"" & theHGMHostGroupListURL & "\""  --build the curl command to get the hostgroups
 		
 		set theHGMHostGroupListJSONDict to my getJSONData:(theHGMGetHostGroupListCommand) --get the JSON dict of hostgroups
 		
-		try
+		--NOTE: THIS TRY IS NO LONGER NEEDED, AND ONLY KEPT FOR REFERENCE
+		
+		(*try
 			set theHGMHostGroupRecord to theHGMHostGroupListJSONDict's hostgrouplist's hostgroup --get the individual hostgroup records. Hierarchy here is NSDictionary -> hostgrouplist -> hostgroup
 			--current application's NSLog("theHGMHostGroupRecord: %@", theHGMHostGroupRecord)
 			on error errorMessage number errorNumber --nagios decided to change the JSON output for host lists in 5.5.x. Assholes
 			if errorNumber is -1728 then
 				set theHGMHostGroupRecord to theHGMHostGroupListJSONDict's hostgroup --5.5.x version
 			end if
-		end try
+		end try*)
+		
+		set theHGMHostGroupRecord to theHGMHostGroupListJSONDict's hostgroup
 		
 		my theHostGroupTableController's removeObjects:(my theHostGroupTableController's arrangedObjects())
 		my theHostGroupTableController's addObjects:theHGMHostGroupRecord
@@ -1601,17 +1624,24 @@ script AppDelegate
 	
 	on getHostGroupMembers:sender
 		set my theHGMHostGroupMemberListDisplay to ""
-		set theHGMHostGroupMemberListURL to my buildNewURL:("gethostgroupmembers") --build url for hostgroup member list
-		set theHGMHostGroupMembersListCommand to "/usr/bin/curl -XGET \"" & theHGMHostGroupMemberListURL & my theHGMServerAPIKey & "&pretty=1\"" --build the curl command to get the hostgroup members
+		--set theHGMHostGroupMemberListURL to my buildNewURL:("gethostgroupmembers") --build url for hostgroup member list
+		set theHGMHostGroupMemberListURL to (my theHGMServerURL as text) & "objects/hostgroupmembers?apikey=" & my theHGMServerAPIKey & "&pretty=1" --build url for hostgroup member list
+		--set theHGMHostGroupMembersListCommand to "/usr/bin/curl -XGET \"" & theHGMHostGroupMemberListURL & my theHGMServerAPIKey & "&pretty=1\"" --build the curl command to get the hostgroup members
+		set theHGMHostGroupMembersListCommand to "/usr/bin/curl -XGET \"" & theHGMHostGroupMemberListURL & "\""
 		set theHGMHostGroupMemberListJSONDict to my getJSONData:(theHGMHostGroupMembersListCommand) --get the JSON dict of hostgroup members
-		try
+		
+		--NOTE: THIS TRY IS NO LONGER NEEDED, AND ONLY KEPT FOR REFERENCE
+		
+		(*try
 			set theHGMHostGroupMembersRecord to theHGMHostGroupMemberListJSONDict's hostgrouplist's hostgroup --get the individual hostgroup records. Hierarchy here is NSDictionary -> hostgrouplist -> hostgroup
 			on error errorMessage number errorNumber --nagios decided to change the JSON output for host lists in 5.5.x. Assholes
 			if errorNumber is -1728 then
 				set theHGMHostGroupMembersRecord to theHGMHostGroupMemberListJSONDict's hostgroup -- 5.5.x version. This simplifies the hierarchy, but on release, was a major change that was undocumented
 				--i am a tad salty about that.
 			end if
-		end try
+		end try*)
+		
+		set theHGMHostGroupMembersRecord to theHGMHostGroupMemberListJSONDict's hostgroup
 		
 		set theHGMHostGroupName to hostgroup_name of my theHostGroupTableController's selectedObjects()
 		
@@ -1641,7 +1671,8 @@ script AppDelegate
 			return
 		end if
 		
-		set theHGMHostGroupAddNewHostGroupURL to my buildNewURL:("addnewhostgroup")
+		--set theHGMHostGroupAddNewHostGroupURL to my buildNewURL:("addnewhostgroup")
+		set theHGMHostGroupAddNewHostGroupURL to (my theHGMServerURL as text) & "config/hostgroup?apikey="
 		
 		--let's compensate for spaces in the name and alias
 		set my theHGMHostGroupNewHostGroupName to my deSpaceify:(my theHGMHostGroupNewHostGroupName) --despace the hostgroup name if it has spaces
@@ -1653,6 +1684,11 @@ script AppDelegate
 		my performSelector:"getHostGroupList:" withObject:(missing value) afterDelay:6 --delay so the nagios server has time to actually insert the new host and refresh itself.
 		--this delay doesn't spike CPU usage to 100%, so we like this.
 	end addNewHostGroup:
+
+	on cancelAddNewHostGroup:sender
+		set my theHGMHostGroupNewHostGroupName to "" --clear the name field
+		set my theHGMHostGroupNewHostGroupAlias to "" --clear the alias field
+	end cancelAddNewHostGroup:
 	
      (*on clearTable:sender --test function to see why we aren't clearing table data correctly.
           userSelection's removeObjects:(userSelection's arrangedObjects()) --clear the table
