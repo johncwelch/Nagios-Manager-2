@@ -395,12 +395,10 @@ script AppDelegate
 			set my theSelectedTabViewItemIndex to my theSelectedTabViewItemIndex as text
 			if theSelectedTabIsCorrect then
 				if my theSelectedTabViewItemIndex is "0" then --clicked on Server Manager tab. Honestly, this may never do much of anything
-					log theSelectedTabViewItemIndex
 					--the initial server tab operations are handled in applicationWillFinishLaunching and other places. But just in case
 					--it's here
 					
 				else if my theSelectedTabViewItemIndex is "1" then --this moves the initial user load to a more lazy system, where it doesn't
-					log theSelectedTabViewItemIndex
 				--kick in until the user tab is selected at least once.
 				
 					if not my theUMInitialUserLoadDone then --the user manager hasn't loaded at least once. This prevents us from continually
@@ -453,11 +451,9 @@ script AppDelegate
 						end if
 					end if
 				else if my theSelectedTabViewItemIndex is "2" then --host manager
-				log theSelectedTabViewItemIndex
 					if not theHMInitialUserLoadDone then --the host manager hasn't loaded at least once. this prevents us from continuously sending
 						--curl commands every time someone clicks on a tab.
 						if my theSMDefaultsExist then --again, if we have no prefs, we have no servers. If we have no servers, we have nothing to get
-							log "we have defaults"
 							--host data for.
 							--also we need to set this up ala user manager tab so we don't reload EVERY time someone clicks the tab.
 							my loadHostManagerFromPopup:(missing value) --initial load of window.
@@ -466,7 +462,6 @@ script AppDelegate
 						end if
 					end if
 				else if my theSelectedTabViewItemIndex is "3" then --hostgroup manager
-				log theSelectedTabViewItemIndex
 					if not theHGMInitialUserLoadDone then
 						if my theSMDefaultsExist then
 							my loadHostGroupManagerFromPopup:(missing value)
@@ -1324,7 +1319,7 @@ script AppDelegate
 		if not theSMDefaultsExist then --if we have no defaults, there's no point in running this code
 			return --back to main loop
 		end if
-		log "we have defaults"
+		
 		set x to my theServerTableController's arrangedObjects()'s firstObject() --get the first object in the array controller. the way this runs, this is the initial load of things. So we want it to be the first thing in the list. When someone manually changes that, it would handled in selectedHMServerName
 		if x is missing value then --if there's nothing in x, stop the function
 			return --back to the main loop
@@ -1333,9 +1328,6 @@ script AppDelegate
 		set my theHMServerName to x's theSMTableServerName --grab the server name
 		set my theHMServerAPIKey to x's theSMTableServerAPIKey --grab the server key
 		set my theHMServerURL to x's theSMTableServerURL --grab the server URL
-		log my theHMServerName
-		log my theHMServerAPIKey
-		log my theHMServerURL
 		my getHostList:(missing value)
 		
 	end loadHostManagerFromPopup:
@@ -1343,9 +1335,7 @@ script AppDelegate
 	on loadHMHostContactTable:sender --this runs whenever a nagios server is selected in the host manager. There's no difference between how it runs for initial tab selection or changing the value in the popup
 		
 		set theHMContactListURL to (my theHMServerURL as text) & "objects/contact?apikey=" & my theHMServerAPIKey & "&pretty=1" --build the contact list URL
-		
 		set theHMGetContactListCommand to "/usr/bin/curl -XGET \"" & theHMContactListURL & "\"" --build the contact list command
-		
 		set my theHMContactListJSONDict to my getJSONData:(theHMGetContactListCommand) --get the JSON NSData all nicely formatted
 		
 		--NOTE: THIS TRY BLOCK ISN'T NEEDED ANYMORE, KEPT FOR POSSIBLE LATER REFERENCE
@@ -1516,17 +1506,22 @@ script AppDelegate
 	end getHMTimePeriodComboBoxChoice:
 	
 	on loadHMHostGroupPopup:sender
-		set theHMHostGroupListURL to my buildNewURL:("gethostgrouplist") --create the URL to get the hostgroup list
-		set theHMGetHostGroupListCommand to "/usr/bin/curl -XGET \"" & theHMHostGroupListURL & my theHMServerAPIKey & "&pretty=1\"" --build the curl command to get the hostgroups
+		--set theHMHostGroupListURL to my buildNewURL:("gethostgrouplist") --create the URL to get the hostgroup list
+		set theHMHostGroupListURL to (my theHMServerURL as text) & "objects/hostgroup?apikey=" & my theHMServerAPIKey & "&pretty=1"
+		set theHMGetHostGroupListCommand to "/usr/bin/curl -XGET \"" & theHMHostGroupListURL & "\"" --build the curl command to get the hostgroups
 		set theHMHostGroupListJSONDict to my getJSONData:(theHMGetHostGroupListCommand) --get the JSON dict of hostgroups
-		try
+		
+		--NOTE: THE TRY IS NO LONGER NEEDED, LEFT HERE FOR REFERENCE PURPOSES
+		
+		(*try
 			set theHMHostGroupRecord to theHMHostGroupListJSONDict's hostgrouplist's hostgroup --get the individual hostgroup records. Hierarchy here is NSDictionary -> hostgrouplist -> hostgroup
 		on error errorMessage number errorNumber --nagios decided to change the JSON output for host lists in 5.5.x. Assholes
 			if errorNumber is -1728 then
 				set theHMHostGroupRecord to theHMHostGroupListJSONDict's hostgroup
 			end if
-		end try
+		end try*)
 		
+		set theHMHostGroupRecord to theHMHostGroupListJSONDict's hostgroup --Grab the hostgroup section from the JSON dict.
 		set theHostGroupNameList to {} --intiialize the list we'll use to load the popup
 		repeat with x in theHMHostGroupRecord
 			set the end of theHostGroupNameList to (hostgroup_name of x) --fill the list of hostgroup names
