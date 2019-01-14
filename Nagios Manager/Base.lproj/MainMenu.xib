@@ -1930,7 +1930,7 @@ Gw
                                             </connections>
                                         </button>
                                         <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" id="uo8-rz-Wsh">
-                                            <rect key="frame" x="14" y="374" width="121" height="17"/>
+                                            <rect key="frame" x="14" y="376" width="121" height="17"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                             <textFieldCell key="cell" lineBreakMode="clipping" title="Notification Period:" id="qcZ-NZ-cHL">
                                                 <font key="font" metaFont="system"/>
@@ -1939,7 +1939,7 @@ Gw
                                             </textFieldCell>
                                         </textField>
                                         <comboBox verticalHuggingPriority="750" id="1uv-eS-Alg">
-                                            <rect key="frame" x="140" y="369" width="109" height="26"/>
+                                            <rect key="frame" x="140" y="371" width="109" height="26"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                             <comboBoxCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" borderStyle="bezel" drawsBackground="YES" completes="NO" numberOfVisibleItems="5" id="FKC-I1-U6w">
                                                 <font key="font" metaFont="system"/>
@@ -1961,7 +1961,7 @@ Gw
                                             </connections>
                                         </comboBox>
                                         <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" id="GZ1-S8-Ix6">
-                                            <rect key="frame" x="14" y="349" width="126" height="17"/>
+                                            <rect key="frame" x="14" y="350" width="126" height="17"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                             <textFieldCell key="cell" lineBreakMode="clipping" title="Notification Interval:" id="PwW-79-o0W">
                                                 <font key="font" metaFont="system"/>
@@ -1970,7 +1970,7 @@ Gw
                                             </textFieldCell>
                                         </textField>
                                         <textField verticalHuggingPriority="750" id="pa4-2j-20F">
-                                            <rect key="frame" x="216" y="347" width="31" height="22"/>
+                                            <rect key="frame" x="216" y="348" width="31" height="22"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                             <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" borderStyle="bezel" drawsBackground="YES" id="wN8-Py-E3h">
                                                 <font key="font" metaFont="system"/>
@@ -1987,7 +1987,7 @@ Gw
                                             </connections>
                                         </textField>
                                         <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" id="GCU-cc-KX3">
-                                            <rect key="frame" x="14" y="324" width="146" height="17"/>
+                                            <rect key="frame" x="14" y="325" width="146" height="17"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                             <textFieldCell key="cell" lineBreakMode="clipping" title="First Notification Delay:" id="JFN-WX-hRy">
                                                 <font key="font" metaFont="system"/>
@@ -1996,7 +1996,7 @@ Gw
                                             </textFieldCell>
                                         </textField>
                                         <textField verticalHuggingPriority="750" id="AJ1-JD-MHs">
-                                            <rect key="frame" x="216" y="322" width="31" height="22"/>
+                                            <rect key="frame" x="216" y="323" width="31" height="22"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                             <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" borderStyle="bezel" drawsBackground="YES" id="jI9-oZ-gQv">
                                                 <font key="font" metaFont="system"/>
@@ -2013,7 +2013,7 @@ Gw
                                             </connections>
                                         </textField>
                                         <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" id="hdn-Gb-iub">
-                                            <rect key="frame" x="14" y="299" width="129" height="17"/>
+                                            <rect key="frame" x="14" y="300" width="129" height="17"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                             <textFieldCell key="cell" lineBreakMode="clipping" title="Notification Options:" id="WUM-iM-2MH">
                                                 <font key="font" metaFont="system"/>
@@ -2022,7 +2022,7 @@ Gw
                                             </textFieldCell>
                                         </textField>
                                         <textField verticalHuggingPriority="750" id="zmi-zg-XuG">
-                                            <rect key="frame" x="149" y="297" width="98" height="22"/>
+                                            <rect key="frame" x="149" y="298" width="98" height="22"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                             <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" borderStyle="bezel" drawsBackground="YES" id="Trj-mL-4IT">
                                                 <font key="font" metaFont="system"/>
@@ -2041,7 +2041,7 @@ Gw
                                             </connections>
                                         </textField>
                                         <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" id="HY7-Jw-prg">
-                                            <rect key="frame" x="15" y="271" width="91" height="18"/>
+                                            <rect key="frame" x="15" y="273" width="91" height="18"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                             <textFieldCell key="cell" lineBreakMode="clipping" title="Hostgroup" id="DRo-i1-fC1">
                                                 <font key="font" metaFont="system"/>
@@ -2050,7 +2050,7 @@ Gw
                                             </textFieldCell>
                                         </textField>
                                         <popUpButton verticalHuggingPriority="750" id="Mbg-rU-wfu">
-                                            <rect key="frame" x="94" y="266" width="155" height="26"/>
+                                            <rect key="frame" x="94" y="268" width="155" height="26"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                             <popUpButtonCell key="cell" type="push" bezelStyle="rounded" alignment="left" lineBreakMode="truncatingTail" borderStyle="borderAndBezel" imageScaling="proportionallyDown" inset="2" id="kNo-XJ-fzX">
                                                 <behavior key="behavior" lightByBackground="YES" lightByGray="YES"/>
@@ -2063,7 +2063,7 @@ Gw
                                             </connections>
                                         </popUpButton>
                                         <scrollView autohidesScrollers="YES" horizontalLineScroll="19" horizontalPageScroll="10" verticalLineScroll="19" verticalPageScroll="10" usesPredominantAxisScrolling="NO" id="76V-4o-m0R">
-                                            <rect key="frame" x="16" y="159" width="231" height="102"/>
+                                            <rect key="frame" x="16" y="165" width="231" height="102"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                             <clipView key="contentView" id="TOr-O2-qdh">
                                                 <rect key="frame" x="1" y="0.0" width="229" height="101"/>
@@ -2118,7 +2118,7 @@ Gw
                                             <accessibility description="New Host Contacts" help="This table contains all existing contacts on the selected Nagios server. You can select one, none, or multiple contacts here."/>
                                         </scrollView>
                                         <button verticalHuggingPriority="750" id="Ngz-7X-47f">
-                                            <rect key="frame" x="10" y="116" width="97" height="32"/>
+                                            <rect key="frame" x="10" y="134" width="97" height="32"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                             <buttonCell key="cell" type="push" title="Add Host" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="Jcq-RD-no4">
                                                 <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
@@ -2135,7 +2135,7 @@ DQ
                                             </connections>
                                         </button>
                                         <button verticalHuggingPriority="750" id="1rC-lB-vXZ">
-                                            <rect key="frame" x="171" y="116" width="82" height="32"/>
+                                            <rect key="frame" x="171" y="134" width="82" height="32"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                             <buttonCell key="cell" type="push" title="Cancel" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="yTk-U5-tb8">
                                                 <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
