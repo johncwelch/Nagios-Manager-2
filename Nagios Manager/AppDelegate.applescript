@@ -1386,7 +1386,6 @@ script AppDelegate
 		set my theHMServerAPIKey to x's theSMTableServerAPIKey --grab the server key
 		set my theHMServerURL to x's theSMTableServerURL --grab the server api
 		my getHostList:(missing value)
-		
 	end selectedHMServerName:
 	
 	on displayHMHostInfo:sender
@@ -1409,20 +1408,25 @@ script AppDelegate
 	end displayHMHostInfo:
 	
 	on getHMHostStatus:sender
-		set theHMHostStatusURL to my buildNewURL:("gethoststatus")
 		set theHostStatusName to host_name of my theHostTableController's selectedObjects() --get the name of the host we want to get the status for
+		set theHMHostStatusURL to (my theHMServerURL as text) & "objects/hoststatus?apikey=" & my theHMServerAPIKey & "&host_name=" & theHostStatusName & "&pretty=1"
+		--build the URL ^^
+		set theHMGetHostStatusCommand to "/usr/bin/curl -XGET \"" & theHMHostStatusURL & "\"" --build the curl command to get the host status for the specified host
 		
-		set theHMGetHostStatusCommand to "/usr/bin/curl -XGET \"" & theHMHostStatusURL & my theHMServerAPIKey & "&host_name=" & theHostStatusName & "&pretty=1\""
-			--build the curl command to get the host status for the specified host
 		set theHMGetHostStatusJSONDict to my getJSONData:(theHMGetHostStatusCommand) --get the JSON info
-		try
+		
+		--NOTE: THIS BIT IS NO LONGER NEEDED, KEPT FOR REFERENCE
+		
+		(*try
 			set theHMHostStatusRecord to hoststatus of theHMGetHostStatusJSONDict's hoststatuslist --we have to pull it from hostlist of the Dict because it buries everything
 			--in hoststatuslist prior to XI 5.5.X
 		on error errorMessage number errorNumber
 			if errorNumber is -1728 then
 				set theHMHostStatusRecord to theHMGetHostStatusJSONDict's hoststatus
 			end if
-		end try
+		end try*)
+		
+		set theHMHostStatusRecord to theHMGetHostStatusJSONDict's hoststatus
 		
 		--fill in the fields in the HUD
 		set my theHMHostID to host_id of theHMHostStatusRecord
