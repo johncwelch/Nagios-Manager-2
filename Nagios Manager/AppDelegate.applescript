@@ -1314,7 +1314,7 @@ script AppDelegate
 		my theHostTableController's removeObjects:(my theHostTableController's arrangedObjects()) --clear out the host array controller
 		my theHostTableController's addObjects:my theHMHostListRecord --load the list of hosts on the nagios server into the array controller
 		my theHostTableController's setSelectionIndex:0 --set the default selection to the first host in the list (it makes sense for the host tab)
-		my loadHMHostContactTable:(missing value) 
+		my loadHMHostContactTable:(missing value)
 		my theHMTimePeriodComboBox's addItemsWithObjectValues:theTimePeriodList
 		my loadHMHostGroupPopup:(missing value)
 	end getHostList:
@@ -1341,19 +1341,28 @@ script AppDelegate
 	end loadHostManagerFromPopup:
 	
 	on loadHMHostContactTable:sender --this runs whenever a nagios server is selected in the host manager. There's no difference between how it runs for initial tab selection or changing the value in the popup
-		set theHMContactListURL to my buildNewURL:("getcontactlist") --create the URL to get the contact list
-		set theHMGetContactListCommand to "/usr/bin/curl -XGET \"" & theHMContactListURL & my theHMServerAPIKey & "&pretty=1\"" --build the curl command to get the contacts
-		set my theHMContactListJSONDict to my getJSONData:(theHMGetContactListCommand)
-		try
+		
+		set theHMContactListURL to (my theHMServerURL as text) & "objects/contact?apikey=" & my theHMServerAPIKey & "&pretty=1" --build the contact list URL
+		
+		set theHMGetContactListCommand to "/usr/bin/curl -XGET \"" & theHMContactListURL & "\"" --build the contact list command
+		
+		set my theHMContactListJSONDict to my getJSONData:(theHMGetContactListCommand) --get the JSON NSData all nicely formatted
+		
+		--NOTE: THIS TRY BLOCK ISN'T NEEDED ANYMORE, KEPT FOR POSSIBLE LATER REFERENCE
+		
+		(*try
 			set my theHMHostContactRecord to |contact| of my theHMContactListJSONDict's contactlist --the hierarchy of data here is contactlist -> contact -> data in record
 		on error errorMessage number errorNumber --nagios decided to change the JSON output for host lists in 5.5.x. Assholes
 			if errorNumber is -1728 then
 				set my theHMHostContactRecord to |contact| of my theHMContactListJSONDict
 			end if
-		end try
+		end try*)
+		
+		set my theHMHostContactRecord to |contact| of my theHMContactListJSONDict --grab the section we actually need
+		
 		my theHostContactController's removeObjects:(my theHostContactController's arrangedObjects()) --clear out the host contact controller
-		my theHostContactController's addObjects:my theHMHostContactRecord
-		my theHostContactController's setSelectionIndex:0
+		my theHostContactController's addObjects:my theHMHostContactRecord --load the record into the array controller
+		my theHostContactController's setSelectionIndex:0 --select the first item
 	end loadHMHostContactTable:
 	
 	on createHMContactList:sender --this is where we create a comma-delimited list of contacts for a new host
