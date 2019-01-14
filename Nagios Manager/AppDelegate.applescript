@@ -395,10 +395,12 @@ script AppDelegate
 			set my theSelectedTabViewItemIndex to my theSelectedTabViewItemIndex as text
 			if theSelectedTabIsCorrect then
 				if my theSelectedTabViewItemIndex is "0" then --clicked on Server Manager tab. Honestly, this may never do much of anything
+					log theSelectedTabViewItemIndex
 					--the initial server tab operations are handled in applicationWillFinishLaunching and other places. But just in case
 					--it's here
 					
 				else if my theSelectedTabViewItemIndex is "1" then --this moves the initial user load to a more lazy system, where it doesn't
+					log theSelectedTabViewItemIndex
 				--kick in until the user tab is selected at least once.
 				
 					if not my theUMInitialUserLoadDone then --the user manager hasn't loaded at least once. This prevents us from continually
@@ -450,10 +452,12 @@ script AppDelegate
 							end if
 						end if
 					end if
-				else if my theSelectedTabViewItemIndex is "2" then --we won't do anything here until this is actually doing something
+				else if my theSelectedTabViewItemIndex is "2" then --host manager
+				log theSelectedTabViewItemIndex
 					if not theHMInitialUserLoadDone then --the host manager hasn't loaded at least once. this prevents us from continuously sending
 						--curl commands every time someone clicks on a tab.
 						if my theSMDefaultsExist then --again, if we have no prefs, we have no servers. If we have no servers, we have nothing to get
+							log "we have defaults"
 							--host data for.
 							--also we need to set this up ala user manager tab so we don't reload EVERY time someone clicks the tab.
 							my loadHostManagerFromPopup:(missing value) --initial load of window.
@@ -462,6 +466,7 @@ script AppDelegate
 						end if
 					end if
 				else if my theSelectedTabViewItemIndex is "3" then --hostgroup manager
+				log theSelectedTabViewItemIndex
 					if not theHGMInitialUserLoadDone then
 						if my theSMDefaultsExist then
 							my loadHostGroupManagerFromPopup:(missing value)
@@ -1247,6 +1252,9 @@ script AppDelegate
 		my canAccessAdvancedFeatures's setState:1
 		my readOnly's setEnabled:true
 		my readOnly's setState:0
+		my theUserCanLocalAuth's setState:0
+		my theUserCanLocalAuth's setEnabled:false
+		my theUMUserAuthType's selectItemAtIndex:0
 		
 		set my theRESTresults to "" --clear the notification field value
 	end cancelAddUser:
@@ -1274,20 +1282,23 @@ script AppDelegate
 	--HOST MANAGER FUNCTIONS
 	
 	on getHostList:sender --pull down the initial list of hosts
-		set theHMHostStatusURL to my buildNewURL:("gethosts") --call buildNewURL: to get a list of hosts on a nagios server
+		--set theHMHostStatusURL to my buildNewURL:("gethosts") --call buildNewURL: to get a list of hosts on a nagios server
+		set theHMHostStatusURL to (my theHMServerURL as text) & "objects/host?apikey="  & my theHMServerAPIKey & "&pretty=1" --Build the URL for the command
+		set theHMGetHostListCommand to "/usr/bin/curl -XGET \"" & theHMHostStatusURL & "\"" --build the command
 		
-		set theHMGetHostListCommand to "/usr/bin/curl -XGET \"" & theHMHostStatusURL & my theHMServerAPIKey & "&pretty=1\"" --build the curl command to get the hosts
+		set my theHMHostListJSONDict to my getJSONData:(theHMGetHostListCommand) --send the command to function, get NSData back.
 		
-		set my theHMHostListJSONDict to my getJSONData:(theHMGetHostListCommand)
 		
-		try --nagios decided to change the JSON output for host lists in 5.5.x. Assholes
+		--NOTE: THE TWO TRY BLOCKS AREN'T NEEDED ANYMORE, BUT ARE LEFT FOR ERROR CODE REFERENCES, ETC.
+		
+		(*try --nagios decided to change the JSON output for host lists in 5.5.x. Assholes
 			set my theHMHostCount to recordcount of my theHMHostListJSONDict's hostlist --get the host count for that server. May use it some day
 		on error errorMessage number errorNumber
 			if errorNumber is -1728 then
 				set my theHMHostCount to recordcount of my theHMHostListJSONDict
 			end if
-		end try
-		try
+		end try*)
+		(*try
 			set my theHMHostListRecord to |host| of my theHMHostListJSONDict's hostlist --we have to pull it from hostlist of the Dict because it buries everything in hostlist.
 		--note that if we want to pull the numerical ID of the host, that's buried in attributes of a given host. So that'll suck.
 		--attributes we initially want: host_name,address,display_name,alias,is_active,active_checks_enabled,passive_checks_enabled,notifications_enabled,notification_interval,
@@ -1296,12 +1307,14 @@ script AppDelegate
 			if errorNumber is -1728 then
 				set my theHMHostListRecord to |host| of my theHMHostListJSONDict
 			end if
-		end try
+		end try*)
+		
+		set my theHMHostListRecord to |host| of my theHMHostListJSONDict --get the hosts section of the dictionary
 		
 		my theHostTableController's removeObjects:(my theHostTableController's arrangedObjects()) --clear out the host array controller
 		my theHostTableController's addObjects:my theHMHostListRecord --load the list of hosts on the nagios server into the array controller
 		my theHostTableController's setSelectionIndex:0 --set the default selection to the first host in the list (it makes sense for the host tab)
-		my loadHMHostContactTable:(missing value)
+		my loadHMHostContactTable:(missing value) 
 		my theHMTimePeriodComboBox's addItemsWithObjectValues:theTimePeriodList
 		my loadHMHostGroupPopup:(missing value)
 	end getHostList:
@@ -1311,6 +1324,7 @@ script AppDelegate
 		if not theSMDefaultsExist then --if we have no defaults, there's no point in running this code
 			return --back to main loop
 		end if
+		log "we have defaults"
 		set x to my theServerTableController's arrangedObjects()'s firstObject() --get the first object in the array controller. the way this runs, this is the initial load of things. So we want it to be the first thing in the list. When someone manually changes that, it would handled in selectedHMServerName
 		if x is missing value then --if there's nothing in x, stop the function
 			return --back to the main loop
@@ -1319,6 +1333,9 @@ script AppDelegate
 		set my theHMServerName to x's theSMTableServerName --grab the server name
 		set my theHMServerAPIKey to x's theSMTableServerAPIKey --grab the server key
 		set my theHMServerURL to x's theSMTableServerURL --grab the server URL
+		log my theHMServerName
+		log my theHMServerAPIKey
+		log my theHMServerURL
 		my getHostList:(missing value)
 		
 	end loadHostManagerFromPopup:

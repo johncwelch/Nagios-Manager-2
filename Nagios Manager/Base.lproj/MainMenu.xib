@@ -1631,7 +1631,7 @@ Gw
                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                             <clipView key="contentView" id="LTo-sO-MEg">
                                                 <rect key="frame" x="1" y="0.0" width="385" height="464"/>
-                                                <autoresizingMask key="autoresizingMask"/>
+                                                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                 <subviews>
                                                     <tableView verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" columnSelection="YES" multipleSelection="NO" autosaveColumns="NO" rowSizeStyle="automatic" headerView="bbp-qv-gaf" viewBased="YES" id="edc-nj-R3v">
                                                         <rect key="frame" x="0.0" y="0.0" width="385" height="439"/>
@@ -2067,7 +2067,7 @@ Gw
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                             <clipView key="contentView" id="TOr-O2-qdh">
                                                 <rect key="frame" x="1" y="0.0" width="229" height="101"/>
-                                                <autoresizingMask key="autoresizingMask"/>
+                                                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                 <subviews>
                                                     <tableView verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" columnSelection="YES" autosaveColumns="NO" rowSizeStyle="automatic" headerView="sMV-sv-x4R" viewBased="YES" id="0RI-NN-yR2">
                                                         <rect key="frame" x="0.0" y="0.0" width="229" height="76"/>
