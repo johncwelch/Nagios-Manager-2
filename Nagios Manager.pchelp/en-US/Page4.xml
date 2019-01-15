@@ -179,7 +179,7 @@
         </line>
         <line Align="Left">
             <content style="Normal bold">Allows Local Auth</content>
-            <content style="Normal"> - This option allows you to create a local password for an account that would normally use AD or LDAP authentication. If the connection to the external auth server is unreliable, this is a good option. It is disabled by default. Note that if this is not enabled, and you choose AD or LDAP as the Auth Type, the Password: field is disabled, since if you’re only using AD or LDAP auth for a user, there is no need to enter a local password. </content>
+            <content style="Normal"> - This option allows you to create a local password for an account that would normally use AD or LDAP authentication. If the connection to the external auth server is unreliable, this is a good option. It is disabled by default. Note that if this is not enabled, and you choose AD or LDAP as the Auth Type, the Password: field is disabled, since if you’re only using AD or LDAP auth for a user, there is no need to enter a local password. If the Auth Type is set to Local, this control is disabled and unchecked.</content>
         </line>
         <line Align="Left">
             <content style="Normal"></content>
