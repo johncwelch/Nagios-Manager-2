@@ -52,23 +52,23 @@ li.Heading2 {
     margin-top: 0;
     margin-bottom: 0.5em;
 }
-body.Custom0, li.Custom0, span.Custom0 {
+body.Custom2, li.Custom2, span.Custom2 {
     font-family: "HelveticaNeue-Bold","Helvetica Neue",sans-serif;
-    font-size: 12.000000px;
-    color: RGBA(58,58,58,1.000000);
+    font-size: 14.000000px;
+    color: RGBA(252,1,7,1.000000);
 }
-span.Custom0_link  {
+span.Custom2_link  {
     font-family: "HelveticaNeue-Bold","Helvetica Neue",sans-serif;
-    font-size: 12.000000px;
+    font-size: 14.000000px;
     color: #0000ff;
 }
-p.Custom0 {
+p.Custom2 {
     margin-top: 0;
-    margin-bottom: 0.0px;
+    margin-bottom: 7.0px;
 }
-li.Custom0 {
+li.Custom2 {
     margin-top: 0;
-    margin-bottom: 0.0em;
+    margin-bottom: 0.5em;
 }
 body.Heading1, li.Heading1, span.Heading1 {
     font-family: "HelveticaNeue-Light","Helvetica Neue",sans-serif;
@@ -108,6 +108,24 @@ p.Custom1 {
     margin-bottom: 0.0px;
 }
 li.Custom1 {
+    margin-top: 0;
+    margin-bottom: 0.0em;
+}
+body.Custom0, li.Custom0, span.Custom0 {
+    font-family: "HelveticaNeue-Bold","Helvetica Neue",sans-serif;
+    font-size: 12.000000px;
+    color: RGBA(58,58,58,1.000000);
+}
+span.Custom0_link  {
+    font-family: "HelveticaNeue-Bold","Helvetica Neue",sans-serif;
+    font-size: 12.000000px;
+    color: #0000ff;
+}
+p.Custom0 {
+    margin-top: 0;
+    margin-bottom: 0.0px;
+}
+li.Custom0 {
     margin-top: 0;
     margin-bottom: 0.0em;
 }

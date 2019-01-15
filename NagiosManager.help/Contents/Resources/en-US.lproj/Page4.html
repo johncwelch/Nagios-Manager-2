@@ -36,7 +36,7 @@
             </li>
         </ul>
         <p class="Left Normal">
-            <span class="Normal">Please note that due to limitations in the REST API, you can’t update or change a user’s settings from Nagios Manager. Also, if you’re using version 1.8 or earlier, you cannot add Active Directory/LDAP users with Nagios Manager, but you can delete them.&nbsp;</span>
+            <span class="Normal">Please note that due to limitations in the REST API, you can’t update or change a user’s settings from Nagios Manager.&nbsp;</span>
         </p>
         <p class="Left">
             <br />
@@ -195,25 +195,45 @@
             <br />
         </p>
         <p class="Left Normal">
-            <span class="Normal">These can all be changed in the main Nagios web UI, if wanted/needed.</span>
+            <span class="Normal bold">Auth Type</span>
+            <span class="Normal">&nbsp;- This is for use with a Nagios server that was set up in Nagios Manager as having an AD or LDAP external authentication server. If the Nagios server you’re working against was not set up with an AD/LDAP auth server, then this will be locked to “Local” and disable, as that’s the only functional option in that case. If the server has an external auth server function, then you select which one of three options to use here: Local, AD, LDAP. Please make sure the one you pick matches the server setup for the Nagios server you’re working against. If you pick “Local”, that’s all you get. If you pick AD or LDAP, you can have a local auth option, as seen below.&nbsp;</span>
+        </p>
+        <p class="Left Custom2 Normal">
+            <span class="Custom2">IMPORTANT</span>
+            <span class="Normal">: If you are using AD or LDAP, then the Username: field&nbsp;</span>
+            <span class="Normal italic">must</span>
+            <span class="Normal">&nbsp;match the AD or LDAP username for AD/LDAP auth to work.&nbsp;</span>
+        </p>
+        <p class="Left">
+            <br />
+        </p>
+        <p class="Left Normal">
+            <span class="Normal bold">Allows Local Auth</span>
+            <span class="Normal">&nbsp;- This option allows you to create a local password for an account that would normally use AD or LDAP authentication. If the connection to the external auth server is unreliable, this is a good option. It is disabled by default. Note that if this is not enabled, and you choose AD or LDAP as the Auth Type, the Password: field is disabled, since if you’re only using AD or LDAP auth for a user, there is no need to enter a local password.&nbsp;</span>
+        </p>
+        <p class="Left">
+            <br />
         </p>
         <p class="Left Normal">
             <span class="Normal">There are three levels of Nagios user: Admin, Read Only, User. The default setting on application launch is User, with permissions that will allow that user to interact with Nagios in a useful manner sans being an admin.</span>
         </p>
         <ul class="listDisc">
-            <li class="Normal">
+            <li class="Normal bold">
                 <p class="Left Normal">
-                    <span class="Normal">Admin: All permissions enabled save API access, that must be enabled within Nagios itself. Selecting the “Admin” radio button locks out Read Only as an option.&nbsp;</span>
+                    <span class="Normal bold">Admin</span>
+                    <span class="Normal">&nbsp;- All permissions enabled save API access, that must be enabled within Nagios itself. Selecting the “Admin” radio button locks out Read Only as an option.&nbsp;</span>
                 </p>
             </li>
-            <li class="Normal">
+            <li class="Normal bold">
                 <p class="Left Normal">
-                    <span class="Normal">Read Only: Only available if the “User” radio button is selected. Removes all other permissions. Note: As it removes “Can See All Objects”, by default, this user will not be able to actually see any Nagios host or service on the selected server. That will have to be enabled within Nagios itself.</span>
+                    <span class="Normal bold">Read Only</span>
+                    <span class="Normal">&nbsp;- Only available if the “User” radio button is selected. Removes all other permissions. Note: As it removes “Can See All Objects”, by default, this user will not be able to actually see any Nagios host or service on the selected server. That will have to be enabled within Nagios itself.</span>
                 </p>
             </li>
-            <li class="Normal">
+            <li class="Normal bold">
                 <p class="Left Normal">
-                    <span class="Normal">User: The default user level. The default permissions for this are: Can See All Objects:, Can Control All Objects:, Can Access Advanced Features:. For detailed explanation(s) of these permission levels, use the online help within Nagios XI.&nbsp;</span>
+                    <span class="Normal bold">User</span>
+                    <span class="Normal">&nbsp;- The default user level. The default permissions for this are: Can See All Objects:, Can Control All Objects:, Can Access Advanced Features:. For detailed explanation(s) of these permission levels, use the online help within Nagios XI.&nbsp;</span>
                 </p>
             </li>
         </ul>
