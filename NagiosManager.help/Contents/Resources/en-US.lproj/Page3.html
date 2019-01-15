@@ -111,7 +111,7 @@
             <a href="javascript:$('#tree').fancytree('getTree').activateKey('Page2')">
                 <span class="Normal_link">main table</span>
             </a>
-            <span class="Normal">&nbsp;also allows you to delete it from Nagios Manager. You can delete the server by selecting it, then clicking the “Delete Selected Server(s) button, or by double-clicking the server you want to delete. Either way will display a “Are you sure you want to do this” dialog. If you click “OK” in the dialog, the server will be deleted. (Note that currently, you can’t select multiple servers. But soon, you will be able to do just that.)</span>
+            <span class="Normal">&nbsp;also allows you to delete it from Nagios Manager. You can delete the server by selecting it, then clicking the “Delete Selected Server(s) button, or by double-clicking the server you want to delete. Either way will display a “Are you sure you want to do this” dialog. If you click “OK” in the dialog, the server will be deleted. (Note that currently, you can’t select multiple servers. But soon, you will be able to do that.)</span>
         </p>
         <p class="Left">
             <br />
@@ -123,29 +123,110 @@
             <hr style="color:RGBA(0,0,0,1.000000);background-color:RGBA(0,0,0,1.000000);height:1.000000pt;" />
         </p>
         <p class="Left Normal">
-            <span class="Normal">To add a server, you have to have the server name, the server URL, and the server API key:</span>
+            <span class="Normal">To add a server, at a minimum you have to have the server name, the server URL, the server API key and how the server will authenticate:</span>
+        </p>
+        <p class="Left Normal">
+            <span class="Normal bold">Basic Settings</span>
         </p>
         <ul class="listDisc">
             <li class="Normal">
                 <p class="Left Normal">
-                    <span class="Normal">The name of the server goes in the Server Name field. This can be anything you want it to be, it is only there for your ease of identification. This is also the name you will use when selecting servers in the other tabs, so you should make it reasonably short and immediately meaningful. “Network Nagios Server” is immediately meaningful, “NNS34QPK5” less so.</span>
+                    <span class="Normal">The name of the server goes in the&nbsp;</span>
+                    <span class="Normal bold">Server Name</span>
+                    <span class="Normal">&nbsp;field. This can be anything you want it to be, it is only there for your ease of identification. This is also the name you will use when selecting servers in the other tabs, so you should make it reasonably short and immediately meaningful. “Network Nagios Server” is immediately meaningful, “NNS34QPK5” less so.</span>
                 </p>
             </li>
             <li class="Normal">
                 <p class="Left Normal Custom1 Custom0">
-                    <span class="Normal">The URL for the server goes in the Server URL field.&nbsp;</span>
+                    <span class="Normal">The URL for the server goes in the&nbsp;</span>
+                    <span class="Normal bold">Server URL</span>
+                    <span class="Normal">&nbsp;field.&nbsp;</span>
                     <span class="Custom1">IMPORTANT</span>
                     <span class="Custom0">:&nbsp;</span>
-                    <span class="Custom1">ONLY</span>
-                    <span class="Normal">enter in the main DNS name or IP address for the server, i.e. http(s)://my.nagios.com/ or https://10.10.10.10/. Do not enter anything else, as at the moment, the basic URL form is grafted on the end of what you enter here. If you enter the wrong thing here, Nagios Manager will not be able to properly communicated with your server.&nbsp;</span>
+                    <span class="Custom1">ONLY&nbsp;</span>
+                    <span class="Normal">enter in the main DNS name or IP address for the server, i.e. http(s)://my.nagios.com/ or https://10.10.10.10/. Do not enter anything else, as at the moment, the basic URL form is grafted on the end of what you enter here. If you enter the wrong thing here, Nagios Manager will not be able to properly communicate with your server.&nbsp;</span>
                 </p>
             </li>
-            <li class="Normal">
+            <li class="Normal bold">
                 <p class="Left Normal">
-                    <span class="Normal">Server API Key: This is available from your user account on the Nagios Server you’re adding to Nagios Manager. For best results, it should be an admin account API Key. There’s not a really good way for Nagios Manager to validate what a given key can or cannot do. If you enter an API key that is not an admin key, your results will be…uncertain.</span>
+                    <span class="Normal bold">Server API Key</span>
+                    <span class="Normal">: This is available from your user account on the Nagios Server you’re adding to Nagios Manager. For best results, it should be an admin account API Key. There’s not a really good way for Nagios Manager to validate what a given key can or cannot do. If you enter an API key that is not an admin key, your results will be…uncertain.</span>
+                </p>
+            </li>
+            <li class="Normal bold">
+                <p class="Left Normal">
+                    <span class="Normal bold">Uses AD/LDAP Auth</span>
+                    <span class="Normal">&nbsp;- Fairly simple. If you want to use an external authentication server, enable this checkbox. if you want to use local&nbsp;</span>
+                    <span class="Normal italic">only</span>
+                    <span class="Normal">, leave this unchecked. Note that if you have a combination of local/external users, enable this. You don’t have to use external auth, but if you don’t set it</span>
                 </p>
             </li>
         </ul>
+        <p class="Left Normal">
+            <span class="Normal bold">Authentication Server Settings</span>
+        </p>
+        <p class="Left">
+            <br />
+        </p>
+        <ul class="listDisc">
+            <li class="Normal bold">
+                <p class="Left Normal">
+                    <span class="Normal bold">Common Authentication Server Controls</span>
+                </p>
+            </li>
+            <li class="Normal">
+                <p style="margin-left:72.000000pt" class="Left Normal">
+                    <span class="Normal">Connection Method - Choose either AD or LDAP. You get one external option per server, AD or LDAP. Not both. If there’s actually a real need for both, I can change that later.</span>
+                </p>
+            </li>
+            <li class="Normal">
+                <p style="margin-left:72.000000pt" class="Left Normal">
+                    <span class="Normal">Security Level - Options are None, TLS, SSL. The value here should always match the value you have set up within the AD/LDAP setup on the specific Nagios server. At this point, you should probably not be using SSL.</span>
+                </p>
+            </li>
+            <li class="Normal">
+                <p style="margin-left:72.000000pt" class="Left Normal">
+                    <span class="Normal">Base DN: the base DN of your AD or LDAP tree, for example, “DC=nagios, DC=com”. Each DC= entry must be separated by a comma</span>
+                </p>
+            </li>
+            <li class="Normal bold">
+                <p class="Left Normal">
+                    <span class="Normal bold">Active Directory Settings</span>
+                </p>
+            </li>
+            <li class="Normal">
+                <p style="margin-left:72.000000pt" class="Left Normal">
+                    <span class="Normal">AD Domain Suffix - this is primarily used for Active Directory, it’s the “new” (Since 2000) “Kerberos” style of domain/user name. So instead of “NAGIOS\john”, it’d be “john@nagios.com”.&nbsp;</span>
+                </p>
+            </li>
+            <li class="Normal">
+                <p style="margin-left:72.000000pt" class="Left Normal">
+                    <span class="Normal">AD Domain Controllers - A comma-delimited list of DNS names and/or IP addresses for your AD/LDAP domain controllers, (DCs). AD setups can have many, many DCs,&nbsp;</span>
+                </p>
+            </li>
+            <li class="Normal bold">
+                <p class="Left Normal">
+                    <span class="Normal bold">LDAP Settings</span>
+                </p>
+            </li>
+            <li class="Normal">
+                <p style="margin-left:72.000000pt" class="Left Normal">
+                    <span class="Normal">LDAP Host - The IP address or DNS name of the LDAP server you want to use for authentication. Currently, you get one, choose wisely.</span>
+                </p>
+            </li>
+            <li class="Normal">
+                <p style="margin-left:72.000000pt" class="Left Normal">
+                    <span class="Normal">LDAP Port - The numerical port you use to connect to the LDAP Host on. Generically, this is 389 for unsecure connections and 636 for TLS/SSL</span>
+                </p>
+            </li>
+        </ul>
+        <p class="Left">
+            <br />
+        </p>
+        <p class="Left Normal">
+            <span class="Normal bold">Add Server&nbsp;</span>
+            <span class="Normal">- Once you’ve filled in the information for the server, this adds the server to the Nagios Manager prefs. IMPORTANT: this only adds it to the application prefs. It does not in any way, shape, or form configure a Nagios server. If what you have here does not match the server you’re pointing Nagios Manager at, you’re not going to be able to use Nagios Manager with that Nagios server.</span>
+        </p>
         <p class="Left">
             <br />
         </p>
