@@ -518,7 +518,10 @@ script AppDelegate
 	end tableViewSelectionDidChange:
 
 	--COMMON CODE FUNCTIONS
-	on buildNewURL:theCallingTab --the important thing we need passed here is what's calling it - server/host/user/other tabs.
+
+	--NOTE THAT buildNewURL IS NO LONGER NEEDED, BUT KEPT AS A BIG-ASSED COMMENT AS A REFERENCE. MAY GET DELETED ONE DAY. MAY NOT.
+
+	(*on buildNewURL:theCallingTab --the important thing we need passed here is what's calling it - server/host/user/other tabs.
 		--so the call should look like "buildNewURL:("host")
 		if theCallingTab is "user" then
 			set theSelection to userSelection's selectedObjects() as record --this gets the selection in the table row
@@ -573,7 +576,7 @@ script AppDelegate
 		--builds the status URL by replacing the the match range with the replacement pattern
 		
 		return theNewURL
-	end buildNewURL:
+	end buildNewURL:*)
 	
 	on getJSONData:theCurlCommand --this does the basic JSON processing, which is the same four lines over and over, unchanged
 		--it shoves the results of the do shell script into a text variable, then makes that into an NSString
