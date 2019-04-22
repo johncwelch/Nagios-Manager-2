@@ -1,0 +1,7 @@
+So found an interesting issue that might affect Nagios Manager: if you have a mix of AD and local users, and you have set conditions on your local user passwords (must have a number, be 8 chars, etc.), and you try to add an AD user with NM, it will probably fail.
+
+The reason is, when adding an AD/LDAP user via the REST API, you don't provide a password unless it's a user that can also auth locally. So you get back "user <foo> created, user id <null>" when you try. Yey.
+
+You also get that if you create a local user with an invalid initial password. Yey.
+
+I'm working with Nagios right now to find a good workaround and get this fixed.
