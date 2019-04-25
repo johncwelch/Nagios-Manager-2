@@ -969,6 +969,7 @@ script AppDelegate
 			my theUMUserAuthType's selectItemAtIndex:0
 			my theUMUserAuthType's setEnabled:false
 			my theUserCanLocalAuth's setEnabled:false
+			my theUMUserPassword's setEnabled:true
 		else --we're using an auth server
 			my theUMUserAuthType's setEnabled:true
 			
@@ -1045,6 +1046,7 @@ script AppDelegate
 			my theUMUserAuthType's selectItemAtIndex:0
 			my theUMUserAuthType's setEnabled:false
 			my theUserCanLocalAuth's setEnabled:false
+			my theUMUserPassword's setEnabled:true
 		else --we're using an auth server
 			my theUMUserAuthType's setEnabled:true
 			
@@ -1155,8 +1157,11 @@ script AppDelegate
      end enabledReadOnly:
 	
 	on addUser:sender --kicks off when add user button is clicked
-		
+		set theAuthServerType to ""
+		set theAuthServerID to ""
+		set theAuthServerBaseDN to ""
 		if (my theUMUserAuthType's titleOfSelectedItem() as text) is not "Local" then --there is an option for an auth server, and we're using it so we're going to need to get the auth server info
+			set my theNagiosNewUserPassword to my makeInitialUserPassword:() --build initial password that won't be used but is needed for the command to work
 			set theGetAuthServerInfoURL to (my theUMServerURL as text) & "system/authserver?apikey=" & (my theUMServerAPIKey as text) & "&pretty=1"
 			set theGetAuthServerInfoCommand to "/usr/bin/curl -XGET \"" & theGetAuthServerInfoURL & "\"" --build the curl command to get the auth server info
 			set theGetAuthServerInfo to my getJSONData:(theGetAuthServerInfoCommand) --run it through the json processing, get nsdata back
@@ -1208,24 +1213,59 @@ script AppDelegate
 		--want it to fail.
 		
 		if (my theUMServerUsesAuthServer as text) is "0" then --we aren't using an auth server, this is the "default"
-			
+			set my theNagiosNewUserPassword to my makeInitialUserPassword:() --generate a random password, can be changed in the UI
 			(*this next line builds the actual command to add a user sans auth server. There's a lot of things that are hardcoded as that's the norm.
 			 it's not a problem to fix later if we need, the variables are already declared, just unused.*)
 			set theAddCommand to "/usr/bin/curl -XPOST \"" & (theAddUserServerURL) & (my theUMServerAPIKey as text) & "&pretty=1\"" & " -d \"username=" & my theNagiosNewUserName & "&password=" & my theNagiosNewUserPassword & "&name=" & my theNagiosNewUserRealName & "&email=" & my theNagiosNewUserEmailAddress & "&force_pw_change=1&email_info=1&monitoring_contact=1&enable_notifications=1&language=xi default&date_format=1&number_format=1&auth_level=" & theAuthLevel & "&can_see_all_hs=" & my canSeeAllObjects's intValue() & "&can_control_all_hs=" & my canControlAllObjects's intValue() & "&can_reconfigure_hs=" & my canReconfigureAllObjects's intValue() & "&can_control_engine=" & my canSeeOrConfigureMonitoringEngine's intValue() & "&can_use_advanced=" & my canAccessAdvancedFeatures's intValue() & "&read_only=" & my readOnly's intValue() & "\""
 			
+			(*log "no auth server, local auth"
+			log theAddCommand
+			log my theNagiosNewUserPassword
+			log my theUMServerUsesAuthServer as text*)
+			
 			set my theRESTresults to do shell script theAddCommand --add the user
 			my getServerUsers:(missing value) --reload the list
 		else --we are using an auth server
-			if (my theUserCanLocalAuth's intValue() as text) is "0" --no local auth allowed
-				set theAddCommand to "/usr/bin/curl -XPOST \"" & (theAddUserServerURL) & (my theUMServerAPIKey as text) & "&pretty=1\"" & " -d \"username=" & my theNagiosNewUserName & "&name=" & my theNagiosNewUserRealName & "&email=" & my theNagiosNewUserEmailAddress & "&monitoring_contact=1&enable_notifications=1&language=xi default&date_format=1&number_format=1&auth_level=" & theAuthLevel & "&can_see_all_hs=" & my canSeeAllObjects's intValue() & "&can_control_all_hs=" & my canControlAllObjects's intValue() & "&can_reconfigure_hs=" & my canReconfigureAllObjects's intValue() & "&can_control_engine=" & my canSeeOrConfigureMonitoringEngine's intValue() & "&can_use_advanced=" & my canAccessAdvancedFeatures's intValue() & "&read_only=" & my readOnly's intValue() & "&auth_type=" & theAuthServerType & "&auth_server_id=" & theAuthServerID & "&allow_local=0" & "&ad_username=" & my theNagiosNewUserName & "&ldap_dn=" & theAuthServerBaseDN & "\""
+			--we have to actually deal with local users added to an AD server here.
+			--we have an auth server, but are creating a local account
+			if (my theUMUserAuthType's titleOfSelectedItem() as text) is "Local" then --creating a local account, works just like if you had no auth server
+				set my theNagiosNewUserPassword to my makeInitialUserPassword:() --generate a random password, can be changed in the UI
+				
+				set theAddCommand to "/usr/bin/curl -XPOST \"" & (theAddUserServerURL) & (my theUMServerAPIKey as text) & "&pretty=1\"" & " -d \"username=" & my theNagiosNewUserName & "&password=" & my theNagiosNewUserPassword & "&name=" & my theNagiosNewUserRealName & "&email=" & my theNagiosNewUserEmailAddress & "&force_pw_change=1&email_info=1&monitoring_contact=1&enable_notifications=1&language=xi default&date_format=1&number_format=1&auth_level=" & theAuthLevel & "&can_see_all_hs=" & my canSeeAllObjects's intValue() & "&can_control_all_hs=" & my canControlAllObjects's intValue() & "&can_reconfigure_hs=" & my canReconfigureAllObjects's intValue() & "&can_control_engine=" & my canSeeOrConfigureMonitoringEngine's intValue() & "&can_use_advanced=" & my canAccessAdvancedFeatures's intValue() & "&read_only=" & my readOnly's intValue() & "\""
+				log "auth server, local auth selected"
 				log theAddCommand
+				log my theNagiosNewUserPassword
+				log my theUMServerUsesAuthServer as text
+				
 				set my theRESTresults to do shell script theAddCommand --add the user
 				my getServerUsers:(missing value) --reload the list
-			else --local auth allowed
-				set theAddCommand to "/usr/bin/curl -XPOST \"" & (theAddUserServerURL) & (my theUMServerAPIKey as text) & "&pretty=1\"" & " -d \"username=" & my theNagiosNewUserName & "&password=" & my theNagiosNewUserPassword & "&name=" & my theNagiosNewUserRealName & "&email=" & my theNagiosNewUserEmailAddress & "&monitoring_contact=1&enable_notifications=1&language=xi default&date_format=1&number_format=1&auth_level=" & theAuthLevel & "&can_see_all_hs=" & my canSeeAllObjects's intValue() & "&can_control_all_hs=" & my canControlAllObjects's intValue() & "&can_reconfigure_hs=" & my canReconfigureAllObjects's intValue() & "&can_control_engine=" & my canSeeOrConfigureMonitoringEngine's intValue() & "&can_use_advanced=" & my canAccessAdvancedFeatures's intValue() & "&read_only=" & my readOnly's intValue() & "&auth_type=" & theAuthServerType & "&auth_server_id=" & theAuthServerID & "&allow_local=1" & "&ad_username=" & my theNagiosNewUserName & "&ldap_dn=" & theAuthServerBaseDN & "\""
-				set my theRESTresults to do shell script theAddCommand --add the user
-				my getServerUsers:(missing value) --reload the list
+			else --the auth type is NOT local
+				if (my theUserCanLocalAuth's intValue() as text) is "0" --no local auth allowed
+					set my theNagiosNewUserPassword to my makeInitialUserPassword:() --generate a random password, can't be changed in the UI.
+					set theAddCommand to "/usr/bin/curl -XPOST \"" & (theAddUserServerURL) & (my theUMServerAPIKey as text) & "&pretty=1\"" & " -d \"username=" & my theNagiosNewUserName & "&name=" & my theNagiosNewUserRealName & "&email=" & my theNagiosNewUserEmailAddress & "&monitoring_contact=1&enable_notifications=1&language=xi default&date_format=1&number_format=1&auth_level=" & theAuthLevel & "&can_see_all_hs=" & my canSeeAllObjects's intValue() & "&can_control_all_hs=" & my canControlAllObjects's intValue() & "&can_reconfigure_hs=" & my canReconfigureAllObjects's intValue() & "&can_control_engine=" & my canSeeOrConfigureMonitoringEngine's intValue() & "&can_use_advanced=" & my canAccessAdvancedFeatures's intValue() & "&read_only=" & my readOnly's intValue() & "&auth_type=" & theAuthServerType & "&auth_server_id=" & theAuthServerID & "&allow_local=0" & "&ad_username=" & my theNagiosNewUserName & "&ldap_dn=" & theAuthServerBaseDN & "\""
+			
+					(*log "auth server, ad/ldap selected, no local auth"
+					log theAddCommand
+					log my theNagiosNewUserPassword
+					log my theUMServerUsesAuthServer as text*)
+			
+					set my theRESTresults to do shell script theAddCommand --add the user
+					my getServerUsers:(missing value) --reload the list
+				else --local auth allowed
+					set my theNagiosNewUserPassword to my makeInitialUserPassword:() --generate a random password, can be changed in the UI
+					set theAddCommand to "/usr/bin/curl -XPOST \"" & (theAddUserServerURL) & (my theUMServerAPIKey as text) & "&pretty=1\"" & " -d \"username=" & my theNagiosNewUserName & "&password=" & my theNagiosNewUserPassword & "&name=" & my theNagiosNewUserRealName & "&email=" & my theNagiosNewUserEmailAddress & "&monitoring_contact=1&enable_notifications=1&language=xi default&date_format=1&number_format=1&auth_level=" & theAuthLevel & "&can_see_all_hs=" & my canSeeAllObjects's intValue() & "&can_control_all_hs=" & my canControlAllObjects's intValue() & "&can_reconfigure_hs=" & my canReconfigureAllObjects's intValue() & "&can_control_engine=" & my canSeeOrConfigureMonitoringEngine's intValue() & "&can_use_advanced=" & my canAccessAdvancedFeatures's intValue() & "&read_only=" & my readOnly's intValue() & "&auth_type=" & theAuthServerType & "&auth_server_id=" & theAuthServerID & "&allow_local=1" & "&ad_username=" & my theNagiosNewUserName & "&ldap_dn=" & theAuthServerBaseDN & "\""
+			
+					log "auth server, ad/ldap selected, local auth"
+					log theAddCommand
+					log my theNagiosNewUserPassword
+					log my theUMServerUsesAuthServer as text
+			
+					set my theRESTresults to do shell script theAddCommand --add the user
+					my getServerUsers:(missing value) --reload the list
+				end if
 			end if
+			
+			
 		end if
 		
 		
@@ -1260,6 +1300,7 @@ script AppDelegate
 	on enableLocalAuthControl:sender --runs if the popup changes
 		if (sender's title as text) is "Local" then
 			my theUserCanLocalAuth's setEnabled:false --if it's local, this is a given, no need to have it enabled.
+			my theUserCanLocalAuth's setState:0 --since it's local auth, clearing this checkbox makes sense
 			my theUMUserPassword's setEnabled:true --make sure the password field is enabled
 		else
 			my theUserCanLocalAuth's setEnabled:true --if it's AD or LDAP, then yeah, we want to enable this control
@@ -1275,6 +1316,31 @@ script AppDelegate
 		end if
 		
 	end allowsLocalAuth:
+
+	--this exists to create a "fake" password initial password for users.
+	--it accepts no parameters and returns a text string.
+	--note this doesn't GUARANTEE at least one of each character. That may bite us in the ass later, but it's fixable.
+	on makeInitialUserPassword:()
+		--many thanks to macgrunt.com for this
+		--build the lists of chars to be used
+		set theFakePassword to ""
+		set mgList1 to {"A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"}
+		set mgList2 to {"a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z"}
+		set mgList3 to {"1", "2", "3", "4", "5", "6", "7", "8", "9", "0"}
+		set mgList4 to {"@", "#", "%", "^", "*", "-", "_", "=", ".", "?"}
+		--create a list of lists
+		set mgList5 to {mgList1, mgList2, mgList3, mgList4}
+		
+		--iterate through ten times to create a ten-char password
+		set theLength to 10
+		repeat theLength times
+			set theList to some item of mgList5 --concat the list of lists to a single long list
+			set theFakePassword to theFakePassword & some item of theList --grab a random character
+		end repeat
+		
+		--return the fake password
+		return theFakePassword
+	end makeInitialUserPassword:
 	
 	
 	--HOST MANAGER FUNCTIONS
