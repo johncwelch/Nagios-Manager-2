@@ -22,6 +22,8 @@ IMPORTANT!!!!!
 
 2.0: getting Nagios Manager to work with AD/LDAP auth servers is the big new feature. Also redoing some of the code, there's no need for that much grepping, ye gods. Once that's done, then 2.X will add, slowly, new features in the API in the post 5.5.X world. I created a new repository so the pre-2.X code that will work on pre-5.5.X nagios still exists. NM2 will be the first one I push into the Mac App Store. Or, at least try to.
 
+2.1: bug fixes for some edge cases that I'm pretty sure I'll be one of the few people to care about, and added a random password generator function.
+
 
 yes, it's written in AppleScriptObjective C. No, I don't particularly care if you like that language, it does what *I* need it to do and that's its only
 requirement.
